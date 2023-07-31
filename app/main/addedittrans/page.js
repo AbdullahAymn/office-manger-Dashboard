@@ -6,6 +6,7 @@ import Link from "next/link";
 import React, { useContext, useState } from "react";
 import Popup from "reactjs-popup";
 import Delete from "@/app/components/popup/delete";
+import PopUp from "./components/PopUp";
 
 export default function AddEditTrans() {
   const isArabicprop = useContext(isArabic).arabic;
@@ -132,7 +133,9 @@ export default function AddEditTrans() {
             >
               {isArabicprop ? "إضافة" : "Add"}{" "}
             </button>
-            <Popup open={openAdd}>{/* <PopUp close={toggelAdd} /> */}</Popup>
+            <Popup open={openAdd}>
+              <PopUp close={toggelAdd} />
+            </Popup>
           </div>
         </div>
         {/*  */}
