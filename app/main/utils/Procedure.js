@@ -41,4 +41,10 @@ export const ProcedureMainData = [
     link: "/main/addedittrans",
     icon: "fa-solid fa-pen",
   },
+  {
+    arabic: "إلغاء الحركات المعدلة يدوياً",
+    english: "Cancel Manually Trans",
+    link: "/main/cancelmanuallytrans",
+    icon: "fa-solid fa-ban",
+  },
 ];
