@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bortl{
+    direction: rtl;
+}
+.boltr{
+    direction: ltr;
+}
+
+.rotate-270{
+  
+  rotate: 270deg;
+}
+.rotate-900{
+  
+  rotate: 90deg;
+}
+* {
+    box-sizing: border-box;
+  }
+  
+
+  ::-webkit-scrollbar{
+    @apply bg-slate-800 w-2 
+  }
+  ::-webkit-scrollbar-thumb{
+    @apply bg-gray-200/50 rounded-full w-2
+    
+  }
+  ::-webkit-scrollbar:hover{
+    @apply rounded-full
+  }
+.abbg{
+  background-color: #e7505a;
+}
+.atbg{
+  background-color: #32c5d2;
+}
+.mlbg{
+  background-color: #8e44ad;
+}
+.labg{
+  background-color: #3598dc;
+}
+
+tr:nth-child(even){
+  background-color: #8c929450;
+}
+tr:hover{
+  background-color: #3598dc40;
+}
+
+.popup-content{
+  width: 75%;
+
+
+}
+
+.siar{
+  
+  right:-100%;
+  transition: all ease-in-out 1s;
+  z-index: 12;
+
+  
+}
+
+.siarac{
+  transition: all ease-in-out 1s;
+  right:0%;
+  z-index: 12;
+  
+
+}
+.sien{
+  
+  left:-100%;
+  transition: all ease-in-out 1s;
+  z-index: 12;
+
+  
+}
+
+.sienac{
+  transition: all ease-in-out 1s;
+  left:0%;
+  z-index: 12;
+  
+
+}
+.border-1{
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.w-75{
+  width: 75%;
+}
+
+@keyframes test {
+  0%{
+  
+    margin-top: -100%;
+    opacity: 0;
+  }
+  100%{
+  
+    margin-top: 0;
+    opacity: 1;
+  }
+  
+}
+
+.getin{
+  animation: test 1s  0s ease-in-out  ;
+}
+
+.w-82{
+  width: 95%;
+}
+
+.w-65{
+  width: 50%;
+}
+.w-150{
+  width: 160%;
+}
+.w-200{
+  width: 300%;
+}
