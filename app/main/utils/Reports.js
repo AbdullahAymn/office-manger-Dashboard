@@ -1,8 +1,8 @@
 export const ReportsMainData = [{
-    arabic: 'ا2',
-    english: 'test2',
-    link: '/main/branches',
-    icon : 'fa-solid fa-code-branch 7'
+    arabic: 'الموظفون',
+    english: 'Employees',
+    link: '/main/employeesreport',
+    icon : 'fa-solid fa-address-book'
   },{
     arabic: 'ا2',
     english: 'test2',
