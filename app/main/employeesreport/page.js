@@ -1,6 +1,9 @@
 "use client";
 import Label from "@/app/components/reports/Label";
 import { isArabic } from "@/utils/langStore";
+import { options } from "@/utils/optionStore";
+
+import useOptions from "@/utils/useOptions";
 import React from "react";
 import { useState } from "react";
 import { useContext } from "react";
@@ -9,6 +12,13 @@ export default function EmployeesReport() {
   const isArabicprop = useContext(isArabic).arabic;
 
   //setSearch
+
+  const branchesOptions = useOptions(useContext(options).branch);
+  const mangementOptions = useOptions(useContext(options).mangement);
+  const departmentOptions = useOptions(useContext(options).department);
+  const jobOptions = useOptions(useContext(options).job);
+  const groupOptions = useOptions(useContext(options).group);
+  const workingTimeOptions = useOptions(useContext(options).workingTime);
 
   const [showSearch, setShowSearch] = useState(true);
 
@@ -43,6 +53,7 @@ export default function EmployeesReport() {
     setGroup("");
     setWorkingTime("");
   };
+
   return (
     <div className=" font-sans">
       <div>
@@ -91,8 +102,7 @@ export default function EmployeesReport() {
                   <option selected hidden>
                     Choose one
                   </option>
-                  <option value="branch 1">Branch 1</option>
-                  <option value="branch 2">Branch 2</option>
+                  {branchesOptions}
                 </select>
               </div>
               <div className=" col-span-3 md:mx-4">
@@ -105,8 +115,7 @@ export default function EmployeesReport() {
                   <option selected hidden>
                     Choose one
                   </option>
-                  <option value="Mangement 1">Mangement 1</option>
-                  <option value="Mangement 2">Mangement 2</option>
+                  {mangementOptions}
                 </select>
               </div>
               <div className=" col-span-3 md:mx-4">
@@ -119,8 +128,7 @@ export default function EmployeesReport() {
                   <option selected hidden>
                     Choose one
                   </option>
-                  <option value="Department 1">Department 1</option>
-                  <option value="Department 2">Department 2</option>
+                  {departmentOptions}
                 </select>
               </div>
               <div className=" col-span-3 md:mx-4">
@@ -133,8 +141,7 @@ export default function EmployeesReport() {
                   <option selected hidden>
                     Choose one
                   </option>
-                  <option value="Job 1">Job 1</option>
-                  <option value="Job 2">Job 2</option>
+                  {jobOptions}
                 </select>
               </div>
               <div className=" col-span-3 md:mx-4">
@@ -147,8 +154,7 @@ export default function EmployeesReport() {
                   <option selected hidden>
                     Choose one
                   </option>
-                  <option value="Group 1">Group 1</option>
-                  <option value="Group 2">Group 2</option>
+                  {groupOptions}
                 </select>
               </div>
               <div className=" col-span-3 md:mx-4">
@@ -161,8 +167,7 @@ export default function EmployeesReport() {
                   <option selected hidden>
                     Choose one
                   </option>
-                  <option value="Working Time 1">Working Time 1</option>
-                  <option value="Working Time 2">Working Time 2</option>
+                  {workingTimeOptions}
                 </select>
               </div>
             </div>
@@ -176,6 +181,49 @@ export default function EmployeesReport() {
           </form>
         </div>
       )}
+
+      {/*  */}
+      {/*  */}
+      {/* Tabel */}
+      {/*  */}
+      {/*  */}
+
+      <div className=" w-full my-12 overflow-auto">
+        <table className=" min-w-full text-sm md:text-base w-200 md:w-full font-sans">
+          <thead>
+            <tr className=" grid grid-cols-12 bg-gray-200 font-bold p-2 border text-black/70">
+              <th className=" col-span-1 text-start">
+                {isArabicprop ? "الكود" : "Code"}
+              </th>
+              <th className=" col-span-2 text-start">
+                {isArabicprop ? "اسم الموظف" : "Name"}
+              </th>
+              <th className=" col-span-2 text-start">
+                {isArabicprop ? "الفرع" : "Banch"}
+              </th>
+              <th className=" col-span-1 text-start">
+                {isArabicprop ? "الإدارة" : "Mangement"}
+              </th>
+              <th
+                className={` col-span-2  ${
+                  isArabicprop ? "text-start" : "text-center"
+                }`}
+              >
+                {isArabicprop ? "القسم" : "Department"}
+              </th>
+              <th className=" col-span-2 text-start">
+                {isArabicprop ? "الوظيفة" : "Job"}
+              </th>
+              <th className=" col-span-1 text-start">
+                {isArabicprop ? "المجموعة" : "Group"}
+              </th>
+              <th className=" col-span-1 text-start">
+                {isArabicprop ? "الدوام" : "Shift"}
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
     </div>
   );
 }

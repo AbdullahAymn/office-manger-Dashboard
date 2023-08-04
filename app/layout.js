@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import LangStore, { isArabic } from "../utils/langStore";
 import { useContext } from "react";
 import Head from "next/head";
+import OptionStore from "@/utils/optionStore";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +25,9 @@ export default function RootLayout({ children }) {
         <meta name="description" content="" />
         <link rel="icon" href="/logo.ico" />
       </head>
-      <LangStore deferLoading={true}>{children}</LangStore>
+      <OptionStore deferLoading={true}>
+        <LangStore deferLoading={true}>{children}</LangStore>
+      </OptionStore>
     </html>
   );
 }

@@ -1,13 +1,16 @@
 "use client";
 import Paginate from "@/app/components/Paginate";
 import { isArabic } from "@/utils/langStore";
+import { options } from "@/utils/optionStore";
+import useOptions from "@/utils/useOptions";
 import { InputLabel, MenuItem, Select } from "@mui/material";
 import Link from "next/link";
 import React, { useContext, useState } from "react";
 
-export default function GetBranchTransactions () {
+export default function GetBranchTransactions() {
   const isArabicprop = useContext(isArabic).arabic;
   const [showsearch, setShowSearch] = useState(true);
+  const branchesOptions = useOptions(useContext(options).branch);
 
   //
   //
@@ -16,7 +19,7 @@ export default function GetBranchTransactions () {
   //
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [branches, setbranches] = useState([]);
+  const [branch, setBranch] = useState([]);
 
   const resetHandeller = () => {
     setFrom("");
@@ -26,12 +29,10 @@ export default function GetBranchTransactions () {
 
   // Paginate
   const [slice, setSlice] = useState([]);
-  const [getData , setGetData] = useState([])
+  const [getData, setGetData] = useState([]);
   const getSlice = (slice) => {
     setSlice(slice);
   };
-  
-  
 
   return (
     <div className=" font-sans">
@@ -96,7 +97,7 @@ export default function GetBranchTransactions () {
                 <div className=" w-full col-span-4 px-4">
                   <h4>{isArabicprop ? "من" : "From"}</h4>
                   <input
-                    className=" p-4 border w-full outline-none "
+                    className=" p-2 border w-full outline-none "
                     type="date"
                     value={from}
                     onChange={(e) => setFrom(e.target.value)}
@@ -105,7 +106,7 @@ export default function GetBranchTransactions () {
                 <div className=" w-full col-span-4 px-4">
                   <h4>{isArabicprop ? "الى" : "To"}</h4>
                   <input
-                    className=" p-4 border outline-none w-full "
+                    className=" p-2 border outline-none w-full "
                     type="date"
                     value={to}
                     onChange={(e) => setTo(e.target.value)}
@@ -113,18 +114,16 @@ export default function GetBranchTransactions () {
                 </div>
                 <div className=" w-full col-span-4 px-4">
                   <h4>{isArabicprop ? "الفروع" : "Branches"}</h4>
-                  <Select
-                    multiple={true}
-                    id="demo-simple-select"
-                    className=" w-full bg-white "
-                    value={branches}
-                    onChange={(e) => setbranches(e.target.value)}
+                  <select
+                    className=" w-full p-2 border outline-none"
+                    value={branch}
+                    onChange={(e) => setBranch(e.target.value)}
                   >
-                    <MenuItem value="branch 1">branch 1</MenuItem>
-                    <MenuItem value="branch 2">branch 2</MenuItem>
-                    <MenuItem value="branch 3">branch 3</MenuItem>
-                    <MenuItem value="branch 4">branch 4</MenuItem>
-                  </Select>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {branchesOptions}
+                  </select>
                 </div>
               </div>
             </form>

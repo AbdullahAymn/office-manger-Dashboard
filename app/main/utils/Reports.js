@@ -4,10 +4,10 @@ export const ReportsMainData = [{
     link: '/main/employeesreport',
     icon : 'fa-solid fa-address-book'
   },{
-    arabic: 'ا2',
-    english: 'test2',
-    link: '/main/branches',
-    icon : 'fa-solid fa-code-branch 8'
+    arabic: 'أوقات العمل',
+    english: 'Working Time ',
+    link: '/main/workingtimereport',
+    icon : 'fa-solid fa-calendar-days'
   },{
     arabic: 'ا2',
     english: 'test2',

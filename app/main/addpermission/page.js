@@ -8,10 +8,18 @@ import { permissionTempData } from "./tempData";
 import Popup from "reactjs-popup";
 import Delete from "@/app/components/popup/delete";
 import PopUp from "./components/PopUp";
+import { options } from "@/utils/optionStore";
+import useOptions from "@/utils/useOptions";
 
 export default function AddPermission() {
   const isArabicprop = useContext(isArabic).arabic;
   const [showsearch, setShowSearch] = useState(true);
+  const branchesOptions = useOptions(useContext(options).branch);
+  const mangementOptions = useOptions(useContext(options).mangement);
+  const departmentOptions = useOptions(useContext(options).department);
+  const jobOptions = useOptions(useContext(options).job);
+  const groupOptions = useOptions(useContext(options).group);
+  const workingTimeOptions = useOptions(useContext(options).workingTime);
 
   //
   //
@@ -224,7 +232,7 @@ export default function AddPermission() {
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "كود الموظف" : "Employee Code"}</h4>
                   <input
-                    className=" p-4 border w-full outline-none "
+                    className=" p-2 border w-full outline-none "
                     type="text"
                     placeholder={isArabicprop ? "كود الموظف" : "Employee Code"}
                     value={code}
@@ -234,7 +242,7 @@ export default function AddPermission() {
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "إسم الموظف" : "Employee Name"}</h4>
                   <input
-                    className=" p-4 border w-full outline-none "
+                    className=" p-2 border w-full outline-none "
                     type="text"
                     placeholder={isArabicprop ? "إسم الموظف" : "Employee Name"}
                     value={name}
@@ -243,106 +251,102 @@ export default function AddPermission() {
                 </div>
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "الفرع" : "Branch"}</h4>
-                  <Select
-                    id="demo-simple-select"
-                    className=" w-full bg-white "
+                  <select
+                    className=" w-full p-2 border outline-none"
                     value={branches}
                     onChange={(e) => setbranches(e.target.value)}
                   >
-                    <MenuItem value="branch 1">branch 1</MenuItem>
-                    <MenuItem value="branch 2">branch 2</MenuItem>
-                    <MenuItem value="branch 3">branch 3</MenuItem>
-                    <MenuItem value="branch 4">branch 4</MenuItem>
-                  </Select>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {branchesOptions}
+                  </select>
                 </div>
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "الإدارة" : "Management"}</h4>
-                  <Select
-                    id="demo-simple-select"
-                    className=" w-full bg-white "
+                  <select
+                    className=" w-full p-2 border outline-none"
                     value={management}
                     onChange={(e) => setManagement(e.target.value)}
                   >
-                    <MenuItem value="Management 1">Management 1</MenuItem>
-                    <MenuItem value="Management 2">Management 2</MenuItem>
-                    <MenuItem value="Management 3">Management 3</MenuItem>
-                    <MenuItem value="Management 4">Management 4</MenuItem>
-                  </Select>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {mangementOptions}
+                  </select>
                 </div>
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "القسم" : "Department"}</h4>
-                  <Select
-                    id="demo-simple-select"
-                    className=" w-full bg-white "
+                  <select
+                    className=" w-full p-2 border outline-none"
                     value={department}
                     onChange={(e) => setDepartment(e.target.value)}
                   >
-                    <MenuItem value="Department 1">Department 1</MenuItem>
-                    <MenuItem value="Department 2">Department 2</MenuItem>
-                    <MenuItem value="Department 3">Department 3</MenuItem>
-                    <MenuItem value="Department 4">Department 4</MenuItem>
-                  </Select>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {departmentOptions}
+                  </select>
                 </div>
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "الوظيفة" : "Job"}</h4>
-                  <Select
-                    id="demo-simple-select"
-                    className=" w-full bg-white "
+                  <select
+                    className=" w-full p-2 border outline-none"
                     value={job}
                     onChange={(e) => setJob(e.target.value)}
                   >
-                    <MenuItem value="Job 1">Job 1</MenuItem>
-                    <MenuItem value="Job 2">Job 2</MenuItem>
-                    <MenuItem value="Job 3">Job 3</MenuItem>
-                    <MenuItem value="Job 4">Job 4</MenuItem>
-                  </Select>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {jobOptions}
+                  </select>
                 </div>
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "المجموعة" : "Group"}</h4>
-                  <Select
-                    id="demo-simple-select"
-                    className=" w-full bg-white "
+                  <select
+                    className=" w-full p-2 border outline-none"
                     value={group}
                     onChange={(e) => setGroup(e.target.value)}
                   >
-                    <MenuItem value="Group 1">Group 1</MenuItem>
-                    <MenuItem value="Group 2">Group 2</MenuItem>
-                    <MenuItem value="Group 3">Group 3</MenuItem>
-                    <MenuItem value="Group 4">Group 4</MenuItem>
-                  </Select>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {groupOptions}
+                  </select>
                 </div>
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "وقت العمل" : "Shift"}</h4>
-                  <Select
-                    id="demo-simple-select"
-                    className=" w-full bg-white "
+                  <select
+                    className=" w-full p-2 border outline-none"
                     value={shift}
                     onChange={(e) => setShift(e.target.value)}
                   >
-                    <MenuItem value="Shift 1">Shift 1</MenuItem>
-                    <MenuItem value="Shift 2">Shift 2</MenuItem>
-                    <MenuItem value="Shift 3">Shift 3</MenuItem>
-                    <MenuItem value="Shift 4">Shift 4</MenuItem>
-                  </Select>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {workingTimeOptions}
+                  </select>
                 </div>
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "نوع الاذن" : "Permission Type"}</h4>
-                  <Select
-                    id="demo-simple-select"
-                    className=" w-full bg-white "
+                  <select
+                    className=" w-full p-2 border outline-none"
                     value={type}
                     onChange={(e) => setType(e.target.value)}
                   >
-                    <MenuItem value="Temporary">مؤقت</MenuItem>
-                    <MenuItem value="Late">حضور متاخر</MenuItem>
-                    <MenuItem value="Early">انصراف مبكر</MenuItem>
-                    <MenuItem value="AllDay">يوم كامل</MenuItem>
-                  </Select>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    <option value="Temporary">مؤقت</option>
+                    <option value="Late">حضور متاخر</option>
+                    <option value="Early">انصراف مبكر</option>
+                    <option value="AllDay">يوم كامل</option>
+                  </select>
                 </div>
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "من" : "From"}</h4>
                   <input
-                    className=" p-4 border outline-none w-full "
+                    className=" p-2 border outline-none w-full "
                     type="date"
                     value={from}
                     onChange={(e) => setFrom(e.target.value)}
@@ -351,7 +355,7 @@ export default function AddPermission() {
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "إلى" : "To"}</h4>
                   <input
-                    className=" p-4 border outline-none w-full "
+                    className=" p-2 border outline-none w-full "
                     type="date"
                     value={to}
                     onChange={(e) => setTo(e.target.value)}

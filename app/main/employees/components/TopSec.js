@@ -3,10 +3,17 @@ import React, { useContext, useEffect, useState } from "react";
 import { isArabic } from "@/utils/langStore";
 import Link from "next/link";
 import ReactPaginate from "react-paginate";
+import useOptions from "@/utils/useOptions";
+import { options } from "@/utils/optionStore";
 
 export default function (props) {
   const isArabicprop = useContext(isArabic).arabic;
   const [showsearch, setShowSearch] = useState(true);
+
+  const branchesOptions = useOptions(useContext(options).branch);
+  const mangementOptions = useOptions(useContext(options).mangement);
+  const departmentOptions = useOptions(useContext(options).department);
+  const workingTimeOptions = useOptions(useContext(options).workingTime);
 
   //
   //
@@ -166,11 +173,10 @@ export default function (props) {
                     onChange={(e) => setBranch(e.target.value)}
                     className=" p-2 border outline-none w-full"
                   >
-                    <option>choose</option>
-                    <option>branch 1</option>
-                    <option>branch 2</option>
-                    <option>branch 3</option>
-                    <option>branch 4</option>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {branchesOptions}
                   </select>
                 </div>
                 <div className=" my-1 col-span-12 md:col-span-3 mx-6">
@@ -180,11 +186,10 @@ export default function (props) {
                     onChange={(e) => setMangment(e.target.value)}
                     className=" p-2 border outline-none w-full"
                   >
-                    <option>choose</option>
-                    <option> Management 1</option>
-                    <option> Management 2</option>
-                    <option> Management 3</option>
-                    <option> Management 4</option>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {mangementOptions}
                   </select>
                 </div>
                 <div className=" my-1 col-span-12 md:col-span-3 mx-6">
@@ -194,11 +199,10 @@ export default function (props) {
                     onChange={(e) => setDepartment(e.target.value)}
                     className=" p-2 border outline-none w-full"
                   >
-                    <option>choose</option>
-                    <option>Department 1</option>
-                    <option>Department 2</option>
-                    <option>Department 3</option>
-                    <option>Department 4</option>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {departmentOptions}
                   </select>
                 </div>
                 <div className=" my-1 col-span-12 mb-10 md:mb-0 md:col-span-3 mx-6">
@@ -208,11 +212,10 @@ export default function (props) {
                     onChange={(e) => setshift(e.target.value)}
                     className=" p-2 border outline-none w-full"
                   >
-                    <option>choose</option>
-                    <option>Shift 1</option>
-                    <option>Shift 1</option>
-                    <option>Shift 1</option>
-                    <option>Shift 1</option>
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {workingTimeOptions}
                   </select>
                 </div>
               </div>
