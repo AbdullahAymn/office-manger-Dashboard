@@ -1,10 +1,13 @@
 "use client";
 import { isArabic } from "@/utils/langStore";
+import { options } from "@/utils/optionStore";
+import useOptions from "@/utils/useOptions";
 import React, { useContext } from "react";
 import { useState } from "react";
 
 export default function PopUp(props) {
   const isArabicprop = useContext(isArabic).arabic;
+  const branchesOptions = useOptions(useContext(options).branch);
 
   const [employee, setEmployee] = useState("");
   const [date, setDate] = useState("");
@@ -73,9 +76,7 @@ export default function PopUp(props) {
               <option selected hidden>
                 Choose one
               </option>
-              <option value="branch 1">branch 1</option>
-              <option value="branch 2">branch 2</option>
-              <option value="branch 3">branch 3</option>
+              {branchesOptions}
             </select>
           </div>
           <div className=" w-full col-span-6 p-2">
@@ -88,9 +89,7 @@ export default function PopUp(props) {
               <option selected hidden>
                 Choose one
               </option>
-              <option value="branch 1">branch 1</option>
-              <option value="branch 2">branch 2</option>
-              <option value="branch 3">branch 3</option>
+              {branchesOptions}
             </select>
           </div>
           <div className=" w-full col-span-6 md:col-span-12 p-2">

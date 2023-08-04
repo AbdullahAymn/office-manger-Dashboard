@@ -5,9 +5,15 @@ import React from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import Paginate from "./Paginate";
+import useOptions from "@/utils/useOptions";
+import { options } from "@/utils/optionStore";
 
 export default function (props) {
   const isArabicprop = useContext(isArabic).arabic;
+  const branchesOptions = useOptions(useContext(options).branch);
+  const mangementOptions = useOptions(useContext(options).mangement);
+  const departmentOptions = useOptions(useContext(options).department);
+  const workingTimeOptions = useOptions(useContext(options).workingTime);
 
   //
   //
@@ -78,12 +84,12 @@ export default function (props) {
       setSelectedEmployee(added);
     }
   };
-  console.log("selectedEmloyee")
+  console.log("selectedEmloyee");
 
   const addHandeller = () => {
-    props.add(selectedEmloyee)
-    props.close()
-  }
+    props.add(selectedEmloyee);
+    props.close();
+  };
 
   const dataForTable = slice.map((e, index) => (
     <tr key={index} className="  p-1 border text-black/70">
@@ -119,7 +125,7 @@ export default function (props) {
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "كود الموظف" : "Employee Code"}</h4>
                   <input
-                    className=" p-4 border w-full outline-none "
+                    className=" p-2 border w-full outline-none "
                     type="text"
                     placeholder={isArabicprop ? "كود الموظف" : "Employee Code"}
                     value={code}
@@ -129,7 +135,7 @@ export default function (props) {
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "إسم الموظف" : "Employee Name"}</h4>
                   <input
-                    className=" p-4 border w-full outline-none "
+                    className=" p-2 border w-full outline-none "
                     type="text"
                     placeholder={isArabicprop ? "إسم الموظف" : "Employee Name"}
                     value={name}
@@ -139,57 +145,53 @@ export default function (props) {
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "الفرع" : "Branch"}</h4>
                   <select
-                    className=" w-full bg-white outline-none p-3 rounded border "
+                    className=" w-full p-2 border outline-none"
                     value={branches}
                     onChange={(e) => setbranches(e.target.value)}
                   >
                     <option selected hidden>
                       Choose one
                     </option>
-                    <option value="branch 1">branch 1</option>
-                    <option value="branch 2">branch 2</option>
+                    {branchesOptions}
                   </select>
                 </div>
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "الادارة" : "Management"}</h4>
                   <select
-                    className=" w-full bg-white outline-none p-3 rounded border "
+                    className=" w-full p-2 border outline-none"
                     value={management}
                     onChange={(e) => setManagement(e.target.value)}
                   >
                     <option selected hidden>
                       Choose one
                     </option>
-                    <option value="management 1">management 1</option>
-                    <option value="management 2">management 2</option>
+                    {mangementOptions}
                   </select>
                 </div>
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "القسم" : "Department"}</h4>
                   <select
-                    className=" w-full bg-white outline-none p-3 rounded border "
+                    className=" w-full p-2 border outline-none"
                     value={department}
-                    onChange={(e) => setDepartment(e.target.value)}
+                    onChange={(e) => setDeapartmet(e.target.value)}
                   >
                     <option selected hidden>
                       Choose one
                     </option>
-                    <option value="department 1">department 1</option>
-                    <option value="department 2">department 2</option>
+                    {departmentOptions}
                   </select>
                 </div>
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "الدوام" : "Shift"}</h4>
                   <select
-                    className=" w-full bg-white outline-none p-3 rounded border "
+                    className=" w-full p-2 border outline-none"
                     value={shift}
                     onChange={(e) => setShift(e.target.value)}
                   >
                     <option selected hidden>
                       Choose one
                     </option>
-                    <option value="shift 1">shift 1</option>
-                    <option value="shift 2">shift 2</option>
+                    {workingTimeOptions}
                   </select>
                 </div>
               </div>
@@ -228,7 +230,8 @@ export default function (props) {
         <div className=" flex items-center justify-center my-3 text-center">
           <button
             onClick={addHandeller}
-            className=" bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none ">
+            className=" bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
+          >
             {isArabicprop ? "إضافة " : "Add "}
           </button>
           <button

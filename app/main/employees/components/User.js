@@ -1,11 +1,23 @@
 "use client";
 import { isArabic } from "@/utils/langStore";
+import { options } from "@/utils/optionStore";
+import useOptions from "@/utils/useOptions";
 import { Checkbox, SwipeableDrawer, Switch } from "@mui/material";
 import Link from "next/link";
 import React, { useContext, useState } from "react";
 
 export default function User(props) {
   const isArabicprop = useContext(isArabic).arabic;
+  const branchesOptions = useOptions(useContext(options).branch);
+  const mangementOptions = useOptions(useContext(options).mangement);
+  const departmentOptions = useOptions(useContext(options).department);
+  const jobOptions = useOptions(useContext(options).job);
+  const groupOptions = useOptions(useContext(options).group);
+  const workingTimeOptions = useOptions(useContext(options).workingTime);
+
+  //
+  //
+  //
   const [code, setCode] = useState(props.code);
   const [active, setActive] = useState(props.active);
   const [nameInArabic, setNameInArabic] = useState(props.nameInArabic);
@@ -108,11 +120,10 @@ export default function User(props) {
                 onChange={(e) => setBranch(e.target.value)}
                 className=" p-2 rounded-md border outline-none w-full"
               >
-                <option>choose</option>
-                <option>branch 1</option>
-                <option>branch 2</option>
-                <option>branch 3</option>
-                <option>branch 4</option>
+                <option selected hidden>
+                  Choose one
+                </option>
+                {branchesOptions}
               </select>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
@@ -122,11 +133,10 @@ export default function User(props) {
                 onChange={(e) => setMangment(e.target.value)}
                 className=" rounded-md p-2 border outline-none w-full"
               >
-                <option>choose</option>
-                <option> Management 1</option>
-                <option> Management 2</option>
-                <option> Management 3</option>
-                <option> Management 4</option>
+                <option selected hidden>
+                  Choose one
+                </option>
+                {mangementOptions}
               </select>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
@@ -136,11 +146,10 @@ export default function User(props) {
                 onChange={(e) => setDepartment(e.target.value)}
                 className=" rounded-md p-2 border outline-none w-full"
               >
-                <option>choose</option>
-                <option>Department 1</option>
-                <option>Department 2</option>
-                <option>Department 3</option>
-                <option>Department 4</option>
+                <option selected hidden>
+                  Choose one
+                </option>
+                {departmentOptions}
               </select>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
@@ -154,11 +163,10 @@ export default function User(props) {
                 onChange={(e) => setshift(e.target.value)}
                 className=" rounded-md p-2 border outline-none w-full"
               >
-                <option>choose</option>
-                <option>Shift 1</option>
-                <option>Shift 2</option>
-                <option>Shift 3</option>
-                <option>Shift 4</option>
+                <option selected hidden>
+                  Choose one
+                </option>
+                {workingTimeOptions}
               </select>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
@@ -168,11 +176,10 @@ export default function User(props) {
                 onChange={(e) => setJob(e.target.value)}
                 className=" rounded-md p-2 border outline-none w-full"
               >
-                <option>choose</option>
-                <option>job 1</option>
-                <option>job 2</option>
-                <option>job 3</option>
-                <option>job 4</option>
+                <option selected hidden>
+                  Choose one
+                </option>
+                {jobOptions}
               </select>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
@@ -182,11 +189,10 @@ export default function User(props) {
                 onChange={(e) => setGroup(e.target.value)}
                 className=" rounded-md p-2 border outline-none w-full"
               >
-                <option>choose</option>
-                <option>group 1</option>
-                <option>group 2</option>
-                <option>group 3</option>
-                <option>group 4</option>
+                <option selected hidden>
+                  Choose one
+                </option>
+                {groupOptions}
               </select>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
@@ -217,7 +223,9 @@ export default function User(props) {
                 onChange={(e) => setNationality(e.target.value)}
                 className=" p-2 rounded-md border outline-none w-full"
               >
-                <option>choose</option>
+                <option selected hidden>
+                  Choose one
+                </option>
                 <option>natinality 1</option>
                 <option>natinality 2</option>
                 <option>natinality 3</option>
@@ -232,7 +240,9 @@ export default function User(props) {
                 onChange={(e) => setTask(e.target.value)}
                 className=" p-2 rounded-md border outline-none w-full"
               >
-                <option>choose</option>
+                <option selected hidden>
+                  Choose one
+                </option>
                 <option>task 1</option>
                 <option>task 2</option>
                 <option>task 3</option>
@@ -247,7 +257,9 @@ export default function User(props) {
                 onChange={(e) => setProject(e.target.value)}
                 className=" p-2 rounded-md border outline-none w-full"
               >
-                <option>choose</option>
+                <option selected hidden>
+                  Choose one
+                </option>
                 <option>project 1</option>
                 <option>project 2</option>
                 <option>project 3</option>
