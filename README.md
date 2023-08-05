@@ -10,3 +10,6 @@
 ## Chart.js
 ## ReactPaginate
 ## mui/material 
+## React-pdf (https://react-pdf.org/)
+## jspdf
+## html2canvas

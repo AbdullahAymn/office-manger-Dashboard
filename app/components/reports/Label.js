@@ -83,7 +83,7 @@ export default function Label(props) {
             }}
           >
             <MenuItem onClick={handleClose}>
-              <h1 className=" px-10">PDF</h1>
+              <h1 onClick={props.pdf} className=" px-10">PDF</h1>
             </MenuItem>
             <MenuItem onClick={handleClose}>
               <h1 className=" px-10">Exel</h1>

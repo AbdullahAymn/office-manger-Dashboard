@@ -13,10 +13,11 @@ export default function OptionStore({ children }) {
     "Department 4",
   ]);
   const [job, setJob] = useState(["job 1", "job 2","job 3", "job 4"]);
-  const [group, setGroup] = useState(["group 1", "group 2"]);
+  const [group, setGroup] = useState(["group 1", "group 2" ,"group 3"]);
   const [workingTime, setWorkingTime] = useState([
     "workingTime 1",
     "workingTime 2",
+    "workingTime 3",
   ]);
   return (
     <options.Provider

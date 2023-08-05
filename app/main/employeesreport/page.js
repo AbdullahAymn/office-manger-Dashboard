@@ -2,11 +2,24 @@
 import Label from "@/app/components/reports/Label";
 import { isArabic } from "@/utils/langStore";
 import { options } from "@/utils/optionStore";
-
 import useOptions from "@/utils/useOptions";
 import React from "react";
 import { useState } from "react";
 import { useContext } from "react";
+import { employeesReportTempData } from "./tempdata";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
+
+function printDocument() {
+  const input = document.getElementById("divToPrint");
+  html2canvas(input).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF();
+    pdf.addImage(imgData, "JPEG", 0, 0);
+    // pdf.output('dataurlnewwindow');
+    pdf.save("تقرير الموظفين.pdf");
+  });
+}
 
 export default function EmployeesReport() {
   const isArabicprop = useContext(isArabic).arabic;
@@ -41,6 +54,34 @@ export default function EmployeesReport() {
 
   const searchHandeller = (e) => {
     e.preventDefault();
+    let searched = employeesReportTempData;
+
+    if (code) {
+      searched = searched.filter((e) => e.id == code.trim());
+    }
+    if (name) {
+      searched = searched.filter((e) => e.name.includes(name.trim()));
+    }
+    if (branch) {
+      searched = searched.filter((e) => e.branch === branch);
+    }
+    if (mangement) {
+      searched = searched.filter((e) => e.mangement === mangement);
+    }
+    if (department) {
+      searched = searched.filter((e) => e.department === department);
+    }
+    if (job) {
+      searched = searched.filter((e) => e.job === job);
+    }
+    if (group) {
+      searched = searched.filter((e) => e.groub === group);
+    }
+    if (workingTime) {
+      searched = searched.filter((e) => e.shift === workingTime);
+    }
+
+    setDataForMap(searched);
   };
 
   const resetHandeller = () => {
@@ -54,10 +95,32 @@ export default function EmployeesReport() {
     setWorkingTime("");
   };
 
+  //
+  //
+  //Maping
+  //
+  //
+
+  const [dataForMap, setDataForMap] = useState([]);
+
+  const showTabel = dataForMap.map((e, index) => (
+    <tr key={index} className="grid grid-cols-12 p-2 font-light text-black/70 ">
+      <th className=" col-span-1 text-start">{e.id}</th>
+      <th className=" col-span-2 text-start">{e.name}</th>
+      <th className=" col-span-2 text-start">{e.branch}</th>
+      <th className=" col-span-1 text-start">{e.mangement}</th>
+      <th className={` col-span-2 text-start `}>{e.department}</th>
+      <th className=" col-span-2 text-start">{e.job}</th>
+      <th className=" col-span-1 text-start">{e.groub}</th>
+      <th className=" col-span-1 text-start">{e.shift}</th>
+    </tr>
+  ));
+
   return (
     <div className=" font-sans">
       <div>
         <Label
+          pdf={printDocument}
           setsearch={showSearchHandeller}
           label={isArabicprop ? "الموظفين" : "Employees"}
         />
@@ -187,11 +250,10 @@ export default function EmployeesReport() {
       {/* Tabel */}
       {/*  */}
       {/*  */}
-
-      <div className=" w-full my-12 overflow-auto">
-        <table className=" min-w-full text-sm md:text-base w-200 md:w-full font-sans">
+      <div id="divToPrint" className=" w-full my-12 overflow-auto">
+        <table className=" min-w-full text-sm  w-200 md:w-full font-sans">
           <thead>
-            <tr className=" grid grid-cols-12 bg-gray-200 font-bold p-2 border text-black/70">
+            <tr className=" grid grid-cols-12 md:text-base bg-gray-200 p-2 border text-black/70">
               <th className=" col-span-1 text-start">
                 {isArabicprop ? "الكود" : "Code"}
               </th>
@@ -222,6 +284,7 @@ export default function EmployeesReport() {
               </th>
             </tr>
           </thead>
+          <tbody>{showTabel}</tbody>
         </table>
       </div>
     </div>
