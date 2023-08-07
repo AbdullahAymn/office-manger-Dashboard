@@ -5,6 +5,7 @@ import Link from "next/link";
 import React from "react";
 import { useContext } from "react";
 import { useState } from "react";
+import { CSVLink } from "react-csv";
 
 export default function Label(props) {
   const isArabicprop = useContext(isArabic).arabic;
@@ -83,10 +84,14 @@ export default function Label(props) {
             }}
           >
             <MenuItem onClick={handleClose}>
-              <h1 onClick={props.pdf} className=" px-10">PDF</h1>
+              <h1 onClick={props.pdf} className=" px-10">
+                PDF
+              </h1>
             </MenuItem>
             <MenuItem onClick={handleClose}>
-              <h1 className=" px-10">Exel</h1>
+              <h1 className=" px-10">
+                <CSVLink filename={`${props.fileName}.csv`} data={props.data} headers={props.headers}>Exel</CSVLink>
+              </h1>
             </MenuItem>
           </Menu>
         </div>

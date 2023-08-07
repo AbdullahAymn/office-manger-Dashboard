@@ -106,28 +106,43 @@ export default function EmployeesReport() {
     </tr>
   ));
 
-  // const headers = [
-  //   { label: "الكود", key: "code" },
-  //   { label: "الاسم", key: "name" },
-  //   { label: "الفرع", key: "branch" },
-  //   { label: "الادارة", key: "mangement" },
-  //   { label: "القسم", key: "department" },
-  //   { label: "الوظيفة", key: "job" },
-  //   { label: "المجموعة", key: "groub" },
-  //   { label: "الدوام", key: "shift" },
-  // ];
-
   //
+  //
+  // Exporting
+  //
+  //
+
+  const headers = [
+    { label: "الكود", key: "code" },
+    { label: "الاسم", key: "name" },
+    { label: "الفرع", key: "branch" },
+    { label: "الادارة", key: "mangement" },
+    { label: "القسم", key: "department" },
+    { label: "الوظيفة", key: "job" },
+    { label: "المجموعة", key: "groub" },
+    { label: "الدوام", key: "shift" },
+  ];
+
+  const cvsData = dataForMap.map((e) => ({
+    code: e.id,
+    name: e.name,
+    branch: e.branch,
+    mangement: e.mangement,
+    department: e.department,
+    job: e.job,
+    groub: e.groub,
+    shift: e.shift,
+  }));
+
   function printDocument() {
     const doc = new jsPDF();
     doc.setFont("Amiri-Regular");
-    doc.text(90, 10, "تقرير الموظفين");
+    doc.text(90, 10, isArabicprop ? "تقرير الموظفين" : "Employees Report");
     autoTable(doc, {
       pageBreak: "auto",
       styles: { font: "Amiri-Regular", halign: "right", fontSize: "8" },
       html: "#mytabel",
     });
-
     doc.save("تقرير الموظفين.pdf");
   }
 
@@ -135,6 +150,9 @@ export default function EmployeesReport() {
     <div className=" font-sans">
       <div>
         <Label
+          headers={headers}
+          data={cvsData}
+          fileName='تقارير الموظفين'
           pdf={printDocument}
           setsearch={showSearchHandeller}
           label={isArabicprop ? "الموظفين" : "Employees"}
