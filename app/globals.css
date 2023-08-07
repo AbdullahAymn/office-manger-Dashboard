@@ -129,3 +129,7 @@ tr:hover{
 .w-200{
   width: 300%;
 }
+
+.w-1200px{
+  min-width: 1300px;
+}

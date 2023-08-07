@@ -13,3 +13,4 @@
 ## React-pdf (https://react-pdf.org/)
 ## jspdf
 ## html2canvas
+## autoTable

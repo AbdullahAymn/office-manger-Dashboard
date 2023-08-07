@@ -3,23 +3,13 @@ import Label from "@/app/components/reports/Label";
 import { isArabic } from "@/utils/langStore";
 import { options } from "@/utils/optionStore";
 import useOptions from "@/utils/useOptions";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import { employeesReportTempData } from "./tempdata";
-import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-
-function printDocument() {
-  const input = document.getElementById("divToPrint");
-  html2canvas(input).then((canvas) => {
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF();
-    pdf.addImage(imgData, "JPEG", 0, 0);
-    // pdf.output('dataurlnewwindow');
-    pdf.save("تقرير الموظفين.pdf");
-  });
-}
+import autoTable from "jspdf-autotable";
+import { fonty } from "@/utils/Amiri-Regular-normal (1)";
 
 export default function EmployeesReport() {
   const isArabicprop = useContext(isArabic).arabic;
@@ -115,6 +105,31 @@ export default function EmployeesReport() {
       <th className=" col-span-1 text-start">{e.shift}</th>
     </tr>
   ));
+
+  // const headers = [
+  //   { label: "الكود", key: "code" },
+  //   { label: "الاسم", key: "name" },
+  //   { label: "الفرع", key: "branch" },
+  //   { label: "الادارة", key: "mangement" },
+  //   { label: "القسم", key: "department" },
+  //   { label: "الوظيفة", key: "job" },
+  //   { label: "المجموعة", key: "groub" },
+  //   { label: "الدوام", key: "shift" },
+  // ];
+
+  //
+  function printDocument() {
+    const doc = new jsPDF();
+    doc.setFont("Amiri-Regular");
+    doc.text(90, 10, "تقرير الموظفين");
+    autoTable(doc, {
+      pageBreak: "auto",
+      styles: { font: "Amiri-Regular", halign: "right", fontSize: "8" },
+      html: "#mytabel",
+    });
+
+    doc.save("تقرير الموظفين.pdf");
+  }
 
   return (
     <div className=" font-sans">
@@ -250,8 +265,11 @@ export default function EmployeesReport() {
       {/* Tabel */}
       {/*  */}
       {/*  */}
-      <div id="divToPrint" className=" w-full my-12 overflow-auto">
-        <table className=" min-w-full text-sm  w-200 md:w-full font-sans">
+      <div className=" w-full my-12 overflow-auto">
+        <table
+          id="mytabel"
+          className=" min-w-full text-sm  w-200 md:w-full font-sans"
+        >
           <thead>
             <tr className=" grid grid-cols-12 md:text-base bg-gray-200 p-2 border text-black/70">
               <th className=" col-span-1 text-start">
@@ -287,6 +305,51 @@ export default function EmployeesReport() {
           <tbody>{showTabel}</tbody>
         </table>
       </div>
+
+      {/* <div className=" hidden">
+        <div id="divToPrint" className=" w-1200px">
+          <div className=" mx-auto my-20 p-12 border rounded-xl text-center ">
+            <h1 className=" font-bold text-3xl">
+              {isArabicprop ? "تقرير الموظفين" : "Employees Report"}
+            </h1>
+          </div>
+          <table className=" min-w-full text-sm w-full font-sans">
+            <thead>
+              <tr className=" grid grid-cols-12 md:text-base bg-gray-200 p-2 border text-black/70">
+                <th className=" col-span-1 text-start">
+                  {isArabicprop ? "الكود" : "Code"}
+                </th>
+                <th className=" col-span-2 text-start">
+                  {isArabicprop ? "اسم الموظف" : "Name"}
+                </th>
+                <th className=" col-span-2 text-start">
+                  {isArabicprop ? "الفرع" : "Banch"}
+                </th>
+                <th className=" col-span-1 text-start">
+                  {isArabicprop ? "الإدارة" : "Mangement"}
+                </th>
+                <th
+                  className={` col-span-2  ${
+                    isArabicprop ? "text-start" : "text-center"
+                  }`}
+                >
+                  {isArabicprop ? "القسم" : "Department"}
+                </th>
+                <th className=" col-span-2 text-start">
+                  {isArabicprop ? "الوظيفة" : "Job"}
+                </th>
+                <th className=" col-span-1 text-start">
+                  {isArabicprop ? "المجموعة" : "Group"}
+                </th>
+                <th className=" col-span-1 text-start">
+                  {isArabicprop ? "الدوام" : "Shift"}
+                </th>
+              </tr>
+            </thead>
+            <tbody>{showTabel}</tbody>
+          </table>
+        </div>
+      </div> */}
     </div>
   );
 }
