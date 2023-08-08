@@ -4,21 +4,14 @@ import { isArabic } from "@/utils/langStore";
 import React from "react";
 import { useContext } from "react";
 
-export default function DetailedAttendance() {
+export default function TotalAttend() {
   const isArabicprop = useContext(isArabic).arabic;
-
-  //
-  //Label
-  //
-
   return (
     <div className=" font-sans">
       <div>
         <Reports
           label={
-            isArabicprop
-              ? "حضور و انصراف التفصيلي"
-              : "Detailed Attendance"
+            isArabicprop ? "حضور و انصراف الإجمالي" : "Total Attendance"
           }
         />
       </div>
