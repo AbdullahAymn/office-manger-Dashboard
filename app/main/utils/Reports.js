@@ -17,4 +17,10 @@ export const ReportsMainData = [
     link: "/main/dayreports",
     icon: "fa-solid fa-circle-question",
   },
+  {
+    arabic: "حضور تفصيلي",
+    english: "Detailed Attendance",
+    link: "/main/attendreport",
+    icon: "fa-solid fa-magnifying-glass-plus",
+  },
 ];
