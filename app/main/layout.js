@@ -131,7 +131,7 @@ export default function RootLayout({ children }) {
     <div onClick={()=> setShow(false)} key={e.icon} className="w-full block">
       <Link href={e.link}>
         <div
-          className={`" w-full flex items-center p-2" ${
+          className={`" w-full flex items-center p-2 " ${
             li === e.link ? "text-gray-100" : "text-gray-100/50 hover:text-gray-100"
           }`}
         >
@@ -256,9 +256,9 @@ export default function RootLayout({ children }) {
               isArabicprop ? "left-10" : "right-10"
             } mt-16 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none up`}
           >
-            <p className="p-2 font-sans text-center text-lg hover:cursor-pointer hover:bg-blue-200/25">{` ${
+            {/* <p className="p-2 font-sans text-center text-lg hover:cursor-pointer hover:bg-blue-200/25">{` ${
               isArabicprop ? "تغيير كلمة السر " : "change password"
-            }`}</p>
+            }`}</p> */}
             <p className="p-2 font-sans text-center text-lg hover:cursor-pointer hover:bg-blue-200/25">
               {` ${isArabicprop ? "تسجيل خروج   " : "log out"}`}{" "}
             </p>
