@@ -74,6 +74,8 @@ export default function EmployeesReport() {
     setDataForMap(searched);
   };
 
+  
+
   const resetHandeller = () => {
     setCode("");
     setName("");
@@ -92,6 +94,8 @@ export default function EmployeesReport() {
   //
 
   const [dataForMap, setDataForMap] = useState([]);
+
+ 
 
   const showTabel = dataForMap.map((e, index) => (
     <tr key={index} className="grid grid-cols-12 p-2 font-light text-black/70 ">
@@ -323,51 +327,6 @@ export default function EmployeesReport() {
           <tbody>{showTabel}</tbody>
         </table>
       </div>
-
-      {/* <div className=" hidden">
-        <div id="divToPrint" className=" w-1200px">
-          <div className=" mx-auto my-20 p-12 border rounded-xl text-center ">
-            <h1 className=" font-bold text-3xl">
-              {isArabicprop ? "تقرير الموظفين" : "Employees Report"}
-            </h1>
-          </div>
-          <table className=" min-w-full text-sm w-full font-sans">
-            <thead>
-              <tr className=" grid grid-cols-12 md:text-base bg-gray-200 p-2 border text-black/70">
-                <th className=" col-span-1 text-start">
-                  {isArabicprop ? "الكود" : "Code"}
-                </th>
-                <th className=" col-span-2 text-start">
-                  {isArabicprop ? "اسم الموظف" : "Name"}
-                </th>
-                <th className=" col-span-2 text-start">
-                  {isArabicprop ? "الفرع" : "Banch"}
-                </th>
-                <th className=" col-span-1 text-start">
-                  {isArabicprop ? "الإدارة" : "Mangement"}
-                </th>
-                <th
-                  className={` col-span-2  ${
-                    isArabicprop ? "text-start" : "text-center"
-                  }`}
-                >
-                  {isArabicprop ? "القسم" : "Department"}
-                </th>
-                <th className=" col-span-2 text-start">
-                  {isArabicprop ? "الوظيفة" : "Job"}
-                </th>
-                <th className=" col-span-1 text-start">
-                  {isArabicprop ? "المجموعة" : "Group"}
-                </th>
-                <th className=" col-span-1 text-start">
-                  {isArabicprop ? "الدوام" : "Shift"}
-                </th>
-              </tr>
-            </thead>
-            <tbody>{showTabel}</tbody>
-          </table>
-        </div>
-      </div> */}
     </div>
   );
 }
