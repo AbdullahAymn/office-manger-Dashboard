@@ -4,13 +4,13 @@ export const usersMainData = [{
     link: '/main/devices',
     icon : 'fa-solid fa-laptop'
   },{
-    arabic: 'ا3',
-    english: 'test3',
-    link: '/main/branches',
-    icon : 'fa-solid fa-code-branch 11'
+    arabic:'بيانات الشركة',
+    english: 'CompanyInfo',
+    link: '/main/companyInfo',
+    icon : 'fa-solid fa-circle-info'
   },{
-    arabic: 'ا3',
-    english: 'test3',
-    link: '/main/branches',
-    icon : 'fa-solid fa-code-branch 12'
+    arabic: 'الإعدادات العامة',
+    english: 'General Settings',
+    link: '/main/generalSettings',
+    icon : 'fa-solid fa-gear'
   }]

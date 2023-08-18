@@ -287,7 +287,7 @@ export default function Devices() {
         <Popup open={openEdit}>
           <PopUp edit={true} element={editElement} close={closeEditHandeller} />
         </Popup>
-        <table className=" table-auto min-w-full w-150 md:w-fit">
+        <table className=" table-auto min-w-full w-200 md:w-fit">
           <thead>
             <tr className="bg-white p-2 border text-black/70">
               <th className=" text-start p-2">
