@@ -175,7 +175,7 @@ export default function generalSettings() {
           </h4>
         </div>
         <div className="col-span-2 w-full p-3 flex items-center justify-center">
-          <Link href="">
+          <Link href="/main/generalSettings/autoTransaction">
             <p className=" text-blue-600 underline">
               {isArabicprop ? "تغيير البيانات" : "change info"}
             </p>
