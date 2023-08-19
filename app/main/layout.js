@@ -11,6 +11,8 @@ import { usersMainData } from "./utils/Users";
 import SideBar from "../components/SideBar";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import usePost from "@/utils/usePost";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +24,15 @@ export default function RootLayout({ children }) {
     router.push("/");
     return;
   }
+
+  const logoutHandeller = async () => {
+    const logout = () => {
+      Cookies.remove("token");
+      Cookies.remove("name");
+      router.push("/");
+    };
+    usePost("logout", {}, logout);
+  };
   //
   //
   // NavBar
@@ -35,7 +46,7 @@ export default function RootLayout({ children }) {
     setAra(preValue);
   }, []);
 
-  const userName = "demo";
+  const userName = Cookies.get("name");
 
   const [drop, setDrop] = useState(false);
 
@@ -277,7 +288,10 @@ export default function RootLayout({ children }) {
             {/* <p className="p-2 font-sans text-center text-lg hover:cursor-pointer hover:bg-blue-200/25">{` ${
               isArabicprop ? "تغيير كلمة السر " : "change password"
             }`}</p> */}
-            <p className="p-2 font-sans text-center text-lg hover:cursor-pointer hover:bg-blue-200/25">
+            <p
+              onClick={logoutHandeller}
+              className="p-2 font-sans text-center text-lg hover:cursor-pointer hover:bg-blue-200/25"
+            >
               {` ${isArabicprop ? "تسجيل خروج   " : "log out"}`}{" "}
             </p>
           </div>
