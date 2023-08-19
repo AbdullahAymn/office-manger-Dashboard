@@ -8,12 +8,14 @@ export default function Home() {
   const token = Cookies.get("token") || false;
   const router = useRouter();
 
-  useEffect(() => {
-    if (token) {
-      router.push("/main");
-      return;
-    }
-  }, []);
+  const goDash = () => {
+    router.push("/main");
+  };
+
+  if (token) {
+    goDash();
+    return;
+  }
 
   return <LogIn />;
 }
