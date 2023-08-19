@@ -11,7 +11,6 @@ import { usersMainData } from "./utils/Users";
 import SideBar from "../components/SideBar";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { ToastContainer, toast } from "react-toastify";
 import usePost from "@/utils/usePost";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,10 +22,13 @@ export default function RootLayout({ children }) {
   const goHome = () => {
     router.push("/");
   };
-  if (!token) {
-    goHome();
-    return;
-  }
+  useEffect(() => {
+    if (!token) {
+      goHome();
+      return;
+    }
+    setUserName(Cookies.get("name"))
+  },[])
 
   const logoutHandeller = async () => {
     const logout = () => {
@@ -49,7 +51,7 @@ export default function RootLayout({ children }) {
     setAra(preValue);
   }, []);
 
-  const userName = Cookies.get("name");
+  const [userName , setUserName] = useState('');
 
   const [drop, setDrop] = useState(false);
 
