@@ -20,8 +20,11 @@ export default function RootLayout({ children }) {
   const token = Cookies.get("token") || false;
   const router = useRouter();
 
-  if (!token) {
+  const goHome = () => {
     router.push("/");
+  };
+  if (!token) {
+    goHome();
     return;
   }
 
