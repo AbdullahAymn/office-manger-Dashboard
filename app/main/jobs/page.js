@@ -1,18 +1,41 @@
 "use client";
 import NameAndSearch from "@/app/components/NameAndSearch";
-import React, { useContext, useState } from "react";
-import { tempJopsData } from "./TempData";
+import React, { useContext, useEffect, useState } from "react";
 import { isArabic } from "@/utils/langStore";
 import Delete from "@/app/components/popup/delete";
 import Popup from "reactjs-popup";
 import AddAndEdit from "@/app/components/popup/AddAndEdit";
+import Cookies from "js-cookie";
+import Loader from "@/app/components/Loader";
 
 export default function jobs() {
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   //
   // get Data
   //
-  const [jobsData, setJobsData] = useState(tempJopsData);
+
+  const [jobsData, setJobsData] = useState([]);
+  const [jobsDataforserch, setJobsDatasforserch] = useState([]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  useEffect(() => {
+    setLoader(!loader);
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchjob`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setJobsData(data);
+          setJobsDatasforserch(data);
+        });
+        setLoader(false);
+      }
+    });
+  }, [refresh]);
   const [slice, setSlice] = useState([]);
 
   const get = (slice) => {
@@ -24,7 +47,7 @@ export default function jobs() {
   };
 
   const restSearch = () => {
-    setJobsData(tempJopsData);
+    setJobsData(jobsDataforserch);
   };
 
   //
@@ -36,30 +59,36 @@ export default function jobs() {
   //delete
 
   const [openDelet, setOpenDelete] = useState(false);
-  const [deleteditemName, setdeletedItemName] = useState("");
+  const [deleteditem, setdeletedItem] = useState("");
 
   const openDeleteHandeller = (e) => {
-    setdeletedItemName(e.name);
+    setdeletedItem(e);
     setOpenDelete(!openDelet);
   };
 
   const closeDeleteHandeller = () => {
     setOpenDelete(!openDelet);
   };
+  const closrefresh = () => {
+    setOpenDelete(!openDelet);
+    setRefresh(!refresh);
+  };
 
   //edit
   const [openEdit, setOpenEdit] = useState(false);
-  const [editedItemName, setEditedItemName] = useState("");
-  const [editedItemNameEn, setEditedItemNameEn] = useState("");
+  const [editedItem, setEditedItem] = useState("");
 
   const openEditHandeller = (e) => {
     setOpenEdit(!openEdit);
-    setEditedItemName(e.nameAr);
-    setEditedItemNameEn(e.nameEn);
+    setEditedItem(e);
   };
 
   const closeEditHandeller = () => {
     setOpenEdit(!openEdit);
+  };
+  const closeEditRefresh = () => {
+    setOpenEdit(!openEdit);
+    setRefresh(!refresh);
   };
 
   //Add
@@ -69,6 +98,10 @@ export default function jobs() {
   const toggelOpenAdd = () => {
     setOpenAdd(!openAdd);
   };
+  const toggelOpenAddresfresh = () => {
+    setOpenAdd(!openAdd);
+    setRefresh(!refresh);
+  };
 
   //
   //
@@ -77,8 +110,10 @@ export default function jobs() {
   //
 
   const tabelData = slice.map((e) => (
-    <tr key={e.name} className="grid grid-cols-9 p-2">
-      <td className=" col-span-7 md:col-span-8 text-start">{ isArabicprop ? e.nameAr : e.nameEn}</td>
+    <tr key={e.id} className="grid grid-cols-9 p-2">
+      <td className=" col-span-7 md:col-span-8 text-start">
+        {isArabicprop ? e.name : e.name_en}
+      </td>
       <td className=" col-span-2 md:col-span-1 text-center text-black/70">
         <i
           onClick={() => openDeleteHandeller(e)}
@@ -94,13 +129,16 @@ export default function jobs() {
 
   return (
     <div>
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       {/*  */}
       {/* Top sec */}
       {/*  */}
       <div>
         {/* Add popUp */}
         <Popup open={openAdd}>
-          <AddAndEdit close={toggelOpenAdd} />
+          <AddAndEdit link={'basicInfoAddjob'} refresh={toggelOpenAddresfresh}  close={toggelOpenAdd} />
         </Popup>
         {/* Body */}
         <NameAndSearch
@@ -109,7 +147,7 @@ export default function jobs() {
           getSlice={get}
           addFun={toggelOpenAdd}
           data={jobsData}
-          dataForSearch={tempJopsData}
+          dataForSearch={jobsDataforserch}
           subName={isArabicprop ? "الوظائف" : "Jobs"}
           name={isArabicprop ? "الوظائف" : "Jobs"}
           ti={isArabicprop ? "الوظيفة" : "Job"}
@@ -129,16 +167,22 @@ export default function jobs() {
 
           {/* delete */}
           <Popup open={openDelet}>
-            <Delete close={closeDeleteHandeller} branch={deleteditemName} />
+            <Delete
+              refresh={closrefresh}
+              close={closeDeleteHandeller}
+              link={"basicInfoDeletejob"}
+              element={deleteditem}
+            />
           </Popup>
 
           {/* edit */}
 
           <Popup open={openEdit}>
             <AddAndEdit
+              link="basicInfoUpdatejob"
               edit={true}
-              name={editedItemName}
-              nameEn={editedItemNameEn}
+              element={editedItem}
+              refresh={closeEditRefresh}
               close={closeEditHandeller}
             />
           </Popup>

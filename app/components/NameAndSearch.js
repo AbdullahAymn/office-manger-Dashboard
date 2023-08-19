@@ -42,12 +42,12 @@ export default function (props) {
     if (isArabicprop) {
       searched = props.dataForSearch.filter(
         //(e) => e.name.trim() === search.trim()
-        (e) => e.nameAr.includes(search.trim())
+        (e) => e.name.includes(search.trim())
       );
     } else {
       searched = props.dataForSearch.filter(
         //(e) => e.name.trim() === search.trim()
-        (e) => e.nameEn.includes(search.trim())
+        (e) => e.name_en.includes(search.trim())
       );
     }
 
