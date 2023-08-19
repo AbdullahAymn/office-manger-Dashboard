@@ -10,10 +10,18 @@ import { ReportsMainData } from "./utils/Reports";
 import { usersMainData } from "./utils/Users";
 import SideBar from "../components/SideBar";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
+  const token = Cookies.get("token") || false;
+  const router = useRouter();
+
+  if (!token) {
+    router.push("/");
+    return;
+  }
   //
   //
   // NavBar
@@ -48,11 +56,13 @@ export default function RootLayout({ children }) {
   const [drobBasic, setDropBasic] = useState(true);
 
   const basicData = Basic.map((e) => (
-    <div onClick={()=> setShow(false)} key={e.icon} className="w-full block">
+    <div onClick={() => setShow(false)} key={e.icon} className="w-full block">
       <Link href={e.link}>
         <div
           className={`" w-full flex items-center p-2   ${
-            li === e.link ? "text-gray-100" : "text-gray-100/50 hover:text-gray-100"
+            li === e.link
+              ? "text-gray-100"
+              : "text-gray-100/50 hover:text-gray-100"
           } "`}
         >
           <i
@@ -75,11 +85,13 @@ export default function RootLayout({ children }) {
   const [drobProcedure, setProcedure] = useState(true);
 
   const ProcedureData = ProcedureMainData.map((e) => (
-    <div onClick={()=> setShow(false)} key={e.icon} className="w-full block">
+    <div onClick={() => setShow(false)} key={e.icon} className="w-full block">
       <Link href={e.link}>
         <div
           className={`" w-full flex items-center p-2 " ${
-            li === e.link ? "text-gray-100" : "text-gray-100/50 hover:text-gray-100"
+            li === e.link
+              ? "text-gray-100"
+              : "text-gray-100/50 hover:text-gray-100"
           }`}
         >
           <i
@@ -102,11 +114,13 @@ export default function RootLayout({ children }) {
   const [drobReports, setReports] = useState(true);
 
   const ReportsData = ReportsMainData.map((e) => (
-    <div onClick={()=> setShow(false)} key={e.icon} className="w-full block">
+    <div onClick={() => setShow(false)} key={e.icon} className="w-full block">
       <Link href={e.link}>
         <div
           className={`" w-full flex items-center p-2 " ${
-            li === e.link ? "text-gray-100" : "text-gray-100/50 hover:text-gray-100"
+            li === e.link
+              ? "text-gray-100"
+              : "text-gray-100/50 hover:text-gray-100"
           }`}
         >
           <i
@@ -128,11 +142,13 @@ export default function RootLayout({ children }) {
   const [drobUsers, setUsers] = useState(true);
 
   const UsersData = usersMainData.map((e) => (
-    <div onClick={()=> setShow(false)} key={e.icon} className="w-full block">
+    <div onClick={() => setShow(false)} key={e.icon} className="w-full block">
       <Link href={e.link}>
         <div
           className={`" w-full flex items-center p-2 " ${
-            li === e.link ? "text-gray-100" : "text-gray-100/50 hover:text-gray-100"
+            li === e.link
+              ? "text-gray-100"
+              : "text-gray-100/50 hover:text-gray-100"
           }`}
         >
           <i
@@ -239,7 +255,9 @@ export default function RootLayout({ children }) {
                   src={` ${isArabicprop ? "/usa.jpg" : "/Ar.jpg"}`}
                   alt="usa flag"
                 />
-                <p className=" text-sm">{` ${isArabicprop ? "English" : "العربية"}`}</p>
+                <p className=" text-sm">{` ${
+                  isArabicprop ? "English" : "العربية"
+                }`}</p>
               </div>
 
               <div

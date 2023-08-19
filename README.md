@@ -15,3 +15,5 @@
 ## html2canvas
 ## autoTable
 ## react-csv
+## react-toastify
+## next-auth
