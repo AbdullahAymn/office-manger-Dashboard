@@ -52,26 +52,26 @@ export default function (props) {
     e.preventDefault();
     let searched = props.dataForSearch;
     if (code) {
-      searched = searched.filter((e) => e.id === +code);
+      searched = searched.filter((e) => e.code === +code);
     }
     if (name) {
       if (isArabicprop) {
-        searched = searched.filter((e) => e.nameAr.includes(name.trim()));
+        searched = searched.filter((e) => e.name_ar.includes(name.trim()));
       } else {
-        searched = searched.filter((e) => e.nameEn.includes(name.trim()));
+        searched = searched.filter((e) => e.name_en.includes(name.trim()));
       }
     }
     if (branch !== "choose") {
-      searched = searched.filter((e) => e.branch.trim() === branch);
+      searched = searched.filter((e) => e.id_branch === branch);
     }
     if (mangement !== "choose") {
-      searched = searched.filter((e) => e.mangement.trim() === mangement);
+      searched = searched.filter((e) => e.id_administation === mangement);
     }
     if (departMent !== "choose") {
-      searched = searched.filter((e) => e.department.trim() === departMent);
+      searched = searched.filter((e) => e.id_depatment === departMent);
     }
     if (shift !== "choose") {
-      searched = searched.filter((e) => e.shift.trim() === shift);
+      searched = searched.filter((e) => e.id_shift === shift);
     }
 
     props.searchRes(searched);

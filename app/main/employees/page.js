@@ -1,34 +1,60 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TopSec from "./components/TopSec";
 import { isArabic } from "@/utils/langStore";
-import { tempEmployeesData } from "./tempData";
 import Popup from "reactjs-popup";
 import Delete from "@/app/components/popup/delete";
 import Link from "next/link";
+import Loader from "@/app/components/Loader";
+import Cookies from "js-cookie";
 
 export default function Employees() {
   //
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   //delete
 
   const [openDelet, setOpenDelete] = useState(false);
-  const [deleteditemName, setdeletedItemName] = useState("");
+  const [deleteditem, setdeletedItem] = useState("");
 
   const openDeleteHandeller = (e) => {
-    setdeletedItemName(e.name);
+    setdeletedItem(e);
     setOpenDelete(!openDelet);
   };
 
   const closeDeleteHandeller = () => {
     setOpenDelete(!openDelet);
   };
+  const closrefresh = () => {
+    setOpenDelete(!openDelet);
+    setRefresh(!refresh);
+  };
 
   //
   //Get Data
   //
-  const [employeesData, setEmployeesData] = useState(tempEmployeesData);
+  const [employeesData, setEmployeesData] = useState([]);
+  const [jobsDataforserch, setJobsDatasforserch] = useState([]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  useEffect(() => {
+    setLoader(!loader);
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchemployee`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setEmployeesData(data);
+          setJobsDatasforserch(data);
+        });
+        setLoader(false);
+      }
+    });
+  }, [refresh]);
   const [slice, setSlice] = useState([]);
   const getSlice = (slice) => {
     setSlice(slice);
@@ -39,7 +65,7 @@ export default function Employees() {
   };
 
   const restSearch = () => {
-    setEmployeesData(tempEmployeesData);
+    setEmployeesData(jobsDataforserch);
   };
 
   //
@@ -49,12 +75,14 @@ export default function Employees() {
   //
   const tabelData = slice.map((e) => (
     <tr key={e.id} className="grid grid-cols-11 p-2">
-      <td className=" col-span-2 text-start">{e.id}</td>
-      <td className=" col-span-2 text-start">{isArabicprop ? e.nameAr : e.nameEn}</td>
-      <td className=" col-span-2 text-start">{e.branch}</td>
-      <td className=" col-span-2 text-start">{e.shift}</td>
+      <td className=" col-span-2 text-start">{e.code}</td>
       <td className=" col-span-2 text-start">
-        {e.active ? (
+        {isArabicprop ? e.name_ar : e.name_en}
+      </td>
+      <td className=" col-span-2 text-start">{e.id_branch}</td>
+      <td className=" col-span-2 text-start">{e.id_shift}</td>
+      <td className=" col-span-2 text-start">
+        {e.activition === "true" ? (
           <h1 className=" font-bold text-white rounded-md text-center px-1 pb-1 w-10 bg-green-600">
             {isArabicprop ? " نعم" : "Yes "}
           </h1>
@@ -78,6 +106,9 @@ export default function Employees() {
 
   return (
     <div className=" overflow-x-hidden">
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       {/*  */}
       {/*  */}
       {/* Top Section */}
@@ -89,7 +120,7 @@ export default function Employees() {
         searchRes={searched}
         reset={restSearch}
         data={employeesData}
-        dataForSearch={tempEmployeesData}
+        dataForSearch={jobsDataforserch}
         name={isArabicprop ? "الموظفون" : "Employees"}
         subName={isArabicprop ? "الموظفون" : "Employees"}
         ti={isArabicprop ? "المشروع" : "Project"}
@@ -107,7 +138,12 @@ export default function Employees() {
 
         {/* delete */}
         <Popup open={openDelet}>
-          <Delete close={closeDeleteHandeller} branch={deleteditemName} />
+          <Delete
+            refresh={closrefresh}
+            close={closeDeleteHandeller}
+            element={deleteditem}
+            link="basicInfoDeleteemployee"
+          />
         </Popup>
         {/*  */}
         {/* tabelBody */}

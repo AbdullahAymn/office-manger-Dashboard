@@ -1,6 +1,7 @@
 "use client";
 import Cookies from "js-cookie";
 import React, { createContext, useState } from "react";
+import { useEffect } from "react";
 
 export const isArabic = createContext();
 

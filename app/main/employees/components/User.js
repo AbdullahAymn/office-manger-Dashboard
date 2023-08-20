@@ -1,53 +1,171 @@
 "use client";
+import Loader from "@/app/components/Loader";
 import { isArabic } from "@/utils/langStore";
 import { options } from "@/utils/optionStore";
 import useOptions from "@/utils/useOptions";
 import { Checkbox, SwipeableDrawer, Switch } from "@mui/material";
+import Cookies from "js-cookie";
 import Link from "next/link";
-import React, { useContext, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useContext, useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Popup from "reactjs-popup";
 
 export default function User(props) {
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
+  const router = useRouter()
   const branchesOptions = useOptions(useContext(options).branch);
   const mangementOptions = useOptions(useContext(options).mangement);
   const departmentOptions = useOptions(useContext(options).department);
   const jobOptions = useOptions(useContext(options).job);
   const groupOptions = useOptions(useContext(options).group);
   const workingTimeOptions = useOptions(useContext(options).workingTime);
+  const projectOptions = useOptions(useContext(options).project);
+  const natOptions = useOptions(useContext(options).nat);
+  const taskOptions = useOptions(useContext(options).task);
 
   //
   //
   //
-  const [code, setCode] = useState(props.code);
-  const [active, setActive] = useState(props.active);
-  const [nameInArabic, setNameInArabic] = useState(props.nameInArabic);
-  const [nameInEnglish, setNameInEnglish] = useState(props.nameInEglish);
-  const [branch, setBranch] = useState(props.branch);
-  const [mangement, setMangment] = useState(props.mangement);
-  const [department, setDepartment] = useState(props.department);
-  const [shift, setshift] = useState(props.shift);
-  const [job, setJob] = useState(props.job);
-  const [group, setGroup] = useState(props.group);
-  const [Id, setID] = useState(props.id);
-  const [email, setEmail] = useState(props.email);
-  const [natinality, setNationality] = useState(props.natinality);
-  const [task, setTask] = useState(props.task);
-  const [project, setProject] = useState(props.project);
-  const [phone, setPhone] = useState(props.phone);
+  const [code, setCode] = useState('');
+  const [active, setActive] = useState();
+  const [nameInArabic, setNameInArabic] = useState('');
+  const [nameInEnglish, setNameInEnglish] = useState('');
+  const [branch, setBranch] = useState('');
+  const [mangement, setMangment] = useState('');
+  const [department, setDepartment] = useState('');
+  const [shift, setshift] = useState('');
+  const [job, setJob] = useState('');
+  const [group, setGroup] = useState('');
+  const [Id, setID] = useState('');
+  const [email, setEmail] = useState('');
+  const [natinality, setNationality] = useState('');
+  const [task, setTask] = useState('');
+  const [project, setProject] = useState('');
+  const [phone, setPhone] = useState('');
+
+  //
+  //
+  const token = Cookies.get("token");
+  const myHeaders1 = new Headers();
+  myHeaders1.append("Authorization", `Bearer ${token}\n`);
+
+ { props.edit && useEffect(()=>{
+    setLoader(!loader);
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchemployee`, {
+      method: "GET",
+      headers: myHeaders1,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          let element = data.filter((e) => e.id === +props.id)[0]
+          setCode(element.code)
+          setActive(element.activition === "true")
+          setNameInArabic(element.name_ar)
+          setNameInEnglish(element.name_en)
+          setBranch(element.id_branch)
+          setMangment(element.id_administation)
+          setDepartment(element.id_depatment)
+          setshift(element.id_shift)
+          setJob(element.id_job)
+          setGroup(element.goubs)
+          setID(element.id_card)
+          setEmail(element.email)
+          setNationality(element.id_nationalitie)
+          setTask(element.id_task)
+          setProject(element.id_poject)
+          setPhone(element.phone_numbe)
+          
+        });
+        setLoader(false);
+      }
+    });
+  },[])}
+
+
   //
   // Settings
   //
-  const [settings, setSettings] = useState(props.settings);
+  const [settings, setSettings] = useState();
   const [overTime, setOverTime] = useState();
   const [beforeShift, setBeforeShift] = useState();
   const [afterShift, setAfterShift] = useState();
   const [vacations, setVacations] = useState();
   const [checkOut, setCheckOut] = useState();
+
+  //
+  //Actions
+  //
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}`);
+  const formdata = new FormData();
+  formdata.append("name_ar", nameInArabic ||'');
+  formdata.append("name_en", nameInEnglish || " ");
+  formdata.append("email", email || "");
+  formdata.append("activition", `${active ? "true" : "false"}` || "false");
+  formdata.append("goubs", group || "");
+  formdata.append("id_poject", project || "");
+  formdata.append("id_task", task || "");
+  formdata.append("id_nationalitie", natinality || "");
+  formdata.append("id_job", job || "");
+  formdata.append("id_shift", shift || "");
+  formdata.append("id_administation", mangement || "");
+  formdata.append("id_depatment", department || "");
+  formdata.append("id_branch", branch || "");
+  formdata.append("phone_numbe", phone || "");
+  formdata.append("id_card", Id);
+  formdata.append("code", code);
+
+  const addHandeller = (e) => {
+    e.preventDefault();
+    setLoader(!loader);
+    fetch("https://backend2.dasta.store/api/auth/basicInfoAddemployee", {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    }).then((res) => {
+      if (res.status === 200) {
+        router.push('/main/employees')
+      } else {
+        setLoader(false)
+        toast.error( 
+          `${isArabicprop ? "هناك حقول مطلوبة خطأ" : "Some required elements are Wrong"}`
+        );
+      }
+    });
+  };
+  const editHandeller = (e) => {
+    e.preventDefault();
+    setLoader(!loader);
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoUpdateemployee/${props.id}`, {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    }).then((res) => {
+      if (res.status === 200) {
+        router.push('/main/employees')
+      } else {
+        setLoader(false)
+        toast.error( 
+          `${isArabicprop ? "هناك حقول مطلوبة خطأ" : "Some required elements are Wrong"}`
+        );
+      }
+    });
+  };
   return (
     <div className=" w-full  md:w-8/12 mx-auto rounded-lg bg-white mt-12">
       {/*  */}
       {/* Top Label */}
       {/*  */}
+      <ToastContainer position="bottom-center" theme="colored" />
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       <div className=" bg-sky-600 p-4 text-2xl text-white text-center font-sans rounded-t-lg">
         {props.edit
           ? `${isArabicprop ? "تعديل موظف" : "Edit Employee"}`
@@ -98,7 +216,10 @@ export default function User(props) {
               ></input>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
-              <h4>{isArabicprop ? "الاسم الانجليزي" : "Name in English"} </h4>
+              <h4>
+                {isArabicprop ? "الاسم الانجليزي" : "Name in English"}{" "}
+                <span className=" text-red-700">*</span>{" "}
+              </h4>
               <input
                 onChange={(e) => setNameInEnglish(e.target.value)}
                 value={nameInEnglish}
@@ -196,7 +317,10 @@ export default function User(props) {
               </select>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
-              <h4>{isArabicprop ? "رقم الهوية" : "National ID"} </h4>
+              <h4>
+                {isArabicprop ? "رقم الهوية" : "National ID"}{" "}
+                <span className=" text-red-700">*</span>{" "}
+              </h4>
               <input
                 onChange={(e) => setID(e.target.value)}
                 value={Id}
@@ -206,12 +330,15 @@ export default function User(props) {
               ></input>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
-              <h4>{isArabicprop ? "الإيميل " : "E-mail"} </h4>
+              <h4>
+                {isArabicprop ? "الإيميل " : "E-mail"}{" "}
+                <span className=" text-red-700">*</span>{" "}
+              </h4>
               <input
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 className=" w-full p-2 border rounded-md outline-none"
-                type="email"
+                type="text"
                 placeholder={isArabicprop ? "الإيميل " : "E-mail"}
               ></input>
             </div>
@@ -226,10 +353,7 @@ export default function User(props) {
                 <option selected hidden>
                   Choose one
                 </option>
-                <option>natinality 1</option>
-                <option>natinality 2</option>
-                <option>natinality 3</option>
-                <option>natinality 4</option>
+                {natOptions}
               </select>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
@@ -243,10 +367,7 @@ export default function User(props) {
                 <option selected hidden>
                   Choose one
                 </option>
-                <option>task 1</option>
-                <option>task 2</option>
-                <option>task 3</option>
-                <option>task 4</option>
+                {taskOptions}
               </select>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
@@ -260,14 +381,14 @@ export default function User(props) {
                 <option selected hidden>
                   Choose one
                 </option>
-                <option>project 1</option>
-                <option>project 2</option>
-                <option>project 3</option>
-                <option>project 4</option>
+                {projectOptions}
               </select>
             </div>
             <div className=" my-2 mx-4 col-span-12 md:col-span-6">
-              <h4>{isArabicprop ? " رقم التليفون" : "Phone"} </h4>
+              <h4>
+                {isArabicprop ? " رقم التليفون" : "Phone"}{" "}
+                <span className=" text-red-700">*</span>{" "}
+              </h4>
               <input
                 onChange={(e) => setPhone(e.target.value)}
                 value={phone}
@@ -357,11 +478,18 @@ export default function User(props) {
                 {isArabicprop ? "الغاء" : "Cancel"}
               </button>
             </Link>
-            <button className=" text-lg rounded-full py-1 px-12 mx-2 md:mx-14 text-white bg-sky-600">
-              {props.edit
-                ? `${isArabicprop ? "تعديل" : "Edit"}`
-                : `${isArabicprop ? "إضافة" : "Add"}`}
-            </button>
+            {props.edit ? (
+              <button onClick={editHandeller} className=" text-lg rounded-full py-1 px-12 mx-2 md:mx-14 text-white bg-sky-600">
+                {isArabicprop ? "تعديل" : "Edit"}
+              </button>
+            ) : (
+              <button
+                onClick={addHandeller}
+                className=" text-lg rounded-full py-1 px-12 mx-2 md:mx-14 text-white bg-sky-600"
+              >
+                {isArabicprop ? "إضافة" : "Add"}
+              </button>
+            )}
           </div>
         </form>
       </div>
