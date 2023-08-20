@@ -138,7 +138,11 @@ export default function jobs() {
       <div>
         {/* Add popUp */}
         <Popup open={openAdd}>
-          <AddAndEdit link={'basicInfoAddjob'} refresh={toggelOpenAddresfresh}  close={toggelOpenAdd} />
+          <AddAndEdit
+            link={"basicInfoAddjob"}
+            refresh={toggelOpenAddresfresh}
+            close={toggelOpenAdd}
+          />
         </Popup>
         {/* Body */}
         <NameAndSearch
