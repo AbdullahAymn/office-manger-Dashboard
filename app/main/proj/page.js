@@ -1,7 +1,6 @@
 "use client";
 import NameAndSearch from "@/app/components/NameAndSearch";
 import React, { useContext, useState } from "react";
-import { tempProjectsData } from "./tempdata";
 import { isArabic } from "@/utils/langStore";
 import Popup from "reactjs-popup";
 import Delete from "@/app/components/popup/delete";
