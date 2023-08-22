@@ -85,7 +85,7 @@ export default function LogIn() {
         res.json().then((data) => {
           Cookies.set("token", data.access_token, { expires: 1 / 24 });
           Cookies.set("name", userName, { expires: 1 / 24 });
-          setLoader(false);
+          // setLoader(false);
           router.push("/main");
         });
       } else if (res.status === 422 || res.status === 201) {

@@ -2,20 +2,20 @@
 import React, { useContext, useState } from "react";
 import { useParams } from "next/navigation";
 import NameAndSearch from "@/app/components/NameAndSearch";
-import { branchData, mangeData } from "../tempData";
+import { mangeData, departmentData } from "../../tempData";
 import { isArabic } from "@/utils/langStore";
-import Delete from "../../../components/popup/delete";
+import Delete from "../../../../components/popup/delete";
 import Popup from "reactjs-popup";
-import Edit from "../popups/edit";
-import AddPopUp from "../popups/AddPoupUp";
-import Link from "next/link";
+import Edit from "../../popups/edit";
+import AddPopUp from "../../popups/AddPoupUp";
+
 
 export default function page() {
   const isArabicprop = useContext(isArabic).arabic;
-  const id = useParams().name;
+  const id = useParams().id;
   const TopName = isArabicprop
-    ? branchData.filter((e) => e.id === +id)[0].nameAr
-    : branchData.filter((e) => e.id === +id)[0].nameEn;
+    ? mangeData.filter((e) => e.id === +id)[0].nameAr
+    : mangeData.filter((e) => e.id === +id)[0].nameEn;
 
   //
   //Add
@@ -65,7 +65,7 @@ export default function page() {
 
   //search
 
-  const [getData, setGetData] = useState(mangeData);
+  const [getData, setGetData] = useState(departmentData);
   const [slice, setSlice] = useState([]);
 
   const get = (slice) => {
@@ -75,17 +75,15 @@ export default function page() {
     setGetData(searchRes);
   };
   const restSearch = () => {
-    setGetData(mangeData);
+    setGetData(departmentData);
   };
 
   //maping
 
   const mangesData = slice.map((e) => (
     <tr key={e.id} className="grid grid-cols-7 p-2">
-      <td className=" col-span-3 text-start text-sky-800">
-        <Link href={`/main/branches/${id}/${e.id}`}>
-          {isArabicprop ? e.nameAr : e.nameEn}
-        </Link>
+      <td className=" col-span-3 text-start ">
+        {isArabicprop ? e.nameAr : e.nameEn}
       </td>
       <td className=" col-span-3 text-start">{e.manger}</td>
       {/* <td className=" col-span-1 text-center">{e.employees}</td>
@@ -110,7 +108,7 @@ export default function page() {
         reset={restSearch}
         getSlice={get}
         addFun={toggleAdd}
-        dataForSearch={mangeData}
+        dataForSearch={departmentData}
         data={getData}
         name={TopName}
         ti={isArabicprop ? "الإدارة" : "Mangement"}

@@ -73,15 +73,15 @@ export default function branches() {
   };
 
   const branchesData = slice.map((e) => (
-    <tr key={e.id} className="grid grid-cols-9 p-2">
+    <tr key={e.id} className="grid grid-cols-7 p-2">
       <td className=" col-span-3 text-start text-sky-800">
         <Link href={`/main/branches/${e.id}`}>
           {isArabicprop ? `${e.nameAr}` : `${e.nameEn}`}
         </Link>{" "}
       </td>
       <td className=" col-span-3 text-start">{e.manger}</td>
-      <td className=" col-span-1 text-center">{e.employee}</td>
-      <td className=" col-span-1 text-center">{e.mangements}</td>
+      {/* <td className=" col-span-1 text-center">{e.employee}</td>
+      <td className=" col-span-1 text-center">{e.mangements}</td> */}
       <td className=" col-span-1 text-center text-black/70">
         <i
           onClick={() => deleteFun(e)}
@@ -128,19 +128,19 @@ export default function branches() {
             />
           </Popup>
           <thead>
-            <tr className=" grid grid-cols-9 bg-white p-2 border text-black/70">
+            <tr className=" grid grid-cols-7 bg-white p-2 border text-black/70">
               <th className=" col-span-3 text-start">
                 {isArabicprop ? "الفرع" : " Branch"}
               </th>
               <th className=" col-span-3 text-start">
                 {isArabicprop ? "المدير" : " Manger"}
               </th>
-              <th className=" col-span-1 ">
+              {/* <th className=" col-span-1 ">
                 {isArabicprop ? "الموظفون" : " Employees"}
               </th>
               <th className=" col-span-1 ">
                 {isArabicprop ? "الإدارات" : " Mangements"}
-              </th>
+              </th> */}
               <th className=" col-span-1 ">
                 {isArabicprop ? "العمليات" : " Actions"}
               </th>

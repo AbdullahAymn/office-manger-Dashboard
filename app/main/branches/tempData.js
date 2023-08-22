@@ -75,3 +75,22 @@ export const mangeData = [
     id: 4,
   },
 ];
+export const departmentData = [
+  {
+    nameAr: "القسم 1",
+    nameEn: "depart 1",
+    manger: "ahmed",
+    employees: 5,
+    sections: 4,
+    id: 1,
+  },
+  {
+    nameAr: "القسم 2",
+    nameEn: "depart 2",
+    manger: "ahmed",
+    employees: 15,
+    sections: 34,
+    id: 2,
+  },
+  
+];
