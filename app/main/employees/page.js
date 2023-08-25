@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 export default function Employees() {
   //
   const isArabicprop = useContext(isArabic).arabic;
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
   //delete

@@ -10,7 +10,7 @@ import Loader from "@/app/components/Loader";
 
 export default function jobs() {
   const isArabicprop = useContext(isArabic).arabic;
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(false);
   const [refresh, setRefresh] = useState(false);
   //
   // get Data
@@ -79,7 +79,7 @@ export default function jobs() {
   const [editedItem, setEditedItem] = useState("");
 
   // trying to fix
-  
+
   const openEditHandeller = (e) => {
     setOpenEdit(!openEdit);
     setEditedItem(e);
