@@ -37,7 +37,7 @@ export const branchData = [
     manger: "Ahmed",
     employee: 59,
     mangements: 9,
-    id: 5,
+    id: 30,
   },
 ];
 
@@ -48,7 +48,7 @@ export const mangeData = [
     manger: "ahmed",
     employees: 5,
     sections: 4,
-    id: 1,
+    id: 15,
   },
   {
     nameAr: " 2",

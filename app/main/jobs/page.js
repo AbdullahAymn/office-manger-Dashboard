@@ -10,7 +10,7 @@ import Loader from "@/app/components/Loader";
 
 export default function jobs() {
   const isArabicprop = useContext(isArabic).arabic;
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [refresh, setRefresh] = useState(false);
   //
   // get Data
@@ -22,7 +22,7 @@ export default function jobs() {
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
-    setLoader(!loader);
+     setLoader(true);
     fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchjob`, {
       method: "GET",
       headers: myHeaders,

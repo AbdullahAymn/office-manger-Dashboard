@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 export default function Employees() {
   //
   const isArabicprop = useContext(isArabic).arabic;
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [refresh, setRefresh] = useState(false);
 
   //delete
@@ -41,7 +41,7 @@ export default function Employees() {
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
-    setLoader(!loader);
+    setLoader(true);
     fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchemployee`, {
       method: "GET",
       headers: myHeaders,

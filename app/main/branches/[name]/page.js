@@ -2,20 +2,46 @@
 import React, { useContext, useState } from "react";
 import { useParams } from "next/navigation";
 import NameAndSearch from "@/app/components/NameAndSearch";
-import { branchData, mangeData } from "../tempData";
 import { isArabic } from "@/utils/langStore";
 import Delete from "../../../components/popup/delete";
 import Popup from "reactjs-popup";
 import Edit from "../popups/edit";
 import AddPopUp from "../popups/AddPoupUp";
 import Link from "next/link";
+import Cookies from "js-cookie";
+import Loader from "@/app/components/Loader";
+import { useEffect } from "react";
 
 export default function page() {
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const id = useParams().name;
+  const [branchData, setBranchData] = useState([
+    { name: "", name_en: "", id: +id },
+  ]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  useEffect(() => {
+    fetch(
+      `https://backend2.dasta.store/api/auth/basicInfoFetchBranchBelongTo`,
+      {
+        method: "GET",
+        headers: myHeaders,
+      }
+    ).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setBranchData(data);
+        });
+      }
+    });
+  }, []);
+
   const TopName = isArabicprop
-    ? branchData.filter((e) => e.id === +id)[0].nameAr
-    : branchData.filter((e) => e.id === +id)[0].nameEn;
+    ? branchData.filter((e) => e.id === +id)[0].name
+    : branchData.filter((e) => e.id === +id)[0].name_en;
 
   //
   //Add
@@ -25,6 +51,10 @@ export default function page() {
 
   const toggleAdd = () => {
     setOpenAdd(!openAdd);
+  };
+  const toggelOpenAddresfresh = () => {
+    setOpenAdd(!openAdd);
+    setRefresh(!refresh);
   };
 
   //
@@ -38,34 +68,58 @@ export default function page() {
   const [openDelete, setOpenDelete] = useState(false);
 
   const deleteFun = (e) => {
-    setDeleted(e.name);
+    setDeleted(e);
     setOpenDelete(!openDelete);
   };
   const closeDelete = () => {
     setOpenDelete(!openDelete);
   };
+  const closrefresh = () => {
+    setOpenDelete(!openDelete);
+    setRefresh(!refresh);
+  };
 
   //edit
 
   const [edit, setEdit] = useState();
-  const [editEn, setEditEn] = useState();
-  const [editManger, setEditManger] = useState();
+
   const [openEdit, setOpenEdit] = useState(false);
 
   const editFun = (e) => {
-    setEdit(e.nameAr);
-    setEditEn(e.nameEn);
-    setEditManger(e.manger);
+    setEdit(e);
     setOpenEdit(!openEdit);
   };
 
   const closeEdit = () => {
     setOpenEdit(!openEdit);
   };
+  const closeEditRefresh = () => {
+    setOpenEdit(!openEdit);
+    setRefresh(!refresh);
+  };
 
   //search
 
-  const [getData, setGetData] = useState(mangeData);
+  const [getData, setGetData] = useState([]);
+  const [jobsDataforserch, setJobsDatasforserch] = useState([]);
+  useEffect(() => {
+    setLoader(true);
+    fetch(
+      `https://backend2.dasta.store/api/auth/basicInfofetchbelongToBranchadministation/${id}`,
+      {
+        method: "GET",
+        headers: myHeaders,
+      }
+    ).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setGetData(data);
+          setJobsDatasforserch(data);
+        });
+        setLoader(false);
+      }
+    });
+  }, [refresh]);
   const [slice, setSlice] = useState([]);
 
   const get = (slice) => {
@@ -75,7 +129,7 @@ export default function page() {
     setGetData(searchRes);
   };
   const restSearch = () => {
-    setGetData(mangeData);
+    setGetData(jobsDataforserch);
   };
 
   //maping
@@ -84,10 +138,10 @@ export default function page() {
     <tr key={e.id} className="grid grid-cols-7 p-2">
       <td className=" col-span-3 text-start text-sky-800">
         <Link href={`/main/branches/${id}/${e.id}`}>
-          {isArabicprop ? e.nameAr : e.nameEn}
+          {isArabicprop ? e.name : e.name_en}
         </Link>
       </td>
-      <td className=" col-span-3 text-start">{e.manger}</td>
+      <td className=" col-span-3 text-start">{e.name_manger}</td>
       {/* <td className=" col-span-1 text-center">{e.employees}</td>
       <td className=" col-span-1 text-center">{e.sections}</td> */}
       <td className=" col-span-1 text-center text-black/70">
@@ -105,19 +159,32 @@ export default function page() {
 
   return (
     <div className=" overflow-x-hidden">
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       <NameAndSearch
         searchRes={searched}
         reset={restSearch}
         getSlice={get}
         addFun={toggleAdd}
-        dataForSearch={mangeData}
+        dataForSearch={jobsDataforserch}
         data={getData}
-        name={TopName}
+        name={`${
+          isArabicprop
+            ? `الإدارات في (${TopName})`
+            : `Managements in (${TopName})`
+        }`}
         ti={isArabicprop ? "الإدارة" : "Mangement"}
         subName={`${isArabicprop ? "الفروع" : "Branches"} / ${TopName}`}
       />
       <Popup open={openAdd}>
-        <AddPopUp close={toggleAdd} />
+        <AddPopUp
+          id={true}
+          administration_id={id}
+          link="basicInfoAddBranchadministation"
+          close={toggleAdd}
+          refresh={toggelOpenAddresfresh}
+        />
       </Popup>
 
       {/*  */}
@@ -129,14 +196,19 @@ export default function page() {
       <div className=" w-full font-sans my-4 overflow-x-scroll md:overflow-x-hidden">
         <table className=" min-w-full w-150 text-sm md:text-base md:w-full">
           <Popup open={openDelete}>
-            <Delete branch={deleted} close={closeDelete} />
+            <Delete
+              element={deleted}
+              link={"basicInfoDeleteBranchadministation"}
+              refresh={closrefresh}
+              close={closeDelete}
+            />
           </Popup>
           <Popup open={openEdit}>
             <Edit
-              branch={edit}
-              branchEn={editEn}
-              manger={editManger}
+              link="basicInfoUpdateBranchadministation"
+              element={edit}
               close={closeEdit}
+              refresh={closeEditRefresh}
             />
           </Popup>
           <thead>

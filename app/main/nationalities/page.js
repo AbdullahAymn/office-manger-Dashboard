@@ -10,7 +10,7 @@ import Cookies from "js-cookie";
 
 export default function page() {
   const isArabicprop = useContext(isArabic).arabic;
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [refresh, setRefresh] = useState(false);
   //
   //
@@ -24,7 +24,7 @@ export default function page() {
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
-    setLoader(!loader);
+    setLoader(true);
     fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchnationalite`, {
       method: "GET",
       headers: myHeaders,

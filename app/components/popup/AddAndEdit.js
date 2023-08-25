@@ -92,16 +92,16 @@ export default function AddAndEdit(props) {
           {props.edit ? (
             <button
               onClick={editHandeller}
-              disabled={loading}
-              className=" disabled:opacity-60 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
+              disabled={loading || !nameAr || !nameEn}
+              className=" disabled:opacity-40 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
             >
               {loading ? "Loading..." : `${isArabicprop ? "تعديل" : "Edit"}`}
             </button>
           ) : (
             <button
               onClick={addHandeller}
-              disabled={loading}
-              className=" disabled:opacity-60 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
+              disabled={loading || !nameAr || !nameEn}
+              className=" disabled:opacity-40 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
             >
               {loading ? "Loading..." : `${isArabicprop ? "إضافة" : "Add"}`}
             </button>
