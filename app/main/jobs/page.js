@@ -78,6 +78,8 @@ export default function jobs() {
   const [openEdit, setOpenEdit] = useState(false);
   const [editedItem, setEditedItem] = useState("");
 
+  // trying to fix
+  
   const openEditHandeller = (e) => {
     setOpenEdit(!openEdit);
     setEditedItem(e);
