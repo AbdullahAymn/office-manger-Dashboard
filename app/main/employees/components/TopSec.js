@@ -10,6 +10,11 @@ export default function (props) {
   const isArabicprop = useContext(isArabic).arabic;
   const [showsearch, setShowSearch] = useState(true);
 
+  const refrshopt = useContext(options).refresh;
+  const setrefrshopt = useContext(options).setRefresh;
+  useEffect(() => {
+    setrefrshopt(!refrshopt);
+  }, []);
   const branchesOptions = useOptions(useContext(options).branch);
   const mangementOptions = useOptions(useContext(options).mangement);
   const departmentOptions = useOptions(useContext(options).department);

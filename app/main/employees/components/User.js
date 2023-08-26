@@ -16,6 +16,12 @@ export default function User(props) {
   const isArabicprop = useContext(isArabic).arabic;
   const [loader, setLoader] = useState(false);
   const router = useRouter()
+
+  const refrshopt = useContext(options).refresh;
+  const setrefrshopt = useContext(options).setRefresh;
+  useEffect(() => {
+    setrefrshopt(!refrshopt)
+  },[])
   const branchesOptions = useOptions(useContext(options).branch);
   const mangementOptions = useOptions(useContext(options).mangement);
   const departmentOptions = useOptions(useContext(options).department);
@@ -25,26 +31,27 @@ export default function User(props) {
   const projectOptions = useOptions(useContext(options).project);
   const natOptions = useOptions(useContext(options).nat);
   const taskOptions = useOptions(useContext(options).task);
+ 
 
   //
   //
   //
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState("");
   const [active, setActive] = useState();
-  const [nameInArabic, setNameInArabic] = useState('');
-  const [nameInEnglish, setNameInEnglish] = useState('');
-  const [branch, setBranch] = useState('');
-  const [mangement, setMangment] = useState('');
-  const [department, setDepartment] = useState('');
-  const [shift, setshift] = useState('');
-  const [job, setJob] = useState('');
-  const [group, setGroup] = useState('');
-  const [Id, setID] = useState('');
-  const [email, setEmail] = useState('');
-  const [natinality, setNationality] = useState('');
-  const [task, setTask] = useState('');
-  const [project, setProject] = useState('');
-  const [phone, setPhone] = useState('');
+  const [nameInArabic, setNameInArabic] = useState("");
+  const [nameInEnglish, setNameInEnglish] = useState("");
+  const [branch, setBranch] = useState("");
+  const [mangement, setMangment] = useState("");
+  const [department, setDepartment] = useState("");
+  const [shift, setshift] = useState("");
+  const [job, setJob] = useState("");
+  const [group, setGroup] = useState("");
+  const [Id, setID] = useState("");
+  const [email, setEmail] = useState("");
+  const [natinality, setNationality] = useState("");
+  const [task, setTask] = useState("");
+  const [project, setProject] = useState("");
+  const [phone, setPhone] = useState("");
 
   //
   //
@@ -52,38 +59,39 @@ export default function User(props) {
   const myHeaders1 = new Headers();
   myHeaders1.append("Authorization", `Bearer ${token}\n`);
 
- { props.edit && useEffect(()=>{
-    setLoader(!loader);
-    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchemployee`, {
-      method: "GET",
-      headers: myHeaders1,
-    }).then((res) => {
-      if (res.status === 200) {
-        res.json().then((data) => {
-          let element = data.filter((e) => e.id === +props.id)[0]
-          setCode(element.code)
-          setActive(element.activition === "true")
-          setNameInArabic(element.name_ar)
-          setNameInEnglish(element.name_en)
-          setBranch(element.id_branch)
-          setMangment(element.id_administation)
-          setDepartment(element.id_depatment)
-          setshift(element.id_shift)
-          setJob(element.id_job)
-          setGroup(element.goubs)
-          setID(element.id_card)
-          setEmail(element.email)
-          setNationality(element.id_nationalitie)
-          setTask(element.id_task)
-          setProject(element.id_poject)
-          setPhone(element.phone_numbe)
-          
+  {
+    props.edit &&
+      useEffect(() => {
+        setLoader(!loader);
+        fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchemployee`, {
+          method: "GET",
+          headers: myHeaders1,
+        }).then((res) => {
+          if (res.status === 200) {
+            res.json().then((data) => {
+              let element = data.filter((e) => e.id === +props.id)[0];
+              setCode(element.code);
+              setActive(element.activition === "true");
+              setNameInArabic(element.name_ar);
+              setNameInEnglish(element.name_en);
+              setBranch(element.id_branch);
+              setMangment(element.id_administation);
+              setDepartment(element.id_depatment);
+              setshift(element.id_shift);
+              setJob(element.id_job);
+              setGroup(element.goubs);
+              setID(element.id_card);
+              setEmail(element.email);
+              setNationality(element.id_nationalitie);
+              setTask(element.id_task);
+              setProject(element.id_poject);
+              setPhone(element.phone_numbe);
+            });
+            setLoader(false);
+          }
         });
-        setLoader(false);
-      }
-    });
-  },[])}
-
+      }, []);
+  }
 
   //
   // Settings
@@ -102,7 +110,7 @@ export default function User(props) {
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}`);
   const formdata = new FormData();
-  formdata.append("name_ar", nameInArabic ||'');
+  formdata.append("name_ar", nameInArabic || "");
   formdata.append("name_en", nameInEnglish || " ");
   formdata.append("email", email || "");
   formdata.append("activition", `${active ? "true" : "false"}` || "false");
@@ -129,11 +137,15 @@ export default function User(props) {
       redirect: "follow",
     }).then((res) => {
       if (res.status === 200) {
-        router.push('/main/employees')
+        router.push("/main/employees");
       } else {
-        setLoader(false)
-        toast.error( 
-          `${isArabicprop ? "هناك حقول مطلوبة خطأ" : "Some required elements are Wrong"}`
+        setLoader(false);
+        toast.error(
+          `${
+            isArabicprop
+              ? "هناك حقول مطلوبة خطأ"
+              : "Some required elements are Wrong"
+          }`
         );
       }
     });
@@ -141,18 +153,25 @@ export default function User(props) {
   const editHandeller = (e) => {
     e.preventDefault();
     setLoader(!loader);
-    fetch(`https://backend2.dasta.store/api/auth/basicInfoUpdateemployee/${props.id}`, {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    }).then((res) => {
+    fetch(
+      `https://backend2.dasta.store/api/auth/basicInfoUpdateemployee/${props.id}`,
+      {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      }
+    ).then((res) => {
       if (res.status === 200) {
-        router.push('/main/employees')
+        router.push("/main/employees");
       } else {
-        setLoader(false)
-        toast.error( 
-          `${isArabicprop ? "هناك حقول مطلوبة خطأ" : "Some required elements are Wrong"}`
+        setLoader(false);
+        toast.error(
+          `${
+            isArabicprop
+              ? "هناك حقول مطلوبة خطأ"
+              : "Some required elements are Wrong"
+          }`
         );
       }
     });
@@ -479,7 +498,10 @@ export default function User(props) {
               </button>
             </Link>
             {props.edit ? (
-              <button onClick={editHandeller} className=" text-lg rounded-full py-1 px-12 mx-2 md:mx-14 text-white bg-sky-600">
+              <button
+                onClick={editHandeller}
+                className=" text-lg rounded-full py-1 px-12 mx-2 md:mx-14 text-white bg-sky-600"
+              >
                 {isArabicprop ? "تعديل" : "Edit"}
               </button>
             ) : (
