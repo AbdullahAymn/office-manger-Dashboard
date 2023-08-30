@@ -118,7 +118,7 @@ export default function LogIn() {
               setAra(!isArabicProp);
               Cookies.set("arabic", !isArabicProp);
             }}
-            className=" flex items-center p-4 hover:cursor-pointer h-full hover:bg-black/20 "
+            className=" flex rounded-xl items-center p-4 hover:cursor-pointer h-full hover:bg-black/20 "
           >
             <img
               className=" h-3 w-5 mx-1 md:h-5 md:w-8 md:mx-2"
@@ -177,7 +177,7 @@ export default function LogIn() {
                         placeholder={
                           isArabicProp
                             ? "أسم المستخدم"
-                            : "Write your company name"
+                            : "User Name"
                         }
                         type="text"
                         className=" mt-12 w-full border rounded-lg p-2 outline-none "
@@ -188,7 +188,7 @@ export default function LogIn() {
                         placeholder={
                           isArabicProp
                             ? "كلمة المرور"
-                            : "Write your company name"
+                            : "Password"
                         }
                         required
                         type="password"

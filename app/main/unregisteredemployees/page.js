@@ -1,18 +1,43 @@
 "use client";
 import { isArabic } from "@/utils/langStore";
-import React, { useContext, useState } from "react";
-import { tempUserData } from "./tempData";
+import React, { useContext, useEffect, useState } from "react";
 import NameAndSearch from "@/app/components/NameAndSearch";
 import Popup from "reactjs-popup";
 import AddAndEdit from "@/app/components/popup/AddAndEdit";
 import Delete from "@/app/components/popup/delete";
+import Loader from "@/app/components/Loader";
+import Cookies from "js-cookie";
 
 export default function UnregisteredEmployees() {
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   //
   // get Data
   //
-  const [userData, setUserData] = useState(tempUserData);
+  const [userData, setUserData] = useState([]);
+  const [jobsDataforserch, setJobsDatasforserch] = useState([]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  useEffect(() => {
+    setLoader(true);
+    fetch(
+      `https://backend2.dasta.store/api/auth/basicInfoFetchunregisterEmployee`,
+      {
+        method: "GET",
+        headers: myHeaders,
+      }
+    ).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setUserData(data);
+          setJobsDatasforserch(data);
+        });
+        setLoader(false);
+      }
+    });
+  }, [refresh]);
   const [slice, setSlice] = useState([]);
 
   const get = (slice) => {
@@ -24,7 +49,7 @@ export default function UnregisteredEmployees() {
   };
 
   const restSearch = () => {
-    setUserData(tempUserData);
+    setUserData(jobsDataforserch);
   };
 
   //
@@ -70,6 +95,11 @@ export default function UnregisteredEmployees() {
     setOpenAdd(!openAdd);
   };
 
+  const toggelOpenAddresfresh = () => {
+    setOpenAdd(!openAdd);
+    setRefresh(!refresh);
+  };
+
   //
   //
   //maping
@@ -80,7 +110,7 @@ export default function UnregisteredEmployees() {
     <tr key={e.name} className="grid grid-cols-9 p-2">
       <td className=" col-span-2 md:col-span-1 text-start">{e.id}</td>
       <td className=" col-span-5 md:col-span-7 text-start">
-        {isArabicprop ? e.nameAr : e.nameEn}
+        {isArabicprop ? e.name : e.name_en}
       </td>
       <td className=" col-span-2 md:col-span-1 text-center text-black/70">
         <i
@@ -96,13 +126,20 @@ export default function UnregisteredEmployees() {
   ));
   return (
     <div>
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       {/*  */}
       {/* Top sec */}
       {/*  */}
       <div>
         {/* Add popUp */}
         <Popup open={openAdd}>
-          <AddAndEdit close={toggelOpenAdd} />
+          <AddAndEdit
+            link={"basicInfoAddunregisterEmployee"}
+            close={toggelOpenAdd}
+            refresh={toggelOpenAddresfresh}
+          />
         </Popup>
         {/* Body */}
         <NameAndSearch
@@ -111,7 +148,7 @@ export default function UnregisteredEmployees() {
           getSlice={get}
           addFun={toggelOpenAdd}
           data={userData}
-          dataForSearch={tempUserData}
+          dataForSearch={jobsDataforserch}
           subName={isArabicprop ? "موظفون " : "Unregistered "}
           name={isArabicprop ? "موظفون " : "Unregistered "}
           ti={isArabicprop ? "الموظف" : "Employee"}
