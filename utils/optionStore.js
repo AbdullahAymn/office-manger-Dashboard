@@ -14,7 +14,7 @@ export default function OptionStore({ children }) {
   const [project, setProject] = useState([]);
   const [nat, setNat] = useState([]);
   const [task, setTask] = useState([]);
-  const [group, setGroup] = useState([{ name: "groub 1" }]);
+  const [group, setGroup] = useState([]);
   const [workingTime, setWorkingTime] = useState([
     { name: "shift 1" },
     { name: "shift 2" },
@@ -90,6 +90,16 @@ export default function OptionStore({ children }) {
       if (res.status === 200) {
         res.json().then((data) => {
           setTask(data);
+        });
+      }
+    });
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchgroubEmployee`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setGroup(data);
         });
       }
     });

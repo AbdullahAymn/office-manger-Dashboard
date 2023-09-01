@@ -15,23 +15,20 @@ export default function UnregisteredEmployees() {
   //
   // get Data
   //
-  const [userData, setUserData] = useState([]);
+  const [jobsData, setJobsData] = useState([]);
   const [jobsDataforserch, setJobsDatasforserch] = useState([]);
   const token = Cookies.get("token");
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
     setLoader(true);
-    fetch(
-      `https://backend2.dasta.store/api/auth/basicInfoFetchunregisterEmployee`,
-      {
-        method: "GET",
-        headers: myHeaders,
-      }
-    ).then((res) => {
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchunregisterEmployee`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
       if (res.status === 200) {
         res.json().then((data) => {
-          setUserData(data);
+          setJobsData(data);
           setJobsDatasforserch(data);
         });
         setLoader(false);
@@ -45,11 +42,11 @@ export default function UnregisteredEmployees() {
   };
 
   const searched = (searchRes) => {
-    setUserData(searchRes);
+    setJobsData(searchRes);
   };
 
   const restSearch = () => {
-    setUserData(jobsDataforserch);
+    setJobsData(jobsDataforserch);
   };
 
   //
@@ -64,12 +61,17 @@ export default function UnregisteredEmployees() {
   const [deleteditemName, setdeletedItemName] = useState("");
 
   const openDeleteHandeller = (e) => {
-    setdeletedItemName(e.name);
+    setdeletedItemName(e);
     setOpenDelete(!openDelet);
   };
 
   const closeDeleteHandeller = () => {
     setOpenDelete(!openDelet);
+  };
+
+  const closrefresh = () => {
+    setOpenDelete(!openDelet);
+    setRefresh(!refresh);
   };
 
   //edit
@@ -147,12 +149,13 @@ export default function UnregisteredEmployees() {
           reset={restSearch}
           getSlice={get}
           addFun={toggelOpenAdd}
-          data={userData}
+          data={jobsData}
           dataForSearch={jobsDataforserch}
           subName={isArabicprop ? "موظفون " : "Unregistered "}
           name={isArabicprop ? "موظفون " : "Unregistered "}
           ti={isArabicprop ? "الموظف" : "Employee"}
         />
+        
       </div>
       {/*  */}
       {/*  */}
@@ -167,7 +170,12 @@ export default function UnregisteredEmployees() {
 
           {/* delete */}
           <Popup open={openDelet}>
-            <Delete close={closeDeleteHandeller} branch={deleteditemName} />
+            <Delete
+              link={"basicInfoDeleteunregisterEmployee"}
+              refresh={closrefresh}
+              close={closeDeleteHandeller}
+              element={deleteditemName}
+            />
           </Popup>
 
           {/* edit */}
