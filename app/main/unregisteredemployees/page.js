@@ -36,6 +36,7 @@ export default function UnregisteredEmployees() {
     });
   }, [refresh]);
   const [slice, setSlice] = useState([]);
+  
 
   const get = (slice) => {
     setSlice(slice);
@@ -76,19 +77,21 @@ export default function UnregisteredEmployees() {
 
   //edit
   const [openEdit, setOpenEdit] = useState(false);
-  const [editedItemName, setEditedItemName] = useState("");
-  const [editedItemNameEn, setEditedItemNameEn] = useState("");
+  const [editedItem, setEditedItem] = useState("");
+  
 
   const openEditHandeller = (e) => {
     setOpenEdit(!openEdit);
-    setEditedItemName(e.nameAr);
-    setEditedItemNameEn(e.nameEn);
+    setEditedItem(e);
   };
 
   const closeEditHandeller = () => {
     setOpenEdit(!openEdit);
   };
-
+  const closeEditRefresh = () => {
+    setOpenEdit(!openEdit);
+    setRefresh(!refresh);
+  };
   //Add
 
   const [openAdd, setOpenAdd] = useState(false);
@@ -108,8 +111,9 @@ export default function UnregisteredEmployees() {
   //
   //
 
+  
   const tabelData = slice.map((e) => (
-    <tr key={e.name} className="grid grid-cols-9 p-2">
+    <tr key={e.id} className="grid grid-cols-9 p-2">
       <td className=" col-span-2 md:col-span-1 text-start">{e.id}</td>
       <td className=" col-span-5 md:col-span-7 text-start">
         {isArabicprop ? e.name : e.name_en}
@@ -182,9 +186,10 @@ export default function UnregisteredEmployees() {
 
           <Popup open={openEdit}>
             <AddAndEdit
+               link="basicInfoUpdateunregisterEmployee"
               edit={true}
-              name={editedItemName}
-              nameEn={editedItemNameEn}
+              element={editedItem}
+              refresh={closeEditRefresh}
               close={closeEditHandeller}
             />
           </Popup>
