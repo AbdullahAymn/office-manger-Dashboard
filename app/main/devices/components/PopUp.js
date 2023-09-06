@@ -2,6 +2,7 @@
 import { isArabic } from "@/utils/langStore";
 import { options } from "@/utils/optionStore";
 import useOptions from "@/utils/useOptions";
+import Cookies from "js-cookie";
 import React, { useContext } from "react";
 import { useState } from "react";
 
@@ -11,11 +12,56 @@ export default function PopUp(props) {
 
   const element = props.element || {};
 
-  const [nameAr, setNameAr] = useState(element.nameAr);
-  const [nameEn, setNameEn] = useState(element.nameEn);
-  const [branch, setBranch] = useState(element.branch);
-  const [serial, setSerial] = useState(element.serial);
-  const [type, setType] = useState(element.type);
+  const [nameAr, setNameAr] = useState(element.name);
+  const [nameEn, setNameEn] = useState(element.name_en);
+  const [branch, setBranch] = useState(element.name_branch);
+  const [serial, setSerial] = useState(element.serialNumber);
+  const [type, setType] = useState(element.sort_device);
+  const [loading, setLoading] = useState(false);
+
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}`);
+  const formdata = new FormData();
+  formdata.append("name", nameAr);
+  formdata.append("name_en", nameEn);
+  formdata.append("sort_device", type);
+  formdata.append("serialNumber", serial);
+  formdata.append("name_branch", branch);
+
+  //
+  //Adding
+  //
+
+  const addHandeller = () => {
+    setLoading(true);
+    fetch(`https://backend2.dasta.store/api/auth/addDevices`, {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+    }).then((res) => {
+      if (res.status === 200) {
+        props.refresh();
+      }
+    });
+  };
+
+  //
+  //Edit
+  //
+
+  const editHandeller = () => {
+    setLoading(true);
+    fetch(`https://backend2.dasta.store/api/auth/updateDevices/${element.id}`, {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+    }).then((res) => {
+      if (res.status === 200) {
+        props.refresh();
+      }
+    });
+  };
 
   return (
     <div className=" h-screen w-full flex items-center justify-center">
@@ -42,7 +88,10 @@ export default function PopUp(props) {
             />
           </div>
           <div className=" w-full col-span-6 p-2">
-            <h4>{isArabicprop ? "الإسم الانجليزي" : "Name in English"}</h4>
+            <h4>
+              {isArabicprop ? "الإسم الانجليزي" : "Name in English"}{" "}
+              <span className="text-red-600">*</span>
+            </h4>
             <input
               type="text"
               className=" w-full bg-white outline-none p-2 border rounded"
@@ -102,13 +151,27 @@ export default function PopUp(props) {
           </div>
         </div>
         <div className=" flex items-center justify-center text-center">
-          <button className=" bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none ">
-            {`${
-              props.edit
-                ? `${isArabicprop ? "تعديل" : "Edit"}`
-                : `${isArabicprop ? "إضافة" : "Add"}`
-            }`}
-          </button>
+          {props.edit ? (
+            <button
+              onClick={editHandeller}
+              disabled={
+                !nameAr || !nameEn || !branch || !serial || !type || loading
+              }
+              className=" disabled:opacity-50 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
+            >
+              {loading ? "loading ....." : `${isArabicprop ? "تعديل" : "Edit"}`}
+            </button>
+          ) : (
+            <button
+              onClick={addHandeller}
+              disabled={
+                !nameAr || !nameEn || !branch || !serial || !type || loading
+              }
+              className=" disabled:opacity-50 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
+            >
+              {loading ? "loading ....." : `${isArabicprop ? "إضافة" : "Add"}`}
+            </button>
+          )}
           <button
             onClick={props.close}
             className=" bg-gray-300 py-1 mx-4 px-8 text-black rounded-full mb-4"

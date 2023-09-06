@@ -6,37 +6,48 @@ import { options } from "@/utils/optionStore";
 import useOptions from "@/utils/useOptions";
 import Link from "next/link";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useContext } from "react";
 import Popup from "reactjs-popup";
 import PopUp from "./components/PopUp";
+import Loader from "@/app/components/Loader";
+import Cookies from "js-cookie";
 
 export default function Devices() {
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  const refrshopt = useContext(options).refresh;
+  const setrefrshopt = useContext(options).setRefresh;
+  useEffect(() => {
+    setrefrshopt(!refrshopt);
+  }, []);
+
   const branchesOptions = useOptions(useContext(options).branch);
-  const tempData = [
-    {
-      num: 1,
-      serial: "1234566789123",
-      nameAr: "nameAr",
-      nameEn: "nameEn",
-      branch: "branch 1",
-      status: " ",
-      type: "ZKTeco",
-    },
-    {
-      num: 2,
-      serial: "5995",
-      nameAr: "nameAr 1",
-      nameEn: "nameEn 1",
-      branch: "branch 2",
-      status: " ",
-      type: "ZKTeco",
-    },
-  ];
+
+  const [getData, setGetData] = useState([]);
+  const [jobsDataforserch, setJobsDatasforserch] = useState([]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  useEffect(() => {
+    setLoader(true);
+    fetch(`https://backend2.dasta.store/api/auth/fetchDevices`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setGetData(data);
+          setJobsDatasforserch(data);
+        });
+        setLoader(false);
+      }
+    });
+  }, [refresh]);
 
   const [slice, setSlice] = useState([]);
-  const [getData, setGetData] = useState(tempData);
   const getSlice = (slice) => {
     setSlice(slice);
   };
@@ -55,22 +66,22 @@ export default function Devices() {
 
   const searchHandeller = (e) => {
     e.preventDefault();
-    let searched = tempData;
+    let searched = jobsDataforserch;
     if (branch) {
-      searched = searched.filter((e) => e.branch === branch);
+      searched = searched.filter((e) => e.name_branch === branch);
     }
     if (name) {
       if (isArabicprop) {
-        searched = searched.filter((e) => e.nameAr.includes(name.trim()));
+        searched = searched.filter((e) => e.name.includes(name.trim()));
       } else {
-        searched = searched.filter((e) => e.nameEn.includes(name.trim()));
+        searched = searched.filter((e) => e.name_en.includes(name.trim()));
       }
     }
     if (serial) {
-      searched = searched.filter((e) => e.serial.includes(serial.trim()));
+      searched = searched.filter((e) => e.serialNumber.includes(serial.trim()));
     }
     if (type) {
-      searched = searched.filter((e) => e.type === type);
+      searched = searched.filter((e) => e.sort_device === type);
     }
 
     setGetData(searched);
@@ -82,7 +93,7 @@ export default function Devices() {
     setSerial("");
     setType("");
 
-    setGetData(tempData);
+    setGetData(jobsDataforserch);
   };
 
   //
@@ -92,15 +103,20 @@ export default function Devices() {
   //
 
   const [openDelet, setOpenDelete] = useState(false);
-  const [deleteditemName, setdeletedItemName] = useState("");
+  const [deleteditem, setdeletedItem] = useState("");
 
   const openDeleteHandeller = (e) => {
-    setdeletedItemName(e.name);
+    setdeletedItem(e);
     setOpenDelete(!openDelet);
   };
 
   const closeDeleteHandeller = () => {
     setOpenDelete(!openDelet);
+  };
+
+  const closrefresh = () => {
+    setOpenDelete(!openDelet);
+    setRefresh(!refresh);
   };
 
   //Edit
@@ -116,10 +132,19 @@ export default function Devices() {
     setOpenEdit(!openEdit);
   };
 
+  const closeEditRefresh = () => {
+    setOpenEdit(!openEdit);
+    setRefresh(!refresh);
+  };
+
   //add
   const [openAdd, setOpenAdd] = useState(false);
   const toggleOpenAdd = () => {
     setOpenAdd(!openAdd);
+  };
+  const toggelOpenAddresfresh = () => {
+    setOpenAdd(!openAdd);
+    setRefresh(!refresh);
   };
 
   //
@@ -130,12 +155,12 @@ export default function Devices() {
 
   const tabelData = slice.map((e, index) => (
     <tr key={index}>
-      <td className=" text-start p-2">{e.num}</td>
-      <td className=" text-start p-2">{e.serial}</td>
-      <td className=" text-start p-2">{isArabicprop ? e.nameAr : e.nameEn}</td>
-      <td className=" text-start p-2">{e.branch}</td>
-      <td className=" text-start p-2">{e.status}</td>
-      <td className=" text-start p-2">{e.type}</td>
+      <td className=" text-start p-2">{e.id}</td>
+      <td className=" text-start p-2">{e.serialNumber}</td>
+      <td className=" text-start p-2">{isArabicprop ? e.name : e.name_en}</td>
+      <td className=" text-start p-2">{e.name_branch}</td>
+      {/* <td className=" text-start p-2">{e.status}</td> */}
+      <td className=" text-start p-2">{e.sort_device}</td>
       <td className=" text-center p-2 text-black/70">
         <i
           onClick={() => openDeleteHandeller(e)}
@@ -151,6 +176,9 @@ export default function Devices() {
   ));
   return (
     <div className=" w-full">
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       {/*  */}
       {/*  */}
       {/* Label */}
@@ -191,7 +219,7 @@ export default function Devices() {
             {isArabicprop ? "إضافة" : "Add"}{" "}
           </button>
           <Popup open={openAdd}>
-            <PopUp close={toggleOpenAdd} />
+            <PopUp refresh={toggelOpenAddresfresh} close={toggleOpenAdd} />
           </Popup>
         </div>
       </div>
@@ -282,10 +310,20 @@ export default function Devices() {
       {/*  */}
       <div className=" w-full text-sm overflow-auto md:text-base font-sans my-4">
         <Popup open={openDelet}>
-          <Delete close={closeDeleteHandeller} branch={deleteditemName} />
+          <Delete
+            link={"deleteDevices"}
+            close={closeDeleteHandeller}
+            refresh={closrefresh}
+            element={deleteditem}
+          />
         </Popup>
         <Popup open={openEdit}>
-          <PopUp edit={true} element={editElement} close={closeEditHandeller} />
+          <PopUp
+            edit={true}
+            refresh={closeEditRefresh}
+            element={editElement}
+            close={closeEditHandeller}
+          />
         </Popup>
         <table className=" table-auto min-w-full w-200 md:w-fit">
           <thead>
@@ -302,9 +340,9 @@ export default function Devices() {
               <th className=" text-start p-2">
                 {isArabicprop ? "الفرع" : "Branch"}
               </th>
-              <th className=" text-start p-2">
+              {/* <th className=" text-start p-2">
                 {isArabicprop ? "حالة الجهاز" : "Device Status"}
-              </th>
+              </th> */}
               <th className=" text-start p-2">
                 {isArabicprop ? "نوع الجهاز" : "Device Type"}
               </th>
