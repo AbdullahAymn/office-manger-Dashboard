@@ -42,18 +42,18 @@ export default function TopSec(props) {
     let searched = props.dataForSearch;
     if (name) {
       if (isArabicprop) {
-        searched = searched.filter((e) => e.nameAr.includes(name.trim()));
+        searched = searched.filter((e) => e.name.includes(name.trim()));
       } else {
-        searched = searched.filter((e) => e.nameEn.includes(name.trim()));
+        searched = searched.filter((e) => e.name_en.includes(name.trim()));
       }
 
       
     }
     if (from) {
-      searched = searched.filter((e) => e.from.includes(from));
+      searched = searched.filter((e) => e.fromday.includes(from));
     }
     if (to) {
-      searched = searched.filter((e) => e.to.includes(to));
+      searched = searched.filter((e) => e.today.includes(to));
     }
 
     props.searchRes(searched);

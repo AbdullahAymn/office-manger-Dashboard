@@ -1,18 +1,43 @@
 "use client";
 import { isArabic } from "@/utils/langStore";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TopSec from "./components/TopSec";
-import { holidaysTempData } from "./tempData";
 import Popup from "reactjs-popup";
 import Delete from "@/app/components/popup/delete";
 import PopUpCopm from "./components/PopUp";
+import Loader from "@/app/components/Loader";
+import Cookies from "js-cookie";
 
 export default function page() {
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   //
   // get Data
   //
-  const [holidaysData, setHolidaysData] = useState(holidaysTempData);
+  const [holidaysData, setHolidaysData] = useState([]);
+  const [jobsDataforserch, setJobsDatasforserch] = useState([]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  useEffect(() => {
+    setLoader(true);
+    fetch(
+      `https://backend2.dasta.store/api/auth/basicInfoFetchoficiallHoliday`,
+      {
+        method: "GET",
+        headers: myHeaders,
+      }
+    ).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setHolidaysData(data);
+          setJobsDatasforserch(data);
+        });
+        setLoader(false);
+      }
+    });
+  }, [refresh]);
   const [slice, setSlice] = useState([]);
 
   const get = (slice) => {
@@ -24,7 +49,7 @@ export default function page() {
   };
 
   const restSearch = () => {
-    setHolidaysData(holidaysTempData);
+    setHolidaysData(jobsDataforserch);
   };
 
   //
@@ -36,34 +61,36 @@ export default function page() {
   //delete
 
   const [openDelet, setOpenDelete] = useState(false);
-  const [deleteditemName, setdeletedItemName] = useState("");
+  const [deleteditem, setdeletedItem] = useState("");
 
   const openDeleteHandeller = (e) => {
-    setdeletedItemName(e.name);
+    setdeletedItem(e);
     setOpenDelete(!openDelet);
   };
 
   const closeDeleteHandeller = () => {
     setOpenDelete(!openDelet);
   };
+  const closrefresh = () => {
+    setOpenDelete(!openDelet);
+    setRefresh(!refresh);
+  };
 
   //edit
   const [openEdit, setOpenEdit] = useState(false);
-  const [editedItemName, setEditedItemName] = useState("");
-  const [editedItemNameEn, setEditedItemNameEn] = useState("");
-  const [editedItemFrom, setEditedItemFrom] = useState("");
-  const [editedItemTo, setEditedItemTo] = useState("");
+  const [editedItem, setEditedItem] = useState("");
 
   const openEditHandeller = (e) => {
     setOpenEdit(!openEdit);
-    setEditedItemName(e.nameAr);
-    setEditedItemNameEn(e.nameEn);
-    setEditedItemFrom(e.from);
-    setEditedItemTo(e.to);
+    setEditedItem(e);
   };
 
   const closeEditHandeller = () => {
     setOpenEdit(!openEdit);
+  };
+  const closeEditRefresh = () => {
+    setOpenEdit(!openEdit);
+    setRefresh(!refresh);
   };
 
   //Add
@@ -74,53 +101,113 @@ export default function page() {
     setOpenAdd(!openAdd);
   };
 
+  const toggelOpenAddresfresh = () => {
+    setOpenAdd(!openAdd);
+    setRefresh(!refresh);
+  };
   //
   //
   //maping
   //
   //
 
-  const tabelData = slice.map((e) => (
-    <tr key={e.name} className="grid grid-cols-12 p-2">
-      <td className=" col-span-3 text-start">{ isArabicprop ?e.nameAr : e.nameEn}</td>
-      <td className=" col-span-2 md:col-span-3 text-start">{e.from}</td>
-      <td className=" col-span-2 md:col-span-3 text-start">{e.to}</td>
-      <td className=" col-span-2 md:col-span-1 text-center">{e.num}</td>
-      <td className=" col-span-2 md:col-span-1 text-center">
-        {e.status ? (
-          <div className=" text-center">
-            <h4 className=" mx-auto w-fit px-2 text-center text-white  bg-green-800 rounded-md">
-              {isArabicprop ? "حالية" : "Active"}
-            </h4>
-          </div>
-        ) : (
-          <div className=" text-center">
-            <h4 className=" mx-auto w-fit px-2 text-center text-white  bg-red-600 rounded-md">
-              {isArabicprop ? "أنتهت" : "Ends"}
-            </h4>
-          </div>
-        )}
-      </td>
-      <td className=" col-span-1 text-center text-black/70">
-        <i
-          onClick={() => openDeleteHandeller(e)}
-          className="fa-solid fa-trash mx-1 hover:cursor-pointer hover:text-red-600"
-        ></i>
-        <i
-          onClick={() => openEditHandeller(e)}
-          className="fa-solid fa-pen-to-square mx-1 hover:cursor-pointer hover:text-sky-600"
-        ></i>
-      </td>
-    </tr>
-  ));
+  const tabelData = slice.map((e) => {
+    const from = new Date(e.fromday);
+    const to = new Date(e.today);
+    const toDay = new Date();
+
+    let statue;
+
+    if (from > toDay) {
+      statue = 1;
+    } else if (toDay > from) {
+      if (to > toDay) {
+        statue = 2;
+      } else if (
+        toDay.toLocaleDateString("en-GB", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }) ==
+        to.toLocaleDateString("en-GB", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        })
+      ) {
+        statue = 2;
+      } else if (toDay > to) {
+        statue = 3;
+      }
+    } else if (
+      toDay.toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }) ==
+      from.toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+    ) {
+      statue = 2;
+    }
+
+    return (
+      <tr key={e.name} className="grid grid-cols-12 p-2">
+        <td className=" col-span-3 text-start">
+          {isArabicprop ? e.name : e.name_en}
+        </td>
+        <td className=" col-span-3 md:col-span-3 text-start">{e.fromday}</td>
+        <td className=" col-span-3 md:col-span-3 text-start">{e.today}</td>
+        <td className=" col-span-2 md:col-span-2 text-center">
+          {statue === 1 && (
+            <div className=" text-center">
+              <h4 className=" mx-auto w-fit px-2 text-center text-white  bg-orange-300 rounded-md">
+                {isArabicprop ? "قادمة" : "Comming"}
+              </h4>
+            </div>
+          )}
+          {statue === 2 && (
+            <div className=" text-center">
+              <h4 className=" mx-auto w-fit px-2 text-center text-white  bg-green-600 rounded-md">
+                {isArabicprop ? "حالية" : "Active"}
+              </h4>
+            </div>
+          )}
+          {statue === 3 && (
+            <div className=" text-center">
+              <h4 className=" mx-auto w-fit px-2 text-center text-white  bg-red-600 rounded-md">
+                {isArabicprop ? "أنتهت" : "Ends"}
+              </h4>
+            </div>
+          )}
+        </td>
+        <td className=" col-span-1 text-center text-black/70">
+          <i
+            onClick={() => openDeleteHandeller(e)}
+            className="fa-solid fa-trash mx-1 hover:cursor-pointer hover:text-red-600"
+          ></i>
+          <i
+            onClick={() => openEditHandeller(e)}
+            className="fa-solid fa-pen-to-square mx-1 hover:cursor-pointer hover:text-sky-600"
+          ></i>
+        </td>
+      </tr>
+    );
+  });
   return (
     <div className=" font-sans overflow-x-hidden">
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       {/*  */}
       {/* Top sec */}
       {/*  */}
       <div>
         <Popup open={openAdd}>
-          <PopUpCopm close={toggelOpenAdd} />
+          <PopUpCopm refresh={toggelOpenAddresfresh} close={toggelOpenAdd} />
         </Popup>
         <TopSec
           searchRes={searched}
@@ -128,7 +215,7 @@ export default function page() {
           getSlice={get}
           addFun={toggelOpenAdd}
           data={holidaysData}
-          dataForSearch={holidaysTempData}
+          dataForSearch={jobsDataforserch}
           subName={isArabicprop ? "العطلات " : " Holidays"}
           name={isArabicprop ? "العطلات " : " Holidays"}
           ti={isArabicprop ? "العطلة" : "Holiday"}
@@ -147,17 +234,20 @@ export default function page() {
 
           {/* delete */}
           <Popup open={openDelet}>
-            <Delete close={closeDeleteHandeller} branch={deleteditemName} />
+            <Delete
+              refresh={closrefresh}
+              close={closeDeleteHandeller}
+              link={"basicInfoDeleteoficiallHoliday"}
+              element={deleteditem}
+            />
           </Popup>
 
           {/* Edit */}
           <Popup open={openEdit}>
             <PopUpCopm
-              name={editedItemName}
-              nameEn={editedItemNameEn}
-              from={editedItemFrom}
-              to={editedItemTo}
+              element={editedItem}
               edit={true}
+              refresh={closeEditRefresh}
               close={closeEditHandeller}
             />
           </Popup>
@@ -168,16 +258,13 @@ export default function page() {
               <th className=" col-span-3 text-start">
                 {isArabicprop ? "العطلة" : "Holiday"}
               </th>
-              <th className=" col-span-2 md:col-span-3 text-start">
+              <th className=" col-span-3 md:col-span-3 text-start">
                 {isArabicprop ? "من" : "From"}
               </th>
-              <th className=" col-span-2 md:col-span-3 text-start">
+              <th className=" col-span-3 md:col-span-3 text-start">
                 {isArabicprop ? "إلى" : "to"}
               </th>
-              <th className=" col-span-2 md:col-span-1 text-center">
-                {isArabicprop ? "المدة" : "Duration"}
-              </th>
-              <th className=" col-span-2 md:col-span-1 text-center">
+              <th className=" col-span-2 md:col-span-2 text-center">
                 {isArabicprop ? "الحالة" : "status"}
               </th>
               <th className=" col-span-1 text-center">
