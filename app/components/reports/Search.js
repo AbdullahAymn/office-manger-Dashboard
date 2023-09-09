@@ -6,6 +6,7 @@ import React, { useContext, useState } from "react";
 
 export default function Search() {
   const isArabicprop = useContext(isArabic).arabic;
+  
 
   //
   //Defiing Options

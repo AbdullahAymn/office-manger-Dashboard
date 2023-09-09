@@ -6,15 +6,25 @@ import useOptions from "@/utils/useOptions";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
-import { employeesReportTempData } from "./tempdata";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { fonty } from "@/utils/Amiri-Regular-normal (1)";
+import Loader from "@/app/components/Loader";
+import Popup from "reactjs-popup";
+import Cookies from "js-cookie";
 
 export default function EmployeesReport() {
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   //setSearch
+
+  const refrshopt = useContext(options).refresh;
+  const setrefrshopt = useContext(options).setRefresh;
+  useEffect(() => {
+    setrefrshopt(!refrshopt);
+  }, []);
 
   const branchesOptions = useOptions(useContext(options).branch);
   const mangementOptions = useOptions(useContext(options).mangement);
@@ -28,6 +38,30 @@ export default function EmployeesReport() {
   const showSearchHandeller = (val) => {
     setShowSearch(val);
   };
+
+  //
+  //GetData
+  //
+  const [dataForMap, setDataForMap] = useState([]);
+  const [jobsDataforserch, setJobsDatasforserch] = useState([]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  useEffect(() => {
+    setLoader(true);
+    fetch(`https://backend2.dasta.store/api/auth/finallyReportgetEmployee`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setDataForMap(data);
+          setJobsDatasforserch(data);
+        });
+        setLoader(false);
+      }
+    });
+  }, [refresh]);
 
   //
   //Search
@@ -44,37 +78,37 @@ export default function EmployeesReport() {
 
   const searchHandeller = (e) => {
     e.preventDefault();
-    let searched = employeesReportTempData;
+    let searched = jobsDataforserch;
 
     if (code) {
-      searched = searched.filter((e) => e.id == code.trim());
+      searched = searched.filter((e) => e.code == code.trim());
     }
     if (name) {
-      searched = searched.filter((e) => e.name.includes(name.trim()));
+      isArabicprop
+        ? (searched = searched.filter((e) => e.name_ar.includes(name.trim())))
+        : (searched = searched.filter((e) => e.name_en.includes(name.trim())));
     }
     if (branch) {
-      searched = searched.filter((e) => e.branch === branch);
+      searched = searched.filter((e) => e.id_branch === branch);
     }
     if (mangement) {
-      searched = searched.filter((e) => e.mangement === mangement);
+      searched = searched.filter((e) => e.id_administation === mangement);
     }
     if (department) {
-      searched = searched.filter((e) => e.department === department);
+      searched = searched.filter((e) => e.id_depatment === department);
     }
     if (job) {
-      searched = searched.filter((e) => e.job === job);
+      searched = searched.filter((e) => e.id_job === job);
     }
     if (group) {
-      searched = searched.filter((e) => e.groub === group);
+      searched = searched.filter((e) => e.goubs === group);
     }
     if (workingTime) {
-      searched = searched.filter((e) => e.shift === workingTime);
+      searched = searched.filter((e) => e.id_shift === workingTime);
     }
 
     setDataForMap(searched);
   };
-
-  
 
   const resetHandeller = () => {
     setCode("");
@@ -85,6 +119,8 @@ export default function EmployeesReport() {
     setJob("");
     setGroup("");
     setWorkingTime("");
+
+    setDataForMap(jobsDataforserch);
   };
 
   //
@@ -93,20 +129,18 @@ export default function EmployeesReport() {
   //
   //
 
-  const [dataForMap, setDataForMap] = useState([]);
-
- 
-
   const showTabel = dataForMap.map((e, index) => (
-    <tr key={index} className="grid grid-cols-12 p-2 font-light text-black/70 ">
-      <th className=" col-span-1 text-start">{e.id}</th>
-      <th className=" col-span-2 text-start">{e.name}</th>
-      <th className=" col-span-2 text-start">{e.branch}</th>
-      <th className=" col-span-1 text-start">{e.mangement}</th>
-      <th className={` col-span-2 text-start `}>{e.department}</th>
-      <th className=" col-span-2 text-start">{e.job}</th>
-      <th className=" col-span-1 text-start">{e.groub}</th>
-      <th className=" col-span-1 text-start">{e.shift}</th>
+    <tr key={index} className=" p-6 font-light text-black/70 ">
+      <th className=" p-2 col-span-1 text-start">{e.code}</th>
+      <th className=" col-span-2 text-start">
+        {isArabicprop ? e.name_ar : e.name_en}
+      </th>
+      <th className=" col-span-2 text-start">{e.id_branch}</th>
+      <th className=" col-span-1 text-start">{e.id_administation}</th>
+      <th className={` col-span-2 text-start `}>{e.id_depatment}</th>
+      <th className=" col-span-2 text-start">{e.id_job}</th>
+      <th className=" col-span-1 text-start">{e.goubs}</th>
+      <th className=" col-span-1 text-start">{e.id_shift}</th>
     </tr>
   ));
 
@@ -128,15 +162,17 @@ export default function EmployeesReport() {
   ];
 
   const cvsData = dataForMap.map((e) => ({
-    code: e.id,
-    name: e.name,
-    branch: e.branch,
-    mangement: e.mangement,
-    department: e.department,
-    job: e.job,
-    groub: e.groub,
-    shift: e.shift,
+    code: e.code,
+    name: isArabicprop ? e.name_ar : e.name_en,
+    branch: e.id_branch,
+    mangement: e.id_administation,
+    department: e.id_depatment,
+    job: e.id_job,
+    groub: e.goubs,
+    shift: e.id_shift,
   }));
+
+  
 
   function printDocument() {
     const doc = new jsPDF();
@@ -152,11 +188,14 @@ export default function EmployeesReport() {
 
   return (
     <div className=" font-sans">
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       <div>
         <Label
           headers={headers}
           data={cvsData}
-          fileName='تقارير الموظفين'
+          fileName="تقارير الموظفين"
           pdf={printDocument}
           setsearch={showSearchHandeller}
           label={isArabicprop ? "الموظفين" : "Employees"}
@@ -290,11 +329,11 @@ export default function EmployeesReport() {
       <div className=" w-full my-12 overflow-auto">
         <table
           id="mytabel"
-          className=" min-w-full text-sm  w-200 md:w-full font-sans"
+          className=" min-w-full table-auto text-sm  w-200 md:w-full font-sans"
         >
           <thead>
-            <tr className=" grid grid-cols-12 md:text-base bg-gray-200 p-2 border text-black/70">
-              <th className=" col-span-1 text-start">
+            <tr className=" md:text-base bg-white p-2 border text-black/70">
+              <th className=" p-2 col-span-1 text-start">
                 {isArabicprop ? "الكود" : "Code"}
               </th>
               <th className=" col-span-2 text-start">
