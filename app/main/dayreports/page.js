@@ -85,7 +85,7 @@ export default function DayReports() {
       } else {
         setLoader(false);
         toast.error(
-          `${isArabicprop ? "هناك مشكلة بالشبكة" : "Something is wrong"}`
+          `${isArabicprop ? "هناك مشكلة" : "Something is wrong"}`
         );
       }
     });
@@ -96,6 +96,8 @@ export default function DayReports() {
     setBranch("");
     setFrom(date.toLocaleDateString("en-CA"));
     setTo(date.toLocaleDateString("en-CA"));
+
+    setDataToMap([])
   };
 
   // -------------------------------------------------------------------
@@ -108,6 +110,15 @@ export default function DayReports() {
   const dataShow = dataToMap.map((e, index) => {
     let searched = element.data[index];
     let num = index;
+
+    const day = new Date(from);
+    day.setDate(day.getDate() + index);
+
+    let date  = day.toLocaleDateString("en-GB", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
 
     if (name) {
       searched = searched.filter((e) => e.name.includes(name.trim()));
@@ -202,10 +213,13 @@ export default function DayReports() {
           <thead>
             <tr></tr>
             <tr className="  w-full bg-[#8c929450] m-1 text-black/70 border">
-              <th colspan="6" className=" p-1">
+              <th colspan="3" className=" p-1">
                 {isArabicprop ? `اليوم : ${e}` : ` Day : ${e}`}
               </th>
-              <th colspan="7">
+              <th colspan="4" className=" p-1">
+                {date}
+              </th>
+              <th colspan="6">
                 {" "}
                 {isArabicprop
                   ? `الفترة من ${element.from} الي ${element.to}`
@@ -301,6 +315,15 @@ export default function DayReports() {
   const cvsDatas = dataToMap.map((e, index) => {
     const el = element;
 
+    const day = new Date(from);
+    day.setDate(day.getDate() + index);
+
+    let date  = day.toLocaleDateString("en-GB", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+
     cvsData.push({
       name: isArabicprop ? `اليوم ` : "day",
       branch: e,
@@ -310,8 +333,8 @@ export default function DayReports() {
       out2: isArabicprop ? `الي ` : "to",
       in3: el.to,
       out3: "",
-      in4: "",
-      out4: "",
+      in4: isArabicprop ? `التاريخ ` : "date",
+      out4: date,
       late: "",
       over: "",
       abence: "",
