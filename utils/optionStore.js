@@ -15,38 +15,44 @@ export default function OptionStore({ children }) {
   const [nat, setNat] = useState([]);
   const [task, setTask] = useState([]);
   const [group, setGroup] = useState([]);
-  const [workingTime, setWorkingTime] = useState([
-    { name: "shift 1" },
-    { name: "shift 2" },
-  ]);
+  const [workingTime, setWorkingTime] = useState([]);
   useEffect(() => {
     const token = Cookies.get("token");
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}\n`);
-    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchBranchBelongTo`, {
-      method: "GET",
-      headers: myHeaders,
-    }).then((res) => {
+    fetch(
+      `https://backend2.dasta.store/api/auth/basicInfoFetchBranchBelongTo`,
+      {
+        method: "GET",
+        headers: myHeaders,
+      }
+    ).then((res) => {
       if (res.status === 200) {
         res.json().then((data) => {
           setBranch(data);
         });
       }
     });
-    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchBranchadministationBelongTocom`, {
-      method: "GET",
-      headers: myHeaders,
-    }).then((res) => {
+    fetch(
+      `https://backend2.dasta.store/api/auth/basicInfoFetchBranchadministationBelongTocom`,
+      {
+        method: "GET",
+        headers: myHeaders,
+      }
+    ).then((res) => {
       if (res.status === 200) {
         res.json().then((data) => {
           setMangement(data);
         });
       }
     });
-    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchBranchdepatmentBelongTocom`, {
-      method: "GET",
-      headers: myHeaders,
-    }).then((res) => {
+    fetch(
+      `https://backend2.dasta.store/api/auth/basicInfoFetchBranchdepatmentBelongTocom`,
+      {
+        method: "GET",
+        headers: myHeaders,
+      }
+    ).then((res) => {
       if (res.status === 200) {
         res.json().then((data) => {
           setDeapartmet(data);
@@ -70,6 +76,16 @@ export default function OptionStore({ children }) {
       if (res.status === 200) {
         res.json().then((data) => {
           setProject(data);
+        });
+      }
+    });
+    fetch(`https://backend2.dasta.store/api/auth/getAllShiftController`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setWorkingTime(data);
         });
       }
     });
@@ -104,6 +120,7 @@ export default function OptionStore({ children }) {
       }
     });
   }, [refresh]);
+
   return (
     <options.Provider
       value={{
