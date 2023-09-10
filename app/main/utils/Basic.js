@@ -30,8 +30,8 @@ export const Basic = [
     icon: "fa-solid fa-list-check",
   },
   {
-    arabic: "أوقات العمل",
-    english: "Working Time",
+    arabic: "أوقات العمل (عادي)"  ,
+    english: "Working Time (Normal)",
     link: "/main/workingtime",
     icon: "fa-solid fa-hourglass-start",
   },
