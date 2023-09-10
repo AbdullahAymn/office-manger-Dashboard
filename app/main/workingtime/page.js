@@ -196,7 +196,7 @@ export default function WorkingTime() {
         {/* tabelBody */}
         {/*  */}
         <div className=" w-full font-sans my-4 overflow-x-scroll md:overflow-x-hidden">
-          <table className=" text-sm md:text-base min-w-full w-150 md:w-full">
+          <table className=" text-sm md:text-base min-w-full md:w-full">
             <thead>
               <tr className=" grid grid-cols-7 bg-white p-2 border text-black/70">
                 <th className=" col-span-3 text-start">
