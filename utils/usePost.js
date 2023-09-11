@@ -14,9 +14,7 @@ export default async function usePost(li, bod, fun) {
     if (res.status === 200) {
       fun();
     } else {
-      toast.warning(
-        `${isArabicprop ? "هناك مشكلة بالشبكة" : "Something is wrong"}`
-      );
+      toast.warning(`${"Something is wrong"}`);
     }
   });
 

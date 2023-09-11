@@ -16,6 +16,7 @@ export default function OptionStore({ children }) {
   const [task, setTask] = useState([]);
   const [group, setGroup] = useState([]);
   const [workingTime, setWorkingTime] = useState([]);
+  const [workingTimes, setWorkingTimes] = useState([]);
   useEffect(() => {
     const token = Cookies.get("token");
     const myHeaders = new Headers();
@@ -85,7 +86,7 @@ export default function OptionStore({ children }) {
     }).then((res) => {
       if (res.status === 200) {
         res.json().then((data) => {
-          setWorkingTime(data);
+          setWorkingTimes(data);
         });
       }
     });
@@ -120,6 +121,22 @@ export default function OptionStore({ children }) {
       }
     });
   }, [refresh]);
+
+  let work = []
+
+  useEffect(() => {
+    
+    workingTimes.map(e => {
+      e.map(e => {
+        work.push(e)
+      })
+    })
+
+    setWorkingTime(work)
+    
+  }, [refresh , workingTimes])
+  
+  
 
   return (
     <options.Provider
