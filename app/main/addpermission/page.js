@@ -3,23 +3,26 @@ import Paginate from "@/app/components/Paginate";
 import { isArabic } from "@/utils/langStore";
 import { MenuItem, Select } from "@mui/material";
 import Link from "next/link";
-import React, { useContext, useState } from "react";
-import { permissionTempData } from "./tempData";
+import React, { useContext, useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 import Delete from "@/app/components/popup/delete";
 import PopUp from "./components/PopUp";
 import { options } from "@/utils/optionStore";
 import useOptions from "@/utils/useOptions";
+import Cookies from "js-cookie";
+import Loader from "@/app/components/Loader";
 
 export default function AddPermission() {
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [showsearch, setShowSearch] = useState(true);
-  const branchesOptions = useOptions(useContext(options).branch);
-  const mangementOptions = useOptions(useContext(options).mangement);
-  const departmentOptions = useOptions(useContext(options).department);
-  const jobOptions = useOptions(useContext(options).job);
-  const groupOptions = useOptions(useContext(options).group);
-  const workingTimeOptions = useOptions(useContext(options).workingTime);
+
+  const refrshopt = useContext(options).refresh;
+  const setrefrshopt = useContext(options).setRefresh;
+  useEffect(() => {
+    setrefrshopt(!refrshopt);
+  }, []);
 
   //
   //
@@ -28,72 +31,56 @@ export default function AddPermission() {
   //
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [branches, setbranches] = useState("");
-  const [management, setManagement] = useState("");
-  const [department, setDepartment] = useState("");
-  const [job, setJob] = useState("");
-  const [group, setGroup] = useState("");
-  const [shift, setShift] = useState("");
   const [type, setType] = useState("");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
+  const [date, setDate] = useState("");
+
+  const [showData, setShowData] = useState([]);
+  const [jobsDataforserch, setJobsDatasforserch] = useState([]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  useEffect(() => {
+    setLoader(true);
+    fetch(`https://backend2.dasta.store/api/auth/fetchAllPermision`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setShowData(data);
+          setJobsDatasforserch(data);
+        });
+        setLoader(false);
+      }
+    });
+  }, [refresh]);
+
+  const searchHandeller = (e) => {
+    e.preventDefault();
+    let searched = jobsDataforserch;
+    if (code) {
+      searched = searched.filter((e) => e.codeEmployee == code.trim());
+    }
+    if (name) {
+      searched = searched.filter((e) => e.nameEmployee.includes(name.trim()));
+    }
+    if (type) {
+      searched = searched.filter((e) => e.comment === type);
+    }
+    if (date) {
+      searched = searched.filter((e) => e.date === date);
+    }
+
+    setShowData(searched);
+  };
 
   const resetHandeller = () => {
     setCode("");
     setName("");
-    setbranches("");
-    setManagement("");
-    setDepartment("");
-    setJob("");
-    setGroup("");
-    setShift("");
     setType("");
-    setFrom("");
-    setTo("");
+    setDate("");
 
-    setShowData(permissionTempData);
-  };
-
-  const [showData, setShowData] = useState(permissionTempData);
-
-  const searchHandeller = (e) => {
-    e.preventDefault();
-    let searched = permissionTempData;
-    if (code) {
-      searched = searched.filter((e) => e.code == code.trim());
-    }
-    if (name) {
-      searched = searched.filter((e) => e.name.includes(name.trim()));
-    }
-    if (branches) {
-      searched = searched.filter((e) => e.branch === branches);
-    }
-    if (management) {
-      searched = searched.filter((e) => e.management === management);
-    }
-    if (department) {
-      searched = searched.filter((e) => e.department === department);
-    }
-    if (job) {
-      searched = searched.filter((e) => e.job === job);
-    }
-    if (group) {
-      searched = searched.filter((e) => e.group === group);
-    }
-    if (shift) {
-      searched = searched.filter((e) => e.workingTime === shift);
-    }
-    if (type) {
-      searched = searched.filter((e) => e.typeVal === type);
-    }
-    if (from) {
-      searched = searched.filter((e) => e.from === from);
-    }
-    if (to) {
-      searched = searched.filter((e) => e.to === to);
-    }
-
-    setShowData(searched);
+    setShowData(jobsDataforserch);
   };
 
   // Paginate
@@ -109,9 +96,20 @@ export default function AddPermission() {
   //
 
   const [openDelet, setOpenDelete] = useState(false);
+  const [deleteditem, setdeletedItem] = useState("");
+  
+  const openDeleteHandeller = (e) => {
+    setdeletedItem(e);
+    setOpenDelete(!openDelet);
+  };
 
   const toggleDelet = () => {
     setOpenDelete(!openDelet);
+  };
+
+  const closrefresh = () => {
+    setOpenDelete(!openDelet);
+    setRefresh(!refresh);
   };
 
   //Add
@@ -120,7 +118,12 @@ export default function AddPermission() {
   const toggelAdd = () => {
     setOpenAdd(!openAdd);
   };
-  //Add
+
+  const toggelOpenAddresfresh = () => {
+    setOpenAdd(!openAdd);
+    setRefresh(!refresh);
+  };
+  //edit
 
   const [openEdit, setOpenEdit] = useState(false);
   const [employee, setEmployee] = useState({});
@@ -134,28 +137,30 @@ export default function AddPermission() {
     setOpenEdit(!openEdit);
   };
 
+  const closeEditRefresh = () => {
+    setOpenEdit(!openEdit);
+    setRefresh(!refresh);
+  };
+
   //
   //Maping
   //
 
-  const tabelData = slice.map((e) => (
-    <tr
-      key={e.code}
-      className=" grid grid-cols-12 bg-white p-2 border text-black/70"
-    >
-      <td className=" col-span-1  text-start">{e.code}</td>
-      <td className=" col-span-2  text-start">{e.name}</td>
+  const tabelData = slice.map((e, index) => (
+    <tr key={index} className=" grid-cols-12 bg-white p-2 border text-black/70">
+      <td className=" p-2 col-span-1  text-start">{e.codeEmployee}</td>
+      <td className=" col-span-2  text-start">{e.nameEmployee}</td>
       <td className=" col-span-1  text-start">{e.date}</td>
-      <td className=" col-span-2  text-start">{e.branch}</td>
-      <td className=" col-span-1  text-start">{e.workingTime}</td>
-      <td className=" col-span-1  text-start">{e.type}</td>
+      {/* <td className=" col-span-2  text-start">{e.branch}</td> */}
+      {/* <td className=" col-span-1  text-start">{e.workingTime}</td> */}
+      <td className=" col-span-1  text-start">{e.comment}</td>
       <td className=" col-span-1  text-start">{e.shift}</td>
-      <td className=" col-span-1  text-center">{e.in}</td>
-      <td className=" col-span-1  text-center">{e.out}</td>
-      <td className=" col-span-1  text-center flex items-center justify-center">
+      {/* <td className=" col-span-1  text-center">{e.in}</td>
+      <td className=" col-span-1  text-center">{e.out}</td> */}
+      <td className=" p-2 col-span-1  text-center flex items-center justify-center">
         {" "}
         <i
-          onClick={() => toggleDelet(e)}
+          onClick={() => openDeleteHandeller(e)}
           className="fa-solid fa-trash mx-1 md:mx-2 hover:cursor-pointer hover:text-red-600"
         ></i>
         <i
@@ -168,6 +173,9 @@ export default function AddPermission() {
 
   return (
     <div className=" font-sans overflow-x-hidden">
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       {/*  */}
       {/* Top section */}
       {/*  */}
@@ -206,7 +214,7 @@ export default function AddPermission() {
             {isArabicprop ? "إضافة" : "Add"}{" "}
           </button>
           <Popup open={openAdd}>
-            <PopUp close={toggelAdd} />
+            <PopUp refresh={toggelOpenAddresfresh} close={toggelAdd} />
           </Popup>
         </div>
       </div>
@@ -228,7 +236,7 @@ export default function AddPermission() {
 
             {/* the form */}
             <form onSubmit={searchHandeller}>
-              <div className=" py-4 grid grid-cols-3 pb-12 md:pb-0 md:grid-cols-12">
+              <div className=" py-4 grid grid-cols-3 pb-12 md:grid-cols-12">
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "كود الموظف" : "Employee Code"}</h4>
                   <input
@@ -250,84 +258,6 @@ export default function AddPermission() {
                   />
                 </div>
                 <div className=" w-full col-span-3 px-4">
-                  <h4>{isArabicprop ? "الفرع" : "Branch"}</h4>
-                  <select
-                    className=" w-full p-2 border outline-none"
-                    value={branches}
-                    onChange={(e) => setbranches(e.target.value)}
-                  >
-                    <option selected hidden>
-                      Choose one
-                    </option>
-                    {branchesOptions}
-                  </select>
-                </div>
-                <div className=" w-full col-span-3 px-4">
-                  <h4>{isArabicprop ? "الإدارة" : "Management"}</h4>
-                  <select
-                    className=" w-full p-2 border outline-none"
-                    value={management}
-                    onChange={(e) => setManagement(e.target.value)}
-                  >
-                    <option selected hidden>
-                      Choose one
-                    </option>
-                    {mangementOptions}
-                  </select>
-                </div>
-                <div className=" w-full col-span-3 px-4">
-                  <h4>{isArabicprop ? "القسم" : "Department"}</h4>
-                  <select
-                    className=" w-full p-2 border outline-none"
-                    value={department}
-                    onChange={(e) => setDepartment(e.target.value)}
-                  >
-                    <option selected hidden>
-                      Choose one
-                    </option>
-                    {departmentOptions}
-                  </select>
-                </div>
-                <div className=" w-full col-span-3 px-4">
-                  <h4>{isArabicprop ? "الوظيفة" : "Job"}</h4>
-                  <select
-                    className=" w-full p-2 border outline-none"
-                    value={job}
-                    onChange={(e) => setJob(e.target.value)}
-                  >
-                    <option selected hidden>
-                      Choose one
-                    </option>
-                    {jobOptions}
-                  </select>
-                </div>
-                <div className=" w-full col-span-3 px-4">
-                  <h4>{isArabicprop ? "المجموعة" : "Group"}</h4>
-                  <select
-                    className=" w-full p-2 border outline-none"
-                    value={group}
-                    onChange={(e) => setGroup(e.target.value)}
-                  >
-                    <option selected hidden>
-                      Choose one
-                    </option>
-                    {groupOptions}
-                  </select>
-                </div>
-                <div className=" w-full col-span-3 px-4">
-                  <h4>{isArabicprop ? "وقت العمل" : "Shift"}</h4>
-                  <select
-                    className=" w-full p-2 border outline-none"
-                    value={shift}
-                    onChange={(e) => setShift(e.target.value)}
-                  >
-                    <option selected hidden>
-                      Choose one
-                    </option>
-                    {workingTimeOptions}
-                  </select>
-                </div>
-                <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "نوع الاذن" : "Permission Type"}</h4>
                   <select
                     className=" w-full p-2 border outline-none"
@@ -337,28 +267,17 @@ export default function AddPermission() {
                     <option selected hidden>
                       Choose one
                     </option>
-                    <option value="Temporary">مؤقت</option>
-                    <option value="Late">حضور متاخر</option>
-                    <option value="Early">انصراف مبكر</option>
-                    <option value="AllDay">يوم كامل</option>
+                    <option value="حضور متاخر">حضور متاخر</option>
+                    <option value="انصراف مبكر">انصراف مبكر</option>
                   </select>
                 </div>
                 <div className=" w-full col-span-3 px-4">
-                  <h4>{isArabicprop ? "من" : "From"}</h4>
+                  <h4>{isArabicprop ? "التاريخ" : "Date"}</h4>
                   <input
                     className=" p-2 border outline-none w-full "
                     type="date"
-                    value={from}
-                    onChange={(e) => setFrom(e.target.value)}
-                  />
-                </div>
-                <div className=" w-full col-span-3 px-4">
-                  <h4>{isArabicprop ? "إلى" : "To"}</h4>
-                  <input
-                    className=" p-2 border outline-none w-full "
-                    type="date"
-                    value={to}
-                    onChange={(e) => setTo(e.target.value)}
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
                   />
                 </div>
               </div>
@@ -387,16 +306,26 @@ export default function AddPermission() {
       {/*  */}
       <div className=" w-full font-sans my-4 overflow-x-scroll md:overflow-x-hidden">
         <Popup open={openDelet}>
-          <Delete close={toggleDelet} />
+          <Delete
+            refresh={closrefresh}
+            close={toggleDelet}
+            link={"deletePermision"}
+            element={deleteditem}
+          />
         </Popup>
         <Popup open={openEdit}>
-          <PopUp edit={true} employee={employee} close={closeEdit} />
+          <PopUp
+            edit={true}
+            employee={employee}
+            refresh={closeEditRefresh}
+            close={closeEdit}
+          />
         </Popup>
-        <table className=" min-w-full w-200 md:w-full text-sm ">
+        <table className=" table-auto min-w-full w-200 md:w-full text-sm ">
           {/* tabelBody */}
           <thead>
-            <tr className=" grid grid-cols-12 bg-white p-2 border text-black/70">
-              <th className=" col-span-1  text-start">
+            <tr className=" grid-cols-12 bg-white p-2 border text-black/70">
+              <th className=" p-2 col-span-1  text-start">
                 {isArabicprop ? "الكود" : "Code"}
               </th>
               <th className=" col-span-2  text-start">
@@ -405,24 +334,24 @@ export default function AddPermission() {
               <th className=" col-span-1  text-start">
                 {isArabicprop ? "التاريخ" : "Date"}
               </th>
-              <th className=" col-span-2  text-start">
+              {/* <th className=" col-span-2  text-start">
                 {isArabicprop ? "الفرع" : "Branch"}
-              </th>
-              <th className=" col-span-1  text-start">
+              </th> */}
+              {/* <th className=" col-span-1  text-start">
                 {isArabicprop ? "الدوام" : "Working Time"}
-              </th>
+              </th> */}
               <th className=" col-span-1  text-start">
                 {isArabicprop ? "نوع الإذن" : "Permission Type"}
               </th>
               <th className=" col-span-1  text-start">
                 {isArabicprop ? "الوردية" : " Shift"}
               </th>
-              <th className=" col-span-1 text-start">
+              {/* <th className=" col-span-1 text-start">
                 {isArabicprop ? "وقت الحضور" : "Time in"}
               </th>
               <th className=" col-span-1 text-start">
                 {isArabicprop ? "وقت الانصارف" : "Time out"}
-              </th>
+              </th> */}
               <th className=" col-span-1 text-cenetr">
                 {isArabicprop ? "العمليات" : "Actions"}
               </th>
