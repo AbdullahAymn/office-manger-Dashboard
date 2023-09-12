@@ -104,7 +104,7 @@ export default function OverTimeReprt() {
       searched = searched.filter((e) => e.nameEmployee.includes(name.trim()));
     }
     if (code) {
-      searched = searched.filter((e) => e.codeEmployee === code);
+      searched = searched.filter((e) => e.codeEmployee == code);
     }
 
     let show = searched.map((e) => (
