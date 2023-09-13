@@ -2,7 +2,6 @@
 import { isArabic } from "@/utils/langStore";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
-import { permissionTempData } from "../tempData";
 import Cookies from "js-cookie";
 
 export default function PopUp(props) {

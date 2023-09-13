@@ -420,7 +420,7 @@ export default function User(props) {
           {/*  */}
           {/* Settings */}
           {/*  */}
-          <div className=" py-4 px-4 border rounded-md mx-8 font-sans">
+          {/* <div className=" py-4 px-4 border rounded-md mx-8 font-sans">
             <div>
               <Checkbox
                 onChange={(e) => setSettings(e.target.checked)}
@@ -490,7 +490,7 @@ export default function User(props) {
                 <label>{isArabicprop ? "تسجيل خروج بدون بصمة" : ""}</label>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className=" my-4 py-8 mx-4 font-sans flex items-center justify-center">
             <Link href="/main/employees">
               <button className=" text-lg rounded-full py-1 px-12 mx-2 md:mx-14 text-black bg-gray-200">

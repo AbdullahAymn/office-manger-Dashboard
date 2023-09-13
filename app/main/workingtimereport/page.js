@@ -1,10 +1,18 @@
 "use client";
+import Loader from "@/app/components/Loader";
 import Label from "@/app/components/reports/Label";
 import { isArabic } from "@/utils/langStore";
-import React, { useContext, useState } from "react";
+import { data } from "autoprefixer";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { fonty } from "@/utils/Amiri-Regular-normal (1)";
+import Cookies from "js-cookie";
+import React, { useContext, useEffect, useState } from "react";
+import Popup from "reactjs-popup";
 
 export default function WorkingTimeReports() {
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
 
   //show serach
 
@@ -14,25 +22,287 @@ export default function WorkingTimeReports() {
     setShowSearch(val);
   };
 
+  // -------------------------------------------------------------------
+
+  //
+  //
+  //Get Data
+  //
+  //
+
+  const myHeaders = new Headers();
+  const token = Cookies.get("token");
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  const [dataToMap, setDataToMap] = useState([[], []]);
+  const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState([]);
+
+  useEffect(() => {
+    setLoader(true);
+    fetch("https://backend2.dasta.store/api/auth/finallyReportgetTimeWork", {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setDataToMap(data);
+          setData1(data[0]);
+          setData2(data[1]);
+          // console.log(data.days)
+          setLoader(false);
+        });
+      }
+    });
+  }, []);
+
+  // console.log(dataToMap);
+  // -------------------------------------------------------------------
+
+  //
+  //Maping
+  //
+
+  // search
+
+  const [name, setName] = useState();
+  const [type, setType] = useState();
+  const searchHandeller = (e) => {
+    e.preventDefault();
+
+    if (name) {
+      let searched1 = dataToMap[0];
+      let searched2 = dataToMap[1];
+      searched1 = searched1.filter((e) => e.shift.name.includes(name.trim()));
+      searched2 = searched2.filter((e) => e.shift.name.includes(name.trim()));
+
+      setData1(searched1);
+      setData2(searched2);
+      // searched1.map(e => {
+      //   console.log(e.shift.name.includes(name.trim()))
+      // })
+    }
+  };
+
+  // -------------------------------------------------------------------
+  //
+
+  const normalShow = data1.map((el, inx) => {
+    let num = inx;
+
+    const rows = el.data.map((elemen, index) => {
+      let day = isArabicprop ? elemen.day.name : elemen.day.name_en;
+      let in1 = "";
+      let out1 = "";
+      let in2 = "";
+      let out2 = "";
+      let in3 = "";
+      let out3 = "";
+      let in4 = "";
+      let out4 = "";
+
+      // console.log(elemen);
+
+      elemen.work.map((element) => {
+        if (element.name == "الورديه الاولي") {
+          in1 = element.attendance;
+          out1 = element.leaveTime;
+        }
+        if (element.name == "الورديه الثانيه") {
+          in2 = element.attendance;
+          out2 = element.leaveTime;
+        }
+        if (element.name == "الورديه الثالثه") {
+          in3 = element.attendance;
+          out3 = element.leaveTime;
+        }
+        if (element.name == "الورديه الرابعه") {
+          in4 = element.attendance;
+          out4 = element.leaveTime;
+        }
+      });
+
+      return (
+        <tr key={index} className=" p-2">
+          <td className=" p-2 text-center">{day}</td>
+          <td className=" p-2 text-center">{in1}</td>
+          <td className=" p-2 text-center">{out1}</td>
+          <td className=" p-2 text-center">{in2}</td>
+          <td className=" p-2 text-center">{out2}</td>
+          <td className=" p-2 text-center">{in3}</td>
+          <td className=" p-2 text-center">{out3}</td>
+          <td className=" p-2 text-center">{in4}</td>
+          <td className=" p-2 text-center">{out4}</td>
+        </tr>
+      );
+    });
+
+    return (
+      <>
+        <table
+          id={`mytabe0${num}`}
+          key={inx}
+          className="  my-3 min-w-full table-auto text-sm  w-200 md:w-full font-sans"
+        >
+          <thead>
+            <tr></tr>
+            <tr className="  w-full bg-[#393d3f50] m-1 text-black/70 border">
+              <th colSpan={6}>{el.shift.name}</th>
+              <th colSpan={5}>{el.shift.type_shift}</th>
+            </tr>
+            <tr>
+              <th className=" p-2">{isArabicprop ? "اليوم" : "Day"} </th>
+              <th colSpan={2} className=" p-2">
+                {isArabicprop ? "الوردية الاولي" : "Shift one"}{" "}
+              </th>
+              <th colSpan={2} className=" p-2">
+                {isArabicprop ? "الوردية الثانية" : "Shift Two"}{" "}
+              </th>
+              <th colSpan={2} className=" p-2">
+                {isArabicprop ? "الوردية الثالثة" : "Shift Three"}{" "}
+              </th>
+              <th colSpan={2} className=" p-2">
+                {isArabicprop ? "الوردية الرابعة" : "Shift Four"}{" "}
+              </th>
+            </tr>
+            <tr>
+              <tr></tr>
+              <th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>
+              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
+              <th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>
+              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
+              <th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>
+              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
+              <th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>
+              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </table>
+        <hr className=" bg-black/50 h-[1px]" />
+      </>
+    );
+  });
+  const openShow = data2.map((el, inx) => {
+    let num = inx;
+
+    const rows = el.data.map((elemen, index) => {
+      console.log(elemen);
+      // let day = "";
+      let day = isArabicprop ? elemen.name : elemen.name_en;
+      let type = elemen.type;
+
+      return (
+        <tr key={index} className=" p-2">
+          <td className=" p-2 text-center">{day}</td>
+          <td className=" p-2 text-center">{type}</td>
+        </tr>
+      );
+    });
+
+    return (
+      <>
+        <table
+          id={`mytabe1${num}`}
+          key={inx}
+          className="  my-3 min-w-full table-auto text-sm  w-200 md:w-full font-sans"
+        >
+          <thead>
+            <tr></tr>
+            <tr className="  w-full bg-[#393d3f50] m-1 text-black/70 border">
+              <th>{el.shift.name}</th>
+              <th>{el.shift.type_shift}</th>
+            </tr>
+            <tr>
+              <th className=" p-2">{isArabicprop ? "اليوم" : "Day"} </th>
+              <th className=" p-2">{isArabicprop ? "الحالة" : "Status"} </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr></tr>
+            {rows}
+          </tbody>
+        </table>
+        <hr className=" bg-black/50 h-[1px]" />
+      </>
+    );
+  });
+  // -------------------------------------------------------------------
+
   //
   //
   //search
   //
   //
-  const [name, setName] = useState();
-  const [type, setType] = useState();
-  const searchHandeller = (e) => {
-    e.preventDefault();
-  };
 
   const resetHandeller = () => {
     setName("");
     setType("");
+
+    setData1(dataToMap[0]);
+    setData2(dataToMap[1]);
   };
+
+  // -------------------------------------------------------------------
+
+  //
+  // Exporting
+  //
+
+  //pdf
+
+  function printDocument() {
+    const doc = new jsPDF();
+    doc.setFont("Amiri-Regular");
+    doc.text(
+      90,
+      10,
+      isArabicprop ? "تقرير أوقات العمل" : "Working Time Report"
+    );
+    dataToMap.map((e, index) => {
+      let num = index;
+      e.map((el, inx) => {
+        let x = inx;
+        autoTable(doc, {
+          pageBreak: "auto",
+          styles: { font: "Amiri-Regular", halign: "right", fontSize: "6" },
+          html: `#mytabe${num}${x}`,
+        });
+      });
+    });
+
+    doc.save("تقرير أوقات العمل.pdf");
+  }
+
+  //
+  //Excel
+  const headers = [
+    { label: "الاسم", key: "name" },
+    { label: "النوع", key: "type" },
+  ];
+
+  let cvsData = [];
+
+  const cvs = dataToMap.map((e, index) => {
+    e.map((el, indx) => {
+      cvsData.push({
+        name: el.shift.name,
+        type: el.shift.type_shift,
+      });
+    });
+  });
+
   return (
     <div className=" font-sans">
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       <div>
         <Label
+          headers={headers}
+          data={cvsData}
+          fileName="تقارير  أوقات العمل"
+          pdf={printDocument}
           setsearch={showSearchHandeller}
           label={isArabicprop ? "أوقات العمل" : "Working Time"}
         />
@@ -67,9 +337,12 @@ export default function WorkingTimeReports() {
                   <option selected hidden>
                     Choose one
                   </option>
-                  <option value='normal'>{isArabicprop ? "عادي" : "Normal"}</option>
-                  <option value='open'>{isArabicprop ? "مفتوح" : "Open"}</option>
-                  <option value='all'>{isArabicprop ? "الكل" : "All"}</option>
+                  <option value="العادي">
+                    {isArabicprop ? "عادي" : "Normal"}
+                  </option>
+                  <option value="المفتوح">
+                    {isArabicprop ? "مفتوح" : "Open"}
+                  </option>
                 </select>
               </div>
             </div>
@@ -83,6 +356,9 @@ export default function WorkingTimeReports() {
           </form>
         </div>
       )}
+
+      {type !== "المفتوح" && <div>{normalShow}</div>}
+      {type !== "العادي" && <div>{openShow}</div>}
     </div>
   );
 }

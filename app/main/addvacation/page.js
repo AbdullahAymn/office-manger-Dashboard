@@ -3,37 +3,77 @@ import Paginate from "@/app/components/Paginate";
 import { isArabic } from "@/utils/langStore";
 import { MenuItem, Select } from "@mui/material";
 import Link from "next/link";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 import Delete from "@/app/components/popup/delete";
-import { vacationTempData } from "./tempdata";
 import PopUp from "./components/PopUp";
 import useOptions from "@/utils/useOptions";
 import { options } from "@/utils/optionStore";
+import Loader from "@/app/components/Loader";
+import Cookies from "js-cookie";
 
 export default function AddVacation() {
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  const refrshopt = useContext(options).refresh;
+  const setrefrshopt = useContext(options).setRefresh;
+  useEffect(() => {
+    setrefrshopt(!refrshopt);
+  }, []);
+
   const [showsearch, setShowSearch] = useState(true);
-  const branchesOptions = useOptions(useContext(options).branch);
-  const mangementOptions = useOptions(useContext(options).mangement);
-  const departmentOptions = useOptions(useContext(options).department);
-  const jobOptions = useOptions(useContext(options).job);
-  const groupOptions = useOptions(useContext(options).group);
-  const workingTimeOptions = useOptions(useContext(options).workingTime);
+
+  //getData
+  const [showData, setShowData] = useState([]);
+  const [jobsDataforserch, setJobsDatasforserch] = useState([]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  useEffect(() => {
+    setLoader(true);
+    fetch(`https://backend2.dasta.store/api/auth/fetchAllholiday`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setShowData(data);
+          setJobsDatasforserch(data);
+        });
+        setLoader(false);
+      }
+    });
+  }, [refresh]);
 
   //
   //
   //search
   //
   //
+  const [types, setTypes] = useState([]);
+  useEffect(() => {
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchsortholiday`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setTypes(data);
+        });
+      }
+    });
+  }, []);
+
+  const typeOptions = types.map((e, index) => (
+    <option key={index} value={e.name}>
+      {e.name}
+    </option>
+  ));
+
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [branches, setbranches] = useState("");
-  const [management, setManagement] = useState("");
-  const [department, setDepartment] = useState("");
-  const [job, setJob] = useState("");
-  const [group, setGroup] = useState("");
-  const [shift, setShift] = useState("");
   const [type, setType] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -41,56 +81,30 @@ export default function AddVacation() {
   const resetHandeller = () => {
     setCode("");
     setName("");
-    setbranches("");
-    setManagement("");
-    setDepartment("");
-    setJob("");
-    setGroup("");
-    setShift("");
     setType("");
     setFrom("");
     setTo("");
 
-    setShowData(vacationTempData);
+    setShowData(jobsDataforserch);
   };
-
-  const [showData, setShowData] = useState(vacationTempData);
 
   const searchHandeller = (e) => {
     e.preventDefault();
-    let searched = vacationTempData;
+    let searched = jobsDataforserch;
     if (code) {
-      searched = searched.filter((e) => e.code == code.trim());
+      searched = searched.filter((e) => e.codeEmployee == code.trim());
     }
     if (name) {
-      searched = searched.filter((e) => e.name.includes(name.trim()));
-    }
-    if (branches) {
-      searched = searched.filter((e) => e.branch === branches);
-    }
-    if (management) {
-      searched = searched.filter((e) => e.management === management);
-    }
-    if (department) {
-      searched = searched.filter((e) => e.department === department);
-    }
-    if (job) {
-      searched = searched.filter((e) => e.job === job);
-    }
-    if (group) {
-      searched = searched.filter((e) => e.group === group);
-    }
-    if (shift) {
-      searched = searched.filter((e) => e.workingTime === shift);
+      searched = searched.filter((e) => e.nameEmployee.includes(name.trim()));
     }
     if (type) {
-      searched = searched.filter((e) => e.type === type);
+      searched = searched.filter((e) => e.sortOfHoliday === type);
     }
     if (from) {
-      searched = searched.filter((e) => e.from === from);
+      searched = searched.filter((e) => e.fromDay === from);
     }
     if (to) {
-      searched = searched.filter((e) => e.to === to);
+      searched = searched.filter((e) => e.toDay === to);
     }
 
     setShowData(searched);
@@ -109,9 +123,18 @@ export default function AddVacation() {
   //
 
   const [openDelet, setOpenDelete] = useState(false);
+  const [deleteditem, setdeletedItem] = useState("");
+  const openDeleteHandeller = (e) => {
+    setdeletedItem(e);
+    setOpenDelete(!openDelet);
+  };
 
   const toggleDelet = () => {
     setOpenDelete(!openDelet);
+  };
+  const closrefresh = () => {
+    setOpenDelete(!openDelet);
+    setRefresh(!refresh);
   };
 
   //Add
@@ -120,7 +143,11 @@ export default function AddVacation() {
   const toggelAdd = () => {
     setOpenAdd(!openAdd);
   };
-  //Add
+  const toggelOpenAddresfresh = () => {
+    setOpenAdd(!openAdd);
+    setRefresh(!refresh);
+  };
+  //Edit
 
   const [openEdit, setOpenEdit] = useState(false);
   const [employee, setEmployee] = useState({});
@@ -134,27 +161,27 @@ export default function AddVacation() {
     setOpenEdit(!openEdit);
   };
 
+  const closeEditRefresh = () => {
+    setOpenEdit(!openEdit);
+    setRefresh(!refresh);
+  };
+
   //
   //Maping
   //
 
-  const tabelData = slice.map((e) => (
-    <tr
-      key={e.code}
-      className=" grid grid-cols-12 bg-white p-2 border text-black/70"
-    >
-      <td className=" col-span-1  text-start">{e.code}</td>
-      <td className=" col-span-2  text-start">{e.name}</td>
-      <td className=" col-span-2  text-start">{e.branch}</td>
-      <td className=" col-span-1  text-start">{e.type}</td>
-      <td className=" col-span-1  text-start">{e.from}</td>
-      <td className=" col-span-1  text-start">{e.to}</td>
-      <td className=" col-span-1  text-center">{e.duration}</td>
-      <td className=" col-span-2  text-start">{e.notes}</td>
-      <td className=" col-span-1  text-center flex items-center justify-center">
+  const tabelData = slice.map((e, index) => (
+    <tr key={index} className=" grid-cols-12 bg-white p-2 border text-black/70">
+      <td className=" p-2 col-span-1  text-start">{e.codeEmployee}</td>
+      <td className=" col-span-2  text-start">{e.nameEmployee}</td>
+      <td className=" col-span-1  text-start">{e.sortOfHoliday}</td>
+      <td className=" col-span-1  text-center">{e.fromDay}</td>
+      <td className=" col-span-1  text-center">{e.toDay}</td>
+      <td className=" col-span-2  text-start">{e.comment}</td>
+      <td className=" p-2 col-span-1  text-center flex items-center justify-center">
         {" "}
         <i
-          onClick={() => toggleDelet(e)}
+          onClick={() => openDeleteHandeller(e)}
           className="fa-solid fa-trash mx-1 md:mx-2 hover:cursor-pointer hover:text-red-600"
         ></i>
         <i
@@ -167,6 +194,9 @@ export default function AddVacation() {
   return (
     <div>
       <div className=" font-sans overflow-x-hidden">
+        <Popup open={loader}>
+          <Loader />
+        </Popup>
         {/*  */}
         {/* Top section */}
         {/*  */}
@@ -205,7 +235,7 @@ export default function AddVacation() {
               {isArabicprop ? "إضافة" : "Add"}{" "}
             </button>
             <Popup open={openAdd}>
-              <PopUp close={toggelAdd} />
+              <PopUp close={toggelAdd} refresh={toggelOpenAddresfresh} />
             </Popup>
           </div>
         </div>
@@ -253,84 +283,6 @@ export default function AddVacation() {
                     />
                   </div>
                   <div className=" w-full col-span-3 px-4">
-                    <h4>{isArabicprop ? "الفرع" : "Branch"}</h4>
-                    <select
-                      className=" w-full p-2 border outline-none"
-                      value={branches}
-                      onChange={(e) => setbranches(e.target.value)}
-                    >
-                      <option selected hidden>
-                        Choose one
-                      </option>
-                      {branchesOptions}
-                    </select>
-                  </div>
-                  <div className=" w-full col-span-3 px-4">
-                    <h4>{isArabicprop ? "الإدارة" : "Management"}</h4>
-                    <select
-                      className=" w-full p-2 border outline-none"
-                      value={management}
-                      onChange={(e) => setManagement(e.target.value)}
-                    >
-                      <option selected hidden>
-                        Choose one
-                      </option>
-                      {mangementOptions}
-                    </select>
-                  </div>
-                  <div className=" w-full col-span-3 px-4">
-                    <h4>{isArabicprop ? "القسم" : "Department"}</h4>
-                    <select
-                      className=" w-full p-2 border outline-none"
-                      value={department}
-                      onChange={(e) => setDeapartmet(e.target.value)}
-                    >
-                      <option selected hidden>
-                        Choose one
-                      </option>
-                      {departmentOptions}
-                    </select>
-                  </div>
-                  <div className=" w-full col-span-3 px-4">
-                    <h4>{isArabicprop ? "الوظيفة" : "Job"}</h4>
-                    <select
-                      className=" w-full p-2 border outline-none"
-                      value={job}
-                      onChange={(e) => setJob(e.target.value)}
-                    >
-                      <option selected hidden>
-                        Choose one
-                      </option>
-                      {jobOptions}
-                    </select>
-                  </div>
-                  <div className=" w-full col-span-3 px-4">
-                    <h4>{isArabicprop ? "المجموعة" : "Group"}</h4>
-                    <select
-                      className=" w-full p-2 border outline-none"
-                      value={group}
-                      onChange={(e) => setGroup(e.target.value)}
-                    >
-                      <option selected hidden>
-                        Choose one
-                      </option>
-                      {groupOptions}
-                    </select>
-                  </div>
-                  <div className=" w-full col-span-3 px-4">
-                    <h4>{isArabicprop ? "وقت العمل" : "Shift"}</h4>
-                    <select
-                      className=" w-full p-2 border outline-none"
-                      value={shift}
-                      onChange={(e) => setShift(e.target.value)}
-                    >
-                      <option selected hidden>
-                        Choose one
-                      </option>
-                      {workingTimeOptions}
-                    </select>
-                  </div>
-                  <div className=" w-full col-span-3 px-4">
                     <h4>{isArabicprop ? "نوع الأجازة" : "Vacation Type"}</h4>
                     <select
                       id="demo-simple-select"
@@ -341,8 +293,7 @@ export default function AddVacation() {
                       <option selected hidden>
                         Choose one
                       </option>
-                      <option value="مرضية">مرضية</option>
-                      <option value="سنوية">سنوية</option>
+                      {typeOptions}
                     </select>
                   </div>
                   <div className=" w-full col-span-3 px-4">
@@ -389,23 +340,30 @@ export default function AddVacation() {
         {/*  */}
         <div className=" w-full font-sans my-4 overflow-x-scroll md:overflow-x-hidden">
           <Popup open={openDelet}>
-            <Delete close={toggleDelet} />
+            <Delete
+              link={"deleteholiday"}
+              element={deleteditem}
+              close={toggleDelet}
+              refresh={closrefresh}
+            />
           </Popup>
           <Popup open={openEdit}>
-            <PopUp edit={true} employee={employee} close={closeEdit} />
+            <PopUp
+              edit={true}
+              employee={employee}
+              refresh={closeEditRefresh}
+              close={closeEdit}
+            />
           </Popup>
-          <table className=" min-w-full w-200 md:w-full text-sm ">
+          <table className=" table-auto min-w-full w-200 md:w-full text-sm ">
             {/* tabelBody */}
             <thead>
-              <tr className=" grid grid-cols-12 bg-white p-2 border text-black/70">
-                <th className=" col-span-1  text-start">
+              <tr className=" grid-cols-12 bg-white p-2 border text-black/70">
+                <th className=" p-2 col-span-1  text-start">
                   {isArabicprop ? "الكود" : "Code"}
                 </th>
                 <th className=" col-span-2  text-start">
                   {isArabicprop ? "الإسم" : "Name"}
-                </th>
-                <th className=" col-span-2  text-start">
-                  {isArabicprop ? "الفرع" : "Branch"}
                 </th>
                 <th className=" col-span-1  text-start">
                   {isArabicprop ? "نوع الاجازة" : "Vacation Type"}
@@ -415,9 +373,6 @@ export default function AddVacation() {
                 </th>
                 <th className=" col-span-1 text-cenetr">
                   {isArabicprop ? "إالى" : "To"}
-                </th>
-                <th className=" col-span-1 text-cenetr">
-                  {isArabicprop ? "المدة" : "Duration"}
                 </th>
                 <th className=" col-span-2 text-start">
                   {isArabicprop ? "ملاحظات" : "Notes"}

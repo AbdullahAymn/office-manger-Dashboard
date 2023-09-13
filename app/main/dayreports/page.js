@@ -282,7 +282,7 @@ export default function DayReports() {
     doc.text(90, 10, isArabicprop ? "تقرير حالة اليوم" : "Day Status Report");
     dataToMap.map((e, index) => {
       let num = index;
-      autoTable(doc, {
+      autoTable(doc, {  
         pageBreak: "auto",
         styles: { font: "Amiri-Regular", halign: "right", fontSize: "6" },
         html: `#mytabe${num}`,
