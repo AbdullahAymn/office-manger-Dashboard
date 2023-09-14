@@ -220,7 +220,7 @@ export default function DelayEarlyLeaveReport() {
     });
 
     doc.save("تقرير اجمالي التأخير.pdf");
-  };
+  }; 
 
 
   // Excel

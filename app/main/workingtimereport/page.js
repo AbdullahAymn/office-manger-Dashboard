@@ -187,7 +187,7 @@ export default function WorkingTimeReports() {
     let num = inx;
 
     const rows = el.data.map((elemen, index) => {
-      console.log(elemen);
+      // console.log(elemen);
       // let day = "";
       let day = isArabicprop ? elemen.name : elemen.name_en;
       let type = elemen.type;
