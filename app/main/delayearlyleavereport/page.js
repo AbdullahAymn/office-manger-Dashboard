@@ -304,8 +304,8 @@ export default function DelayEarlyLeaveReport() {
     { label: "انصراف الورية 2", key: "out2" },
     { label: "حضور الوردية 3", key: "in3" },
     { label: "انصراف الورية 3", key: "out3" },
-    { label: "حضور الوردية 3", key: "in4" },
-    { label: "انصراف الورية 3", key: "out4" },
+    { label: "حضور الوردية 4", key: "in4" },
+    { label: "انصراف الورية 4", key: "out4" },
     { label: "الغياب", key: "abs" },
   ];
   let cvsData = [];

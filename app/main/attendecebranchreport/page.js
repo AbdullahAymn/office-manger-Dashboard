@@ -25,6 +25,7 @@ export default function AttendanceBranchRyreport() {
   }, []);
 
   const workingTimeOptions = useOptions(useContext(options).workingTime);
+  const branchesOptions = useOptions(useContext(options).branch);
 
   // -------------------------------------------------------------------
   //
@@ -43,6 +44,7 @@ export default function AttendanceBranchRyreport() {
   const date = new Date();
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
+  const [branch, setBranch] = useState("");
   const [shift, setShift] = useState("");
   const [from, setFrom] = useState(date.toLocaleDateString("en-CA"));
   const [to, setTo] = useState(date.toLocaleDateString("en-CA"));
@@ -62,12 +64,15 @@ export default function AttendanceBranchRyreport() {
     const formdata = new FormData();
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
-    await fetch("https://backend2.dasta.store/api/auth/FinalReportTotallates", {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    }).then((res) => {
+    await fetch(
+      "https://backend2.dasta.store/api/auth/leaveAndAttedanceinBranch",
+      {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      }
+    ).then((res) => {
       if (res.status === 200) {
         // let dataa = JSON.stringify(res);
         // console.log(res.json())
@@ -98,7 +103,6 @@ export default function AttendanceBranchRyreport() {
     setName("");
     setCode("");
     setBranch("");
-    setJob("");
     setShift("");
     setFrom(date.toLocaleDateString("en-CA"));
     setTo(date.toLocaleDateString("en-CA"));
@@ -106,13 +110,241 @@ export default function AttendanceBranchRyreport() {
     setDataToMap([]);
   };
 
+  // -------------------------------------------------------------------
+  //
+  //
+  //Maping
+  //
+  //
+
+  let searched = dataToMap;
+  if (name) {
+    searched = searched.filter((e) => e.name.includes(name.trim()));
+  }
+  if (code) {
+    searched = searched.filter((e) => e.code == code);
+  }
+  if (branch) {
+    searched = searched.filter((e) => e.branch == branch);
+  }
+  if (shift) {
+    searched = searched.filter((e) => e.shift == shift);
+  }
+
+  const dataShow = searched.map((e, index) => {
+    let num = index;
+
+    let show = e.details.map((el) => {
+      let in1 = "";
+      let out1 = "";
+      let in2 = "";
+      let out2 = "";
+      let in3 = "";
+      let out3 = "";
+      let in4 = "";
+      let out4 = "";
+
+      el.data.map((elem) => {
+        if (elem.worktime == "الورديه الاولي") {
+          in1 = elem.start_attedance;
+          out1 = elem.end_leave;
+        }
+        if (elem.worktime == "الورديه الثانيه") {
+          in2 = elem.start_attedance;
+          out2 = elem.end_leave;
+        }
+        if (elem.worktime == "الورديه الثالثه") {
+          in3 = elem.start_attedance;
+          out3 = elem.end_leave;
+        }
+        if (elem.worktime == "الورديه الرابعه") {
+          in4 = elem.start_attedance;
+          out4 = elem.end_leave;
+        }
+      });
+
+      return (
+        <tr className=" grid-cols-11 border">
+          <td className=" col-span-1 text-center p-2">{el.date}</td>
+          <td className=" col-span-3 text-center p-2">{e.shift}</td>
+          <td className=" col-span-3 text-center p-2">{e.branch}</td>
+          <td className=" col-span-1 text-center p-2">{in1}</td>
+          <td className=" col-span-3 text-center p-2">{out1}</td>
+          <td className=" col-span-3 text-center p-2">{in2}</td>
+          <td className=" col-span-1 text-center p-2">{out2}</td>
+          <td className=" col-span-3 text-center p-2">{in3}</td>
+          <td className=" col-span-3 text-center p-2">{out3}</td>
+          <td className=" col-span-1 text-center p-2">{in4}</td>
+          <td className=" col-span-3 text-center p-2">{out4}</td>
+        </tr>
+      );
+    });
+
+    // const froom = from
+    const day = new Date(from);
+    day.setDate(day.getDate() + index);
+    return (
+      <>
+        <table
+          id={`mytabe${num}`}
+          className=" my-3 min-w-full table-auto text-sm  w-200 md:w-full font-sans"
+        >
+          <thead>
+            <tr></tr>
+
+            <tr className=" grid-cols-11  w-full bg-[#8c929450] m-1 text-black/70 border">
+              <th colspan={2} className=" col-span-11">
+                {isArabicprop ? "الكود" : "Code"} {" :"} {e.code}
+              </th>
+              <th colspan={2} className=" col-span-11">
+                {isArabicprop ? "الاسم" : "Name"} {" :"} {e.name}
+              </th>
+              <th colspan={2} className=" col-span-11">
+                {isArabicprop ? "الفرع" : "Branch"} {" :"} {e.branch}
+              </th>
+              <th colspan={5} className=" col-span-11">
+                {isArabicprop
+                  ? `الفترة من ${e.from} الي ${e.to}`
+                  : `From ${e.from} to ${e.to}`}
+              </th>
+            </tr>
+            <tr className="bg-white grid-cols-11 border text-black/70">
+              <th className=" col-span-1 text-center p-2">
+                {isArabicprop ? "التاريخ" : "Date"}
+              </th>
+              <th className=" col-span-3 text-center p-2">
+                {isArabicprop ? "الدوام" : "Shift"}
+              </th>
+              <th className=" col-span-3 text-center p-2">
+                {isArabicprop ? "الفرع" : "Branch"}
+              </th>
+              <th colSpan={2} className=" col-span-2 text-center p-2">
+                {isArabicprop ? "الوردية الاولي" : "shift one"}
+              </th>
+              <th colSpan={2} className=" col-span-2 text-center p-2">
+                {isArabicprop ? "الوردية الثانية" : "shift two"}
+              </th>
+              <th colSpan={2} className=" col-span-2 text-center p-2">
+                {isArabicprop ? "الوردية الثالثة" : "shift three"}
+              </th>
+              <th colSpan={2} className=" col-span-2 text-center p-2">
+                {isArabicprop ? "الوردية الرابعة" : "shift four"}
+              </th>
+            </tr>
+            <tr className="border text-black/70">
+              <th></th>
+              <th></th>
+              <th></th>
+              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
+              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
+              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
+              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
+              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
+              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
+              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
+              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
+            </tr>
+          </thead>
+          <tbody>{show}</tbody>
+        </table>
+        <hr className="h-1 bg-black" />
+      </>
+    );
+  });
+
+  // -------------------------------------------------------------------
   //
   // Exporting
   //
 
-  const printDocument = () => {};
-  const headers = "";
-  const cvsData = "";
+  const printDocument = () => {
+    const doc = new jsPDF();
+    doc.setFont("Amiri-Regular");
+    doc.text(
+      90,
+      10,
+      isArabicprop ? " تقارير الحضور والانصراف بالفروع" : "Branch Attendance Report"
+    );
+    dataToMap.map((e, index) => {
+      let num = index;
+      autoTable(doc, {
+        pageBreak: "auto",
+        styles: { font: "Amiri-Regular", halign: "right", fontSize: "6" },
+        html: `#mytabe${num}`,
+      });
+    });
+
+    doc.save("تقارير الحضور والانصراف بالفروع.pdf");
+  };
+
+  //Excel
+
+  const headers = [
+    { label: `الكود`, key: "code" },
+    { label: "الاسم", key: "name" },
+    { label: "الفرع", key: "branch" },
+    { label: "الدوام", key: "shift" },
+    { label: "التاريخ", key: "date" },
+    { label: "حضور الوردية 1", key: "in1" },
+    { label: "انصراف الورية 1", key: "out1" },
+    { label: "حضور الوردية 2", key: "in2" },
+    { label: "انصراف الورية 2", key: "out2" },
+    { label: "حضور الوردية 3", key: "in3" },
+    { label: "انصراف الورية 3", key: "out3" },
+    { label: "حضور الوردية 4", key: "in4" },
+    { label: "انصراف الورية 4", key: "out4" },
+   
+  ];
+  let cvsData = [];
+
+  const cvsDatas = dataToMap.map((e, index) => {
+    e.details.map((el) => {
+
+      let in1 = "";
+      let out1 = "";
+      let in2 = "";
+      let out2 = "";
+      let in3 = "";
+      let out3 = "";
+      let in4 = "";
+      let out4 = "";
+
+      el.data.map((elem) => {
+        if (elem.worktime == "الورديه الاولي") {
+          in1 = elem.start_attedance;
+          out1 = elem.end_leave;
+        }
+        if (elem.worktime == "الورديه الثانيه") {
+          in2 = elem.start_attedance;
+          out2 = elem.end_leave;
+        }
+        if (elem.worktime == "الورديه الثالثه") {
+          in3 = elem.start_attedance;
+          out3 = elem.end_leave;
+        }
+        if (elem.worktime == "الورديه الرابعه") {
+          in4 = elem.start_attedance;
+          out4 = elem.end_leave;
+        }
+      })
+
+      cvsData.push({
+        code: e.code,
+        name: e.name,
+        branch: e.branch ,
+        shift: e.shift,
+        date: el.date,
+        in1: in1,
+        out1: out1,
+        in2: in2,
+        out2: out2,
+        in3: in3,
+        out3: out3,
+        in4: in4,
+        out4: out4,
+      });
+    });
+  });
 
   return (
     <div className=" font-sans">
@@ -164,6 +396,20 @@ export default function AttendanceBranchRyreport() {
                   />
                 </div>
                 <div className=" col-span-3 md:mx-4">
+                  <h4>{isArabicprop ? "الفرع" : "Branch"} </h4>
+                  <select
+                    value={branch}
+                    required
+                    onChange={(e) => setBranch(e.target.value)}
+                    className=" p-2 rounded-md border outline-none w-full"
+                  >
+                    <option selected hidden>
+                      Choose one
+                    </option>
+                    {branchesOptions}
+                  </select>
+                </div>
+                <div className=" col-span-3 md:mx-4">
                   <h4>{isArabicprop ? "الدوام" : " Working Time"}</h4>
                   <select
                     value={shift}
@@ -207,6 +453,7 @@ export default function AttendanceBranchRyreport() {
           </div>
         </div>
       )}
+      <div>{dataShow}</div>
     </div>
   );
 }
