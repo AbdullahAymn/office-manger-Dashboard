@@ -166,7 +166,7 @@ export default function WorkingTimeReports() {
               </th>
             </tr>
             <tr>
-              <tr></tr>
+              <th></th>
               <th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>
               <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
               <th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>
@@ -277,11 +277,157 @@ export default function WorkingTimeReports() {
   //
   //Excel
   const headers = [
-    { label: "الاسم", key: "name" },
-    { label: "النوع", key: "type" },
+    { label: " ", key: "day" },
+    { label: " ", key: "statu" },
+    { label: " ", key: "in1" },
+    { label: " ", key: "out1" },
+    { label: " ", key: "in2" },
+    { label: " ", key: "out2" },
+    { label: " ", key: "in3" },
+    { label: " ", key: "out3" },
+    { label: " ", key: "in4" },
+    { label: " ", key: "out4" },
   ];
 
   let cvsData = [];
+
+  dataToMap[0].map((e) => {
+    cvsData.push({
+      day: isArabicprop ? "الدوام" : "shift",
+      statu: isArabicprop ? e.shift.name : e.shift.name_en,
+      in1: "",
+      out1: "",
+      in2: isArabicprop ? "النوع" : "type",
+      out2: e.shift.type_shift,
+      in3: "",
+      out3: "",
+      in4: "",
+      out4: "",
+    });
+    cvsData.push({
+      day: "اليوم",
+      statu: "الحالة",
+      in1: "حضور الوردية 1",
+      out1: "انصراف الوردية 1",
+      in2: "حضور الوردية 2",
+      out2: "انصراف الوردية 2",
+      in3: "حضور الوردية 3",
+      out3: "انصراف الوردية 3",
+      in4: "حضور الوردية 4",
+      out4: "انصراف الوردية 4",
+    });
+
+    e.data.map((ele) => {
+      let in1 = "";
+      let out1 = "";
+      let in2 = "";
+      let out2 = "";
+      let in3 = "";
+      let out3 = "";
+      let in4 = "";
+      let out4 = "";
+
+      ele.work.map((el) => {
+        if (el.name == "الورديه الاولي") {
+          in1 = el.attendance;
+          out1 = el.leaveTime;
+        }
+        if (el.name == "الورديه الثانيه") {
+          in2 = el.attendance;
+          out2 = el.leaveTime;
+        }
+        if (el.name == "الورديه الثالثه") {
+          in3 = el.attendance;
+          out3 = el.leaveTime;
+        }
+        if (el.name == "الورديه الرابعه") {
+          in4 = el.attendance;
+          out4 = el.leaveTime;
+        }
+      });
+
+      cvsData.push({
+        day: isArabicprop ? ele.day.name : ele.day.name_en,
+        statu: ele.day.type,
+        in1: in1,
+        out1: out1,
+        in2: in2,
+        out2: out2,
+        in3: in3,
+        out3: out3,
+        in4: in4,
+        out4: out4,
+      });
+    });
+
+    cvsData.push({
+      day: "",
+      statu: "",
+      in1: "",
+      out1: "",
+      in2: "",
+      out2: "",
+      in3: "",
+      out3: "",
+      in4: "",
+      out4: "",
+    });
+  });
+
+  dataToMap[1].map((e) => {
+    cvsData.push({
+      day: isArabicprop ? "الدوام" : "shift",
+      statu: isArabicprop ? e.shift.name : e.shift.name_en,
+      in1: "",
+      out1: "",
+      in2: isArabicprop ? "النوع" : "type",
+      out2: e.shift.type_shift,
+      in3: "",
+      out3: "",
+      in4: "",
+      out4: "",
+    });
+    cvsData.push({
+      day: "اليوم",
+      statu: "الحالة",
+      in1: "",
+      out1: "",
+      in2: "",
+      out2: "",
+      in3: "",
+      out3: "",
+      in4: "",
+      out4: "",
+    });
+
+    e.data.map((ele) => {
+      cvsData.push({
+        day: isArabicprop ? ele.name : ele.name_en,
+        statu: ele.type,
+        in1: "",
+        out1: "",
+        in2: "",
+        out2: "",
+        in3: "",
+        out3: "",
+        in4: "",
+        out4: "",
+      });
+    });
+
+    cvsData.push({
+      day: "",
+      statu: "",
+      in1: "",
+      out1: "",
+      in2: "",
+      out2: "",
+      in3: "",
+      out3: "",
+      in4: "",
+      out4: "",
+    });
+  });
 
   const cvs = dataToMap.map((e, index) => {
     e.map((el, indx) => {
