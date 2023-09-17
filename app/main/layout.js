@@ -19,6 +19,12 @@ export default function RootLayout({ children }) {
   const token = Cookies.get("token") || false;
   const router = useRouter();
 
+  setTimeout(doSomething, 1000*60*50);
+
+  function doSomething() {
+    window.location.reload()
+}
+
   const goHome = () => {
     router.push("/");
   };

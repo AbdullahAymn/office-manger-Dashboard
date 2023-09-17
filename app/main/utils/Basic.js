@@ -39,7 +39,7 @@ export const Basic = [
     arabic: "أوقات العمل (مفتوح)"  ,
     english: "Working Time (Open)",
     link: "/main/workingtimeOpen",
-    icon: "fa-solid fa-hourglass-start",
+    icon: "fa-solid fa-hourglass-start 11",
   },
   {
     arabic: "الموظفون",

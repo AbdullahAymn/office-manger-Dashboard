@@ -3,22 +3,56 @@ import Paginate from "@/app/components/Paginate";
 import { isArabic } from "@/utils/langStore";
 import { MenuItem, Select } from "@mui/material";
 import Link from "next/link";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 import Delete from "@/app/components/popup/delete";
 import PopUp from "./components/PopUp";
 import { options } from "@/utils/optionStore";
 import useOptions from "@/utils/useOptions";
+import Loader from "@/app/components/Loader";
+import Cookies from "js-cookie";
 
 export default function AddEditTrans() {
   const isArabicprop = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  const refrshopt = useContext(options).refresh;
+  const setrefrshopt = useContext(options).setRefresh;
+  useEffect(() => {
+    setrefrshopt(!refrshopt);
+  }, []);
   const [showsearch, setShowSearch] = useState(true);
   const branchesOptions = useOptions(useContext(options).branch);
   const mangementOptions = useOptions(useContext(options).mangement);
   const departmentOptions = useOptions(useContext(options).department);
   const workingTimeOptions = useOptions(useContext(options).workingTime);
 
+  //
+  // Get Data
+  //
+
   const [transData, setTransData] = useState([]);
+  const [jobsDataforserch, setJobsDatasforserch] = useState([]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+
+  useEffect(() => {
+    setLoader(true);
+    fetch(`https://backend2.dasta.store/api/auth/fetchAllhandle`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setTransData(data);
+          setJobsDatasforserch(data);
+        });
+        setLoader(false);
+      }
+    });
+  }, [refresh]);
 
   //
   //
@@ -28,30 +62,22 @@ export default function AddEditTrans() {
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [branches, setbranches] = useState("");
-  const [management, setManagement] = useState("");
-  const [department, setDepartment] = useState("");
   const [shift, setShift] = useState("");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
+  const [date, setDate] = useState("");
 
   const resetHandeller = () => {
     setCode("");
     setName("");
     setbranches("");
-    setManagement("");
-    setDepartment("");
     setShift("");
-    setFrom("");
-    setTo("");
+    setDate("");
 
-    setShowData(transData);
+    setTransData(jobsDataforserch);
   };
-
-  const [showData, setShowData] = useState(transData);
 
   const searchHandeller = (e) => {
     e.preventDefault();
-    let searched = transData;
+    let searched = jobsDataforserch;
     if (code) {
       searched = searched.filter((e) => e.code == code.trim());
     }
@@ -61,23 +87,14 @@ export default function AddEditTrans() {
     if (branches) {
       searched = searched.filter((e) => e.branch === branches);
     }
-    if (management) {
-      searched = searched.filter((e) => e.management === management);
-    }
-    if (department) {
-      searched = searched.filter((e) => e.department === department);
-    }
     if (shift) {
-      searched = searched.filter((e) => e.workingTime === shift);
+      searched = searched.filter((e) => e.shift === shift);
     }
-    if (from) {
-      searched = searched.filter((e) => e.from === from);
-    }
-    if (to) {
-      searched = searched.filter((e) => e.to === to);
+    if (date) {
+      searched = searched.filter((e) => e.date === date);
     }
 
-    setShowData(searched);
+    setTransData(searched);
   };
 
   // Paginate
@@ -98,9 +115,74 @@ export default function AddEditTrans() {
   const toggelAdd = () => {
     setOpenAdd(!openAdd);
   };
+  const toggelOpenAddresfresh = () => {
+    setOpenAdd(!openAdd);
+    setRefresh(!refresh);
+  };
+
+  //Delete
+
+  const [openDelet, setOpenDelete] = useState(false);
+  const [deleteditem, setdeletedItem] = useState("");
+
+  const openDeleteHandeller = (e) => {
+    setdeletedItem(e);
+    setOpenDelete(!openDelet);
+  };
+
+  const toggleDelet = () => {
+    setOpenDelete(!openDelet);
+  };
+
+  const closrefresh = () => {
+    setOpenDelete(!openDelet);
+    setRefresh(!refresh);
+  };
+
+  //edit
+
+  const [openEdit, setOpenEdit] = useState(false);
+  const [employee, setEmployee] = useState({});
+
+  const openEditHandeller = (e) => {
+    setEmployee(e);
+    setOpenEdit(!openEdit);
+  };
+
+  const closeEdit = () => {
+    setOpenEdit(!openEdit);
+  };
+
+  const closeEditRefresh = () => {
+    setOpenEdit(!openEdit);
+    setRefresh(!refresh);
+  };
+
+  const show = slice.map((e, index) => (
+    <tr key={index} className=" grid grid-cols-10 p-2 border text-black/70">
+      <td className=" col-span-1  text-start">{e.code}</td>
+      <td className=" col-span-2  text-start">{e.name}</td>
+      <td className=" col-span-2  text-start">{e.date}</td>
+      <td className=" col-span-2  text-start">{e.start_attedance}</td>
+      <td className=" col-span-2  text-start">{e.end_leave}</td>
+      <td className=" col-span-1 text-cenetr">
+        <i
+          onClick={() => openDeleteHandeller(e)}
+          className="fa-solid fa-trash mx-1 md:mx-4 hover:cursor-pointer hover:text-red-600"
+        ></i>
+        <i
+          onClick={() => openEditHandeller(e)}
+          className="fa-solid fa-pen-to-square mx-1 md:mx-4 hover:cursor-pointer hover:text-sky-600"
+        ></i>
+      </td>
+    </tr>
+  ));
 
   return (
     <div>
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       <div className=" font-sans overflow-x-hidden">
         {/*  */}
         {/* Top section */}
@@ -140,7 +222,7 @@ export default function AddEditTrans() {
               {isArabicprop ? "إضافة" : "Add"}{" "}
             </button>
             <Popup open={openAdd}>
-              <PopUp close={toggelAdd} />
+              <PopUp refresh={toggelOpenAddresfresh} close={toggelAdd} />
             </Popup>
           </div>
         </div>
@@ -201,32 +283,6 @@ export default function AddEditTrans() {
                     </select>
                   </div>
                   <div className=" w-full col-span-3 px-4">
-                    <h4>{isArabicprop ? "الإدارة" : "Management"}</h4>
-                    <select
-                      className=" w-full p-2 border outline-none"
-                      value={management}
-                      onChange={(e) => setManagement(e.target.value)}
-                    >
-                      <option selected hidden>
-                        Choose one
-                      </option>
-                      {mangementOptions}
-                    </select>
-                  </div>
-                  <div className=" w-full col-span-3 px-4">
-                    <h4>{isArabicprop ? "القسم" : "Department"}</h4>
-                    <select
-                      className=" w-full p-2 border outline-none"
-                      value={department}
-                      onChange={(e) => setDepartment(e.target.value)}
-                    >
-                      <option selected hidden>
-                        Choose one
-                      </option>
-                      {departmentOptions}
-                    </select>
-                  </div>
-                  <div className=" w-full col-span-3 px-4">
                     <h4>{isArabicprop ? "الدوام" : "Shift"}</h4>
                     <select
                       className=" w-full p-2 border outline-none"
@@ -244,17 +300,8 @@ export default function AddEditTrans() {
                     <input
                       className=" p-2 border outline-none w-full "
                       type="date"
-                      value={from}
-                      onChange={(e) => setFrom(e.target.value)}
-                    />
-                  </div>
-                  <div className=" w-full col-span-3 px-4">
-                    <h4>{isArabicprop ? "إلى" : "To"}</h4>
-                    <input
-                      className=" p-2 border outline-none w-full "
-                      type="date"
-                      value={to}
-                      onChange={(e) => setTo(e.target.value)}
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
                     />
                   </div>
                 </div>
@@ -275,19 +322,29 @@ export default function AddEditTrans() {
         {/*  */}
 
         <div className=" w-full">
-          <Paginate data={showData} getSlice={getSlice} />
+          <Paginate data={transData} getSlice={getSlice} />
         </div>
 
         {/*  */}
         {/* Table */}
         {/*  */}
         <div className=" w-full font-sans my-4 overflow-x-scroll md:overflow-x-hidden">
-          {/* <Popup open={openDelet}>
-            <Delete close={toggleDelet} />
+          <Popup open={openDelet}>
+            <Delete
+              refresh={closrefresh}
+              close={toggleDelet}
+              link={"deletehandle"}
+              element={deleteditem}
+            />
           </Popup>
           <Popup open={openEdit}>
-            <PopUp edit={true} employee={employee} close={closeEdit} />
-          </Popup> */}
+            <PopUp
+              edit={true}
+              employee={employee}
+              refresh={closeEditRefresh}
+              close={closeEdit}
+            />
+          </Popup>
           <table className=" min-w-full w-200 md:w-full text-sm ">
             {/* tabelBody */}
             <thead>
@@ -304,7 +361,7 @@ export default function AddEditTrans() {
                 <th className=" col-span-2  text-start">
                   {isArabicprop ? "وقت الحضور" : "Time In"}
                 </th>
-                <th className=" col-span-2  text-cenetr">
+                <th className=" col-span-2 text-start">
                   {isArabicprop ? "وقت الإنصراف" : "Time Out"}
                 </th>
                 <th className=" col-span-1 text-cenetr">
@@ -313,7 +370,7 @@ export default function AddEditTrans() {
               </tr>
             </thead>
 
-            {/* <tbody className=" text-sm"> {tabelData} </tbody> */}
+            <tbody className=" text-sm"> {show} </tbody>
           </table>
         </div>
       </div>

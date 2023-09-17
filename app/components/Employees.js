@@ -1,15 +1,22 @@
 "use client";
 import { isArabic } from "@/utils/langStore";
 import { MenuItem, Select, Switch } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import Paginate from "./Paginate";
 import useOptions from "@/utils/useOptions";
 import { options } from "@/utils/optionStore";
+import Cookies from "js-cookie";
 
 export default function (props) {
   const isArabicprop = useContext(isArabic).arabic;
+
+  const refrshopt = useContext(options).refresh;
+  const setrefrshopt = useContext(options).setRefresh;
+  useEffect(() => {
+    setrefrshopt(!refrshopt);
+  }, []);
   const branchesOptions = useOptions(useContext(options).branch);
   const mangementOptions = useOptions(useContext(options).mangement);
   const departmentOptions = useOptions(useContext(options).department);
@@ -27,26 +34,48 @@ export default function (props) {
   const [department, setDepartment] = useState("");
   const [shift, setShift] = useState("");
 
-  const [employeesData, setEmployeesData] = useState(props.data);
+  const [employeesData, setEmployeesData] = useState([]);
+  const [jobsDataforserch, setJobsDatasforserch] = useState([]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+
+  useEffect(() => {
+    // setLoader(true);
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchemployee`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setEmployeesData(data);
+          setJobsDatasforserch(data);
+        });
+        // setLoader(false);
+      }
+    });
+  }, []);
+
+
   const searchHadller = () => {
-    let searched = props.data;
+    let searched = jobsDataforserch;
     if (code) {
       searched = searched.filter((e) => e.code == code.trim());
     }
     if (name) {
-      searched = searched.filter((e) => e.name.includes(name.trim()));
+      searched = searched.filter((e) => e.name_ar.includes(name.trim()));
     }
     if (branches) {
-      searched = searched.filter((e) => e.branch === branches);
+      searched = searched.filter((e) => e.id_branch === branches);
     }
     if (management) {
-      searched = searched.filter((e) => e.management === management);
+      searched = searched.filter((e) => e.id_administation === management);
     }
     if (department) {
-      searched = searched.filter((e) => e.department === department);
+      searched = searched.filter((e) => e.id_depatment === department);
     }
     if (shift) {
-      searched = searched.filter((e) => e.workingTime === shift);
+      searched = searched.filter((e) => e.id_shift === shift);
     }
     setEmployeesData(searched);
   };
@@ -58,7 +87,7 @@ export default function (props) {
     setManagement("");
     setDepartment("");
     setShift("");
-    setEmployeesData(props.data);
+    setEmployeesData(jobsDataforserch);
   };
 
   const [slice, setSlice] = useState([]);
@@ -73,21 +102,29 @@ export default function (props) {
   //
 
   const [selectedEmloyee, setSelectedEmployee] = useState(props.selected);
+  const [selectedEmloyeeId, setSelectedEmployeeId] = useState(props.selectedId);
 
-  const addEmployee = (code, value) => {
+  const addEmployee = (code, id , value) => {
     if (!value) {
       let deleted = selectedEmloyee.filter((e) => e !== code);
+      let deletedId = selectedEmloyeeId.filter((e) => e !== id);
       setSelectedEmployee(deleted);
+      setSelectedEmployeeId(deletedId);
     } else {
       let added = selectedEmloyee;
+      let addedId = selectedEmloyeeId;
       added = added.concat([code]);
+      addedId = addedId.concat([id]);
       setSelectedEmployee(added);
+      setSelectedEmployeeId(addedId);
     }
   };
-  console.log("selectedEmloyee");
+  //  console.log(selectedEmloyee);
+  //  console.log(selectedEmloyeeId);
 
   const addHandeller = () => {
     props.add(selectedEmloyee);
+    props.addId(selectedEmloyeeId);
     props.close();
   };
 
@@ -97,11 +134,11 @@ export default function (props) {
         {" "}
         <Switch
           checked={selectedEmloyee.includes(e.code)}
-          onChange={(item) => addEmployee(e.code, item.target.checked)}
+          onChange={(item) => addEmployee(e.code, e.id , item.target.checked)}
         />{" "}
       </td>
       <td className=" p-3 text-start">{e.code}</td>
-      <td className=" p-3 text-start">{e.name}</td>
+      <td className=" p-3 text-start">{isArabicprop ? e.name_ar : e.name_en}</td>
     </tr>
   ));
 
@@ -173,7 +210,7 @@ export default function (props) {
                   <select
                     className=" w-full p-2 border outline-none"
                     value={department}
-                    onChange={(e) => setDeapartmet(e.target.value)}
+                    onChange={(e) => setDepartment(e.target.value)}
                   >
                     <option selected hidden>
                       Choose one

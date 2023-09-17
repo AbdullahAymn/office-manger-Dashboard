@@ -23,18 +23,18 @@ export const ProcedureMainData = [
     link: "/main/addvacation",
     icon: "fa-solid fa-file-pen",
   },
-  {
-    arabic: "ترحيل الحركات",
-    english: "Transfer Transactions",
-    link: "/main/transfertransactions",
-    icon: "fa-solid fa-right-left",
-  },
-  {
-    arabic: " إلغاء ترحيل الحركات",
-    english: "Cancel Transfer Transactions",
-    link: "/main/canceltransfer",
-    icon: "fa-solid fa-power-off",
-  },
+  // {
+  //   arabic: "ترحيل الحركات",
+  //   english: "Transfer Transactions",
+  //   link: "/main/transfertransactions",
+  //   icon: "fa-solid fa-right-left",
+  // },
+  // {
+  //   arabic: " إلغاء ترحيل الحركات",
+  //   english: "Cancel Transfer Transactions",
+  //   link: "/main/canceltransfer",
+  //   icon: "fa-solid fa-power-off",
+  // },
   {
     arabic: "إضافة وتعديل الحركات",
     english: "Add & Edit Trans",
