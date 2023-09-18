@@ -4,7 +4,7 @@ import { isArabic } from "@/utils/langStore";
 import Link from "next/link";
 import React, { useContext, useState } from "react";
 import Popup from "reactjs-popup";
-import { tempEmployeesData } from "./tempData";
+// import { tempEmployeesData } from "./tempData";
 import Loader from "@/app/components/Loader";
 import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
@@ -21,6 +21,7 @@ export default function CancelTransfer() {
 
   const resetHandeller = () => {
     setSelectedEmployyes([]);
+    setSelectedEmployyesId([])
     setFrom("");
     setTo("");
   };
@@ -32,7 +33,7 @@ export default function CancelTransfer() {
     setOpenEmployees(!openEmployees);
   };
 
-  const data = tempEmployeesData;
+  // const data = tempEmployeesData;
 
   const [selectedEmployees, setSelectedEmployyes] = useState([]);
   const [selectedEmployeesId, setSelectedEmployyesId] = useState([]);
@@ -61,6 +62,8 @@ export default function CancelTransfer() {
   formdata.append("FromDay", from);
   formdata.append("ToDay", to);
 
+  
+
   const cancel = () => {
     setLoader(true);
     fetch(`https://backend2.dasta.store/api/auth/deleteCollection`, {
@@ -71,6 +74,7 @@ export default function CancelTransfer() {
     }).then((res) => {
       if (res.status === 200) {
         setLoader(false);
+        resetHandeller()
       }
       else {
         setLoader(false);
@@ -133,7 +137,7 @@ export default function CancelTransfer() {
           <Popup open={openEmployees}>
             <Employees
               close={closeEmploye}
-              data={data}
+              // data={data}
               add={getSelectedData}
               addId={getSelectedDataId}
               selected={selectedEmployees}

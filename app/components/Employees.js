@@ -42,7 +42,7 @@ export default function (props) {
 
   useEffect(() => {
     // setLoader(true);
-    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchemployee`, {
+    fetch(`https://backend2.dasta.store/api/auth/fetchAllhandle`, {
       method: "GET",
       headers: myHeaders,
     }).then((res) => {
@@ -63,10 +63,10 @@ export default function (props) {
       searched = searched.filter((e) => e.code == code.trim());
     }
     if (name) {
-      searched = searched.filter((e) => e.name_ar.includes(name.trim()));
+      searched = searched.filter((e) => e.name.includes(name.trim()));
     }
     if (branches) {
-      searched = searched.filter((e) => e.id_branch === branches);
+      searched = searched.filter((e) => e.branch === branches);
     }
     if (management) {
       searched = searched.filter((e) => e.id_administation === management);
@@ -75,7 +75,7 @@ export default function (props) {
       searched = searched.filter((e) => e.id_depatment === department);
     }
     if (shift) {
-      searched = searched.filter((e) => e.id_shift === shift);
+      searched = searched.filter((e) => e.shift === shift);
     }
     setEmployeesData(searched);
   };
@@ -138,7 +138,7 @@ export default function (props) {
         />{" "}
       </td>
       <td className=" p-3 text-start">{e.code}</td>
-      <td className=" p-3 text-start">{isArabicprop ? e.name_ar : e.name_en}</td>
+      <td className=" p-3 text-start">{e.name}</td>
     </tr>
   ));
 
@@ -158,7 +158,7 @@ export default function (props) {
               }`}
             ></i>
             <form>
-              <div className=" py-4 grid grid-cols-3 pb-12 md:pb-0 md:grid-cols-12">
+              <div className=" py-4 grid grid-cols-3 pb-12  md:grid-cols-12">
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "كود الموظف" : "Employee Code"}</h4>
                   <input
@@ -192,7 +192,7 @@ export default function (props) {
                     {branchesOptions}
                   </select>
                 </div>
-                <div className=" w-full col-span-3 px-4">
+                {/* <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "الادارة" : "Management"}</h4>
                   <select
                     className=" w-full p-2 border outline-none"
@@ -217,7 +217,7 @@ export default function (props) {
                     </option>
                     {departmentOptions}
                   </select>
-                </div>
+                </div> */}
                 <div className=" w-full col-span-3 px-4">
                   <h4>{isArabicprop ? "الدوام" : "Shift"}</h4>
                   <select

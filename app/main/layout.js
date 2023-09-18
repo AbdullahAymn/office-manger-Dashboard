@@ -20,10 +20,12 @@ export default function RootLayout({ children }) {
   const router = useRouter();
 
   setTimeout(doSomething, 1000*60*50);
+  // setTimeout(dothing, 1000*30);
 
   function doSomething() {
     window.location.reload()
 }
+  
 
   const goHome = () => {
     router.push("/");
