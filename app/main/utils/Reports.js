@@ -15,6 +15,12 @@ export const ReportsMainData = [
     arabic: "حالة اليوم",
     english: "Day Status",
     link: "/main/dayreports",
+    icon: "fa-solid fa-circle-question 1",
+  },
+  {
+    arabic: "حالة اليوم (تأخير واضافي)",
+    english: "Day Status (Delay & over time)",
+    link: "/main/dayreportsdelayOverTime",
     icon: "fa-solid fa-circle-question",
   },
   {

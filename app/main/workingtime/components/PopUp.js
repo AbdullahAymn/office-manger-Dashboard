@@ -21,7 +21,11 @@ export default function PopUpCom(props) {
   const [name, setName] = useState(element.name);
   const [nameEn, setNameEn] = useState(element.name_en);
   const [end, setEnd] = useState(element.next_day);
-  const [nextDayShift, setNextDayShift] = useState(!!element.next_day);
+  const [nextDayShift, setNextDayShift] = useState(
+    element.type_shift == "two day"
+  );
+
+  let check = !end && nextDayShift 
 
   const myHeaders = new Headers();
   const token = Cookies.get("token");
@@ -30,8 +34,16 @@ export default function PopUpCom(props) {
   formdata.append("name", name);
   formdata.append("name_en", nameEn);
   formdata.append("open_shift", "no");
-  {nextDayShift && formdata.append("next_day", end);}
-  formdata.append("type_shift", "العادي");
+  {
+    nextDayShift
+      ? formdata.append("next_day", end)
+      : formdata.append("next_day", '00:00:00');
+  }
+  {
+    nextDayShift
+      ? formdata.append("type_shift", "two day")
+      : formdata.append("type_shift", "one day");
+  }
 
   const addHandeller = () => {
     setLoader(true);
@@ -149,7 +161,7 @@ export default function PopUpCom(props) {
         <div className=" flex items-center justify-center text-center">
           {props.edit ? (
             <button
-              disabled={load || !name || !nameEn}
+              disabled={load || !name || !nameEn || check}
               onClick={editHandeller}
               className=" disabled:opacity-50 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
             >
@@ -157,7 +169,7 @@ export default function PopUpCom(props) {
             </button>
           ) : (
             <button
-              disabled={load || !name || !nameEn}
+              disabled={load || !name || !nameEn || check}
               onClick={addHandeller}
               className=" disabled:opacity-50 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
             >

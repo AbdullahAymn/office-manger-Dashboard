@@ -5,10 +5,16 @@ export const ProcedureMainData = [
     link: "/main/branchtransactions",
     icon: "fa-solid fa-download",
   },
+  // {
+  //   arabic: "عرض الحركات",
+  //   english: "Display Transactions 1",
+  //   link: "/main/displaytransactions",
+  //   icon: "fa-solid fa-display",
+  // },
   {
     arabic: "عرض الحركات",
     english: "Display Transactions",
-    link: "/main/displaytransactions",
+    link: "/main/displaytrans",
     icon: "fa-solid fa-display",
   },
   {

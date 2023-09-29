@@ -3,7 +3,6 @@ import { isArabic } from "@/utils/langStore";
 import { MenuItem, Select } from "@mui/material";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
-
 import Cookies from "js-cookie";
 
 export default function PopUp(props) {
@@ -17,9 +16,9 @@ export default function PopUp(props) {
 
   const [employee, setEmployee] = useState(employeeElement.nameEmployee);
   const [code, setCode] = useState(employeeElement.codeEmployee);
-  const [type, setType] = useState(employeeElement.sortOfHoliday);
-  const [from, setFrom] = useState(employeeElement.fromDay);
-  const [to, setTo] = useState(employeeElement.toDay);
+//   const [type, setType] = useState(employeeElement.sortOfHoliday);
+  const [from, setFrom] = useState(employeeElement.fromday);
+  const [to, setTo] = useState(employeeElement.today);
   const [notes, setNotes] = useState(employeeElement.comment);
 
   //getting emmplyee
@@ -77,25 +76,25 @@ export default function PopUp(props) {
   //Getting types
   //
 
-  const [types, setTypes] = useState([]);
-  useEffect(() => {
-    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchsortholiday`, {
-      method: "GET",
-      headers: myHeaders,
-    }).then((res) => {
-      if (res.status === 200) {
-        res.json().then((data) => {
-          setTypes(data);
-        });
-      }
-    });
-  }, []);
+//   const [types, setTypes] = useState([]);
+//   useEffect(() => {
+//     fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchsortholiday`, {
+//       method: "GET",
+//       headers: myHeaders,
+//     }).then((res) => {
+//       if (res.status === 200) {
+//         res.json().then((data) => {
+//           setTypes(data);
+//         });
+//       }
+//     });
+//   }, []);
 
-  const typeOptions = types.map((e, index) => (
-    <option key={index} value={e.name}>
-      {e.name}
-    </option>
-  ));
+//   const typeOptions = types.map((e, index) => (
+//     <option key={index} value={e.name}>
+//       {e.name}
+//     </option>
+//   ));
 
   //
   //Add
@@ -104,14 +103,14 @@ export default function PopUp(props) {
   const formdata = new FormData();
   formdata.append("nameEmployee", employee);
   formdata.append("comment", notes);
-  formdata.append("sortOfHoliday", type);
-  formdata.append("fromDay", from);
-  formdata.append("toDay", to);
+//   formdata.append("sortOfHoliday", type);
+  formdata.append("fromday", from);
+  formdata.append("today", to);
   formdata.append("codeEmployee", code);
 
   const addHandeller = () => {
     setloading(true);
-    fetch(`https://backend2.dasta.store/api/auth/Addholiday`, {
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoAddtask`, {
       method: "POST",
       headers: myHeaders,
       body: formdata,
@@ -128,7 +127,7 @@ export default function PopUp(props) {
 
   const editHandeller = () => {
     setloading(true);
-    fetch(`https://backend2.dasta.store/api/auth/updateholiday/${employeeElement.id}`, {
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoUpdatetask/${employeeElement.id}`, {
       method: "POST",
       headers: myHeaders,
       body: formdata,
@@ -194,7 +193,7 @@ export default function PopUp(props) {
               onChange={(e) => setTo(e.target.value)}
             />
           </div>
-          <div className=" col-span-6 w-full p-2">
+          {/* <div className=" col-span-6 w-full p-2">
             <h4>{isArabicprop ? "نوع الاجازة" : "Vacation Type"}</h4>
             <select
               className=" w-full bg-white outline-none p-3 rounded border "
@@ -206,7 +205,7 @@ export default function PopUp(props) {
               </option>
               {typeOptions}
             </select>
-          </div>
+          </div> */}
           <div className=" col-span-6 w-full p-2">
             <h4>{isArabicprop ? "ملاحظات" : "Notes"}</h4>
             <input
@@ -222,7 +221,7 @@ export default function PopUp(props) {
             <button
               onClick={editHandeller}
               disabled={
-                !employee || !from || !to || !type || !code || !notes || loading
+                !employee || !from || !to || !code || !notes || loading
               }
               className=" disabled:opacity-50 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
             >
@@ -232,7 +231,7 @@ export default function PopUp(props) {
             <button
               onClick={addHandeller}
               disabled={
-                !employee || !from || !to || !type || !code || !notes || loading
+                !employee || !from || !to  || !code || !notes || loading
               }
               className=" disabled:opacity-50 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
             >
