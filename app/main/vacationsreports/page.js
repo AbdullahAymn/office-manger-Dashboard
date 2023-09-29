@@ -93,67 +93,38 @@ export default function VacationsReports() {
   //
   //
 
-  const dataShow = dataToMap.map((e, index) => {
+  let searr = dataToMap;
+
+  if (name) {
+    searr = searr.filter((e) => e.data.nameEmployee.includes(name.trim()));
+  }
+  if (code) {
+    searr = searr.filter((e) => e.data.codeEmployee == code);
+  }
+
+  const dataShow = searr.map((e, index) => {
     let num = index;
     let searched = e.data;
-    const day = new Date(from);
-    day.setDate(day.getDate() + index);
-    let date = day.toLocaleDateString("en-CA");
-    if (name) {
-      searched = searched.filter((e) => e.nameEmployee.includes(name.trim()));
-    }
-    if (code) {
-      searched = searched.filter((e) => e.codeEmployee == code);
-    }
-
-    let show = searched.map((e) => (
-      <tr className=" grid-cols-11 border">
-        <td className=" col-span-1 text-start p-2">{e.codeEmployee}</td>
-        <td className=" col-span-3 text-start p-2">{e.nameEmployee}</td>
-        <td className=" col-span-3 text-start p-2">{e.fromDay}</td>
-        <td className=" col-span-2 text-start p-2">{e.toDay}</td>
-        <td className=" col-span-2 text-start p-2">{e.sortOfHoliday}</td>
-        <td className=" col-span-2 text-start p-2">{e.comment}</td>
-      </tr>
-    ));
+    // const day = new Date(from);
+    // day.setDate(day.getDate() + index);
+    // let date = day.toLocaleDateString("en-CA");
 
     return (
       <>
-        <table
-          id={`mytabe${num}`}
-          className=" my-3 min-w-full table-auto text-sm  w-200 md:w-full font-sans"
-        >
-          <thead>
-            <tr></tr>
-            <tr className="  w-full bg-[#393d3f50] m-1 text-black/70 border">
-              <th colSpan={6} className=" text-black/70">
-                {date}
-              </th>
-            </tr>
-            <tr className="bg-white  grid-cols-11 border text-black/70">
-              <th className=" col-span-1 text-start p-2">
-                {isArabicprop ? "الكود" : "Code"}
-              </th>
-              <th className=" col-span-3 text-start p-2">
-                {isArabicprop ? "الأسم" : "name"}
-              </th>
-              <th className=" col-span-3 text-start p-2">
-                {isArabicprop ? "من" : "From"}
-              </th>
-              <th className=" col-span-2 text-start p-2">
-                {isArabicprop ? "الي" : "To"}
-              </th>
-              <th className=" col-span-2 text-start p-2">
-                {isArabicprop ? "نوع الاجازة" : "Type of Vacation"}
-              </th>
-              <th className=" col-span-2 text-start p-2">
-                {isArabicprop ? "ملاحظات" : "Notes"}
-              </th>
-            </tr>
-          </thead>
-          <tbody>{show}</tbody>
-        </table>
-        <hr className="h-[1px] bg-black/50" />
+        <tr className=" grid-cols-11 border">
+          <td className=" col-span-1 text-start p-2">
+            {searched.codeEmployee}
+          </td>
+          <td className=" col-span-3 text-start p-2">
+            {searched.nameEmployee}
+          </td>
+          <td className=" col-span-3 text-start p-2">{searched.fromDay}</td>
+          <td className=" col-span-2 text-start p-2">{searched.toDay}</td>
+          <td className=" col-span-2 text-start p-2">
+            {searched.sortOfHoliday}
+          </td>
+          <td className=" col-span-2 text-start p-2">{searched.comment}</td>
+        </tr>
       </>
     );
   });
@@ -169,13 +140,14 @@ export default function VacationsReports() {
     const doc = new jsPDF();
     doc.setFont("Amiri-Regular");
     doc.text(90, 10, isArabicprop ? "تقرير الأجازات" : "Vacations Report");
-    dataToMap.map((e, index) => {
-      let num = index;
-      autoTable(doc, {
-        pageBreak: "auto",
-        styles: { font: "Amiri-Regular", halign: "right", fontSize: "6" },
-        html: `#mytabe${num}`,
-      });
+    // dataToMap.map((e, index) => {
+    //   let num = index;
+
+    // });
+    autoTable(doc, {
+      pageBreak: "auto",
+      styles: { font: "Amiri-Regular", halign: "right", fontSize: "6" },
+      html: `#mytabe`,
     });
 
     doc.save("تقرير الأجازات.pdf");
@@ -193,15 +165,13 @@ export default function VacationsReports() {
   let cvsData = [];
 
   const cvsDatas = dataToMap.map((e, index) => {
-    e.data.map((e) => {
-      cvsData.push({
-        code: e.codeEmployee,
-        name: e.nameEmployee,
-        from: e.fromDay,
-        to: e.toDay,
-        type: e.sortOfHoliday,
-        notes: e.comment,
-      });
+    cvsData.push({
+      code: e.data.codeEmployee,
+      name: e.data.nameEmployee,
+      from: e.data.fromDay,
+      to: e.data.toDay,
+      type: e.data.sortOfHoliday,
+      notes: e.data.comment,
     });
   });
 
@@ -283,7 +253,42 @@ export default function VacationsReports() {
         </div>
       )}
 
-      {dataShow}
+      <div>
+        <table
+          id={`mytabe`}
+          className=" my-3 min-w-full table-auto text-sm  w-200 md:w-full font-sans"
+        >
+          <thead>
+            {/* <tr></tr>
+          <tr className="  w-full bg-[#393d3f50] m-1 text-black/70 border">
+            <th colSpan={6} className=" text-black/70">
+              {date}
+            </th>
+          </tr> */}
+            <tr className="bg-white  grid-cols-11 border text-black/70">
+              <th className=" col-span-1 text-start p-2">
+                {isArabicprop ? "الكود" : "Code"}
+              </th>
+              <th className=" col-span-3 text-start p-2">
+                {isArabicprop ? "الأسم" : "name"}
+              </th>
+              <th className=" col-span-3 text-start p-2">
+                {isArabicprop ? "من" : "From"}
+              </th>
+              <th className=" col-span-2 text-start p-2">
+                {isArabicprop ? "الي" : "To"}
+              </th>
+              <th className=" col-span-2 text-start p-2">
+                {isArabicprop ? "نوع الاجازة" : "Type of Vacation"}
+              </th>
+              <th className=" col-span-2 text-start p-2">
+                {isArabicprop ? "ملاحظات" : "Notes"}
+              </th>
+            </tr>
+          </thead>
+          <tbody>{dataShow}</tbody>
+        </table>
+      </div>
     </div>
   );
 }

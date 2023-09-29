@@ -9,13 +9,19 @@ export default function PopUpCom(props) {
   const isArabicprop = useContext(isArabic).arabic;
   const [load, setLoader] = useState(false);
   // const [openShift, setOpenShift] = useState(props.openShift);
-  // const [nextDayShift, setNextDayShift] = useState(props.nextDayShift);
 
-  const element = props.element || {};
+  const element = props.element || {
+    name: null,
+    name_en: null,
+    next_day: null,
+  };
+
+  // console.log(!!element.next_day)
 
   const [name, setName] = useState(element.name);
   const [nameEn, setNameEn] = useState(element.name_en);
   const [end, setEnd] = useState(element.next_day);
+  const [nextDayShift, setNextDayShift] = useState(!!element.next_day);
 
   const myHeaders = new Headers();
   const token = Cookies.get("token");
@@ -24,7 +30,7 @@ export default function PopUpCom(props) {
   formdata.append("name", name);
   formdata.append("name_en", nameEn);
   formdata.append("open_shift", "no");
-  formdata.append("next_day", end);
+  {nextDayShift && formdata.append("next_day", end);}
   formdata.append("type_shift", "العادي");
 
   const addHandeller = () => {
@@ -100,8 +106,9 @@ export default function PopUpCom(props) {
                 checked={openShift}
                 onChange={(e) => setOpenShift(e.target.checked)}
               />
-            </div>
-            <div className=" w-full">
+            </div> */}
+          <div className=" mb-4 p-8 w-full text-sm flex items-start justify-center">
+            <div className=" w-fit">
               <h1>
                 {isArabicprop
                   ? "الدوام ينتهي اليوم التالي"
@@ -119,15 +126,17 @@ export default function PopUpCom(props) {
                     {isArabicprop ? " وقت إنتهاء اليوم " : "Day End Time"} :
                   </h1>
                   <input
-                    value={props.nextDayTime}
+                    value={end}
+                    onChange={(e) => setEnd(e.target.value)}
                     className=" outline-none p-2 border rounded-md"
                     type="time"
                   ></input>
                 </div>
               )}
             </div>
-          </div> */}
-          <div className=" flex items-center justify-center col-span-6 mx-4 ">
+          </div>
+          {/* </div> */}
+          {/* <div className=" flex items-center justify-center col-span-6 mx-4 ">
             <h4>{isArabicprop ? "وقت إنتهاء اليوم" : "Day End Time"}</h4>
             <input
               className=" outline-none mx-4 border-1 p-1"
@@ -135,12 +144,12 @@ export default function PopUpCom(props) {
               onChange={(e) => setEnd(e.target.value)}
               type="time"
             ></input>
-          </div>
+          </div> */}
         </div>
         <div className=" flex items-center justify-center text-center">
           {props.edit ? (
             <button
-              disabled={load || !name || !nameEn || !end}
+              disabled={load || !name || !nameEn}
               onClick={editHandeller}
               className=" disabled:opacity-50 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
             >
@@ -148,7 +157,7 @@ export default function PopUpCom(props) {
             </button>
           ) : (
             <button
-              disabled={load || !name || !nameEn || !end}
+              disabled={load || !name || !nameEn}
               onClick={addHandeller}
               className=" disabled:opacity-50 bg-sky-400 py-1 mx-4 px-8 text-white rounded-full mb-4 outline-none border-none "
             >
