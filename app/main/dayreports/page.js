@@ -53,6 +53,9 @@ export default function DayReports() {
     setLoader(true);
     const myHeaders = new Headers();
     const token = Cookies.get("token");
+    if (!token) {
+      window.location.reload();
+    }
     myHeaders.append("Authorization", `Bearer ${token}\n`);
     const formdata = new FormData();
     formdata.append("FromDay", from);
@@ -225,23 +228,7 @@ export default function DayReports() {
               </th>
             </tr>
             <tr className="bg-white p-2 border text-black/70">
-              <th className=" p-2">{isArabicprop ? "الأسم" : "name"}</th>
-              <th className=" p-2">{isArabicprop ? "الفرع" : "branch"}</th>
-              <th colspan="2" className=" p-2">
-                {isArabicprop ? "الوردية 1" : "shift 1"}
-              </th>
-              <th colspan="2" className=" p-2">
-                {isArabicprop ? "الوردية 2" : "shift 2"}
-              </th>
-              <th colspan="2" className=" p-2">
-                {isArabicprop ? "الوردية 3" : "shift 3"}
-              </th>
-              <th colspan="2" className=" p-2">
-                {isArabicprop ? "الوردية 4" : "shift 4"}
-              </th>
-              <th className=" p-2">{isArabicprop ? "التأخير" : "delay"}</th>
-              <th className=" p-2">{isArabicprop ? "الإضافي" : "over time"}</th>
-              <th className=" p-2">{isArabicprop ? "الغياب" : "Absence"}</th>
+              
             </tr>
             <tr className="bg-white p-2 border text-black/70">
               <th className=" p-2"></th>

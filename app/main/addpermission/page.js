@@ -37,6 +37,9 @@ export default function AddPermission() {
   const [showData, setShowData] = useState([]);
   const [jobsDataforserch, setJobsDatasforserch] = useState([]);
   const token = Cookies.get("token");
+  if (!token) {
+    window.location.reload();
+  }
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
@@ -97,7 +100,7 @@ export default function AddPermission() {
 
   const [openDelet, setOpenDelete] = useState(false);
   const [deleteditem, setdeletedItem] = useState("");
-  
+
   const openDeleteHandeller = (e) => {
     setdeletedItem(e);
     setOpenDelete(!openDelet);

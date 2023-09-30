@@ -35,6 +35,9 @@ export default function AddEditTrans() {
   const [transData, setTransData] = useState([]);
   const [jobsDataforserch, setJobsDatasforserch] = useState([]);
   const token = Cookies.get("token");
+  if (!token) {
+    window.location.reload();
+  }
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}\n`);
 

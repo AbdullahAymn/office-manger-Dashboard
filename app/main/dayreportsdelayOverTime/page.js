@@ -126,77 +126,110 @@ export default function DayReports() {
     }
 
     let show = searched.map((e) => {
-      let in1 = "";
-      let out1 = "";
-      let in2 = "";
-      let out2 = "";
-      let in3 = "";
-      let out3 = "";
-      let in4 = "";
-      let out4 = "";
+      //   let in1 = "";
+      //   let out1 = "";
+      //   let in2 = "";
+      //   let out2 = "";
+      //   let in3 = "";
+      //   let out3 = "";
+      //   let in4 = "";
+      //   let out4 = "";
       let abence = isArabicprop ? "لا" : "No";
 
-      if (e.Attedance.length > 0) {
-        e.Attedance.map((element) => {
-          if (element.shift === "الورديه الاولي") {
-            in1 = element.day.substr(11, 5);
-          }
-          if (element.shift === "الورديه الثانيه") {
-            in2 = element.day.substr(11, 5);
-          }
-          if (element.shift === "الورديه الثالثه") {
-            in3 = element.day.substr(11, 5);
-          }
-          if (element.shift === "الورديه الرابعه") {
-            in4 = element.day.substr(11, 5);
-          }
-        });
-      }
-      if (e.leave.length > 0) {
-        e.leave.map((element) => {
-          if (element.shift === "الورديه الاولي") {
-            out1 = element.day.substr(11, 5);
-          }
-          if (element.shift === "الورديه الثانيه") {
-            out2 = element.day.substr(11, 5);
-          }
-          if (element.shift === "الورديه الثالثه") {
-            out3 = element.day.substr(11, 5);
-          }
-          if (element.shift === "الورديه الرابعه") {
-            out4 = element.day.substr(11, 5);
-          }
-        });
-      }
+      //   if (e.Attedance.length > 0) {
+      //     e.Attedance.map((element) => {
+      //       if (element.shift === "الورديه الاولي") {
+      //         in1 = element.day.substr(11, 5);
+      //       }
+      //       if (element.shift === "الورديه الثانيه") {
+      //         in2 = element.day.substr(11, 5);
+      //       }
+      //       if (element.shift === "الورديه الثالثه") {
+      //         in3 = element.day.substr(11, 5);
+      //       }
+      //       if (element.shift === "الورديه الرابعه") {
+      //         in4 = element.day.substr(11, 5);
+      //       }
+      //     });
+      //   }
+      //   if (e.leave.length > 0) {
+      //     e.leave.map((element) => {
+      //       if (element.shift === "الورديه الاولي") {
+      //         out1 = element.day.substr(11, 5);
+      //       }
+      //       if (element.shift === "الورديه الثانيه") {
+      //         out2 = element.day.substr(11, 5);
+      //       }
+      //       if (element.shift === "الورديه الثالثه") {
+      //         out3 = element.day.substr(11, 5);
+      //       }
+      //       if (element.shift === "الورديه الرابعه") {
+      //         out4 = element.day.substr(11, 5);
+      //       }
+      //     });
+      //   }
 
       if (e.abcent.length > 0) {
         abence = isArabicprop ? "غائب" : "Yes";
       }
 
-      let delay = "";
-      let overtime = "";
+      let delay1 = "";
+      let overtime1 = "";
+      let delay2 = "";
+      let overtime2 = "";
+      let delay3 = "";
+      let overtime3 = "";
+      let delay4 = "";
+      let overtime4 = "";
+
       if (e.late.length > 0) {
-        delay = e.late[0].late;
+        e.late.map((element) => {
+          if (element.shift === "الورديه الاولي") {
+            delay1 = element.day.substr(11, 5);
+          }
+          if (element.shift === "الورديه الثانيه") {
+            delay2 = element.day.substr(11, 5);
+          }
+          if (element.shift === "الورديه الثالثه") {
+            delay3 = element.day.substr(11, 5);
+          }
+          if (element.shift === "الورديه الرابعه") {
+            delay4 = element.day.substr(11, 5);
+          }
+        });
       }
       if (e.ExtraWork.length > 0) {
-        overtime = e.ExtraWork[0].exreaWork;
+        e.ExtraWork.map((element) => {
+          if (element.shift === "الورديه الاولي") {
+            overtime1 = element.day.substr(11, 5);
+          }
+          if (element.shift === "الورديه الثانيه") {
+            overtime2 = element.day.substr(11, 5);
+          }
+          if (element.shift === "الورديه الثالثه") {
+            overtime3 = element.day.substr(11, 5);
+          }
+          if (element.shift === "الورديه الرابعه") {
+            overtime4 = element.day.substr(11, 5);
+          }
+        });
       }
 
       return (
         <tr>
           <th className=" p-2">{e.name}</th>
           <th className=" p-2">{e.branch}</th>
-          <th className=" p-2">{in1}</th>
-          <th className=" p-2">{out1}</th>
-          <th className=" p-2">{in2}</th>
-          <th className=" p-2">{out2}</th>
-          <th className=" p-2">{in3}</th>
-          <th className=" p-2">{out3}</th>
-          <th className=" p-2">{in4}</th>
-          <th className=" p-2">{out4}</th>
+          <th className=" p-2">{delay1}</th>
+          <th className=" p-2">{overtime1}</th>
+          <th className=" p-2">{delay2}</th>
+          <th className=" p-2">{overtime2}</th>
+          <th className=" p-2">{delay3}</th>
+          <th className=" p-2">{overtime3}</th>
+          <th className=" p-2">{delay4}</th>
+          <th className=" p-2">{overtime4}</th>
 
-          <th className=" p-2">{e.totalLate}</th>
-          <th className=" p-2">{e.totalExtraWork}</th>
+          {/* <th className=" p-2">{e.totalLate}</th>
+          <th className=" p-2">{e.totalExtraWork}</th> */}
           <th className=" p-2">{abence}</th>
         </tr>
       );
@@ -239,24 +272,24 @@ export default function DayReports() {
               <th colspan="2" className=" p-2">
                 {isArabicprop ? "الوردية 4" : "shift 4"}
               </th>
-              <th className=" p-2">{isArabicprop ? "التأخير" : "delay"}</th>
-              <th className=" p-2">{isArabicprop ? "الإضافي" : "over time"}</th>
+              {/* <th className=" p-2">{isArabicprop ? "التأخير" : "delay"}</th>
+              <th className=" p-2">{isArabicprop ? "الإضافي" : "over time"}</th> */}
               <th className=" p-2">{isArabicprop ? "الغياب" : "Absence"}</th>
             </tr>
             <tr className="bg-white p-2 border text-black/70">
               <th className=" p-2"></th>
               <th className=" p-2"></th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-              <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-              <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-              <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-              <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
+              <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
+              <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
+              <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
+              <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
+              <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
+              <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
+              <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
+              <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
 
-              <th className=" p-2"></th>
-              <th className=" p-2"></th>
+              {/* <th className=" p-2"></th>
+              <th className=" p-2"></th> */}
               <th className=" p-2"></th>
             </tr>
           </thead>
@@ -303,8 +336,8 @@ export default function DayReports() {
     { label: " ", key: "out3" },
     { label: " ", key: "in4" },
     { label: " ", key: "out4" },
-    { label: " ", key: "late" },
-    { label: " ", key: "over" },
+    // { label: " ", key: "late" },
+    // { label: " ", key: "over" },
     { label: " ", key: "abence" },
   ];
 
@@ -333,23 +366,23 @@ export default function DayReports() {
       out3: "",
       in4: isArabicprop ? `التاريخ ` : "date",
       out4: date,
-      late: "",
-      over: "",
+    //   late: "",
+    //   over: "",
       abence: "",
     });
     cvsData.push({
       name: isArabicprop ? `الاسم` : "Name",
       branch: isArabicprop ? `الفرع` : "Branch",
-      in1: isArabicprop ? `حضور الوردية 1` : "In Shift 1",
-      out1: isArabicprop ? `انصراف الوردية 1` : "Out Shift 1",
-      in2: isArabicprop ? `حضور الوردية 2` : "In Shift 2",
-      out2: isArabicprop ? `انصراف الوردية 2` : "Out Shift 2",
-      in3: isArabicprop ? `حضور الوردية 3` : "In Shift 3",
-      out3: isArabicprop ? `انصراف الوردية 3` : "Out Shift 3",
-      in4: isArabicprop ? `حضور الوردية 4` : "In Shift 4",
-      out4: isArabicprop ? `انصراف الوردية 4` : "Out Shift 4",
-      late: isArabicprop ? "التاخير" : "Delay",
-      over: isArabicprop ? "الاضافي" : "Over time",
+      in1: isArabicprop ? `تأخير الوردية 1` : "Delay Shift 1",
+      out1: isArabicprop ? `اضافي الوردية 1` : "over time Shift 1",
+      in2: isArabicprop ? `تأخير الوردية 2` : "Delay Shift 2",
+      out2: isArabicprop ? `اضافي الوردية 2` : "over time Shift 2",
+      in3: isArabicprop ? `تأخير الوردية 3` : "Delay Shift 3",
+      out3: isArabicprop ? `اضافي الوردية 3` : "over time Shift 3",
+      in4: isArabicprop ? `تأخير الوردية 4` : "Delay Shift 4",
+      out4: isArabicprop ? `اضافي الوردية 4` : "over time Shift 4",
+    //   late: isArabicprop ? "التاخير" : "Delay",
+    //   over: isArabicprop ? "الاضافي" : "Over time",
       abence: isArabicprop ? "الغياب" : "Absence",
     });
 
@@ -364,8 +397,8 @@ export default function DayReports() {
       let out4 = "";
       let abence = isArabicprop ? "لا" : "No";
 
-      if (e.Attedance.length > 0) {
-        e.Attedance.map((element) => {
+      if (e.late.length > 0) {
+        e.late.map((element) => {
           if (element.shift === "الورديه الاولي") {
             in1 = element.day.substr(11, 5);
           }
@@ -380,8 +413,8 @@ export default function DayReports() {
           }
         });
       }
-      if (e.leave.length > 0) {
-        e.leave.map((element) => {
+      if (e.ExtraWork.length > 0) {
+        e.ExtraWork.map((element) => {
           if (element.shift === "الورديه الاولي") {
             out1 = element.day.substr(11, 5);
           }
@@ -439,8 +472,8 @@ export default function DayReports() {
       out3: "",
       in4: "",
       out4: "",
-      late: "",
-      over: "",
+    //   late: "",
+    //   over: "",
       abence: "",
     });
   });
@@ -467,7 +500,11 @@ export default function DayReports() {
           fileName="تقارير حالة اليوم"
           pdf={printDocument}
           setsearch={showSearchHandeller}
-          label={isArabicprop ? "حالة اليوم" : "Day Status"}
+          label={
+            isArabicprop
+              ? " حالة اليوم (تاخير و اضافي)"
+              : "Day Status (Delay and Over Time)"
+          }
         />
       </div>
       {showSearch && (

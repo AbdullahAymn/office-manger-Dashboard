@@ -108,14 +108,14 @@ export const ReportsMainData = [
     icon: "fa-solid fa-bed",
   },
   {
-    arabic: "اجمالي الغياب",
-    english: "Total Absence",
+    arabic: "تفاصيل الغياب",
+    english: "Absence Details",
     link: "/main/totalabence",
     icon: "fa-solid fa-ban",
   },
   {
-    arabic: "اجمالي التأخير",
-    english: "Total Delay",
+    arabic: "تفاصيل التأخير",
+    english: "Delay Details",
     link: "/main/totaldelay",
     icon: "fa-solid fa-clock-rotate-left",
   },
