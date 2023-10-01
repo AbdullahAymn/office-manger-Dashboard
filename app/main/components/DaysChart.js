@@ -4,10 +4,24 @@ import React, { useContext } from "react";
 import Chart from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
-export default function DaysChart() {
+export default function DaysChart(props) {
   const arabicProp = useContext(isArabic).arabic;
 
-  const labels = ["1", "2", "3", "4", "5", "6" , "7" ,"8" ,"9" ,"10"];
+  let allData = props.dataall || []
+
+  //  console .log(allData)
+
+  const labels = [];
+  const abs = [];
+  const late = [];
+  const extra = [];
+
+  allData.map((e, index) => {
+    labels.push(e.day)
+    abs.push(e.rangeOfAbcent)
+    late.push(e.rangeOfLate)
+    extra.push(e.rangeOfEarly)
+  })
 
   const data = {
     labels: labels,
@@ -16,17 +30,17 @@ export default function DaysChart() {
         label: arabicProp ? " غياب" : "  Abcent ",
         backgroundColor: "rgb(255, 99, 132)",
         borderColor: "rgb(255, 99, 132)",
-        data: [16 , 16 , 16 , 15 ,16 , 16 , 16 ,16 , 16 , 16 ],
+        data: abs,
       },{
         label: arabicProp ? " تأخير" : "  Late ",
         backgroundColor: "blue",
         borderColor: "blue",
-        data: [0, 0 ,0,0,2,0, 0 ,0,0,0],
+        data: late,
       },{
         label: arabicProp ? " انصراف مبكر" : "  early leave ",
         backgroundColor: "green",
         borderColor: "green",
-        data: [0, 0 ,1,0,0,0, 0 ,1,0,0],
+        data: extra,
       },
     ],
   };

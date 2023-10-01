@@ -1,13 +1,58 @@
 "use client";
+import Loader from "@/app/components/Loader";
 import { isArabic } from "@/utils/langStore";
 import { Switch } from "@mui/material";
+import Cookies from "js-cookie";
 import Link from "next/link";
 import React, { useContext } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
+import Popup from "reactjs-popup";
 
 export default function generalSettings() {
   const isArabicprop = useContext(isArabic).arabic;
   const numOfShifts = useContext(isArabic).numOfShifts;
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  //
+  //GetData
+  //
+
+  const [settingsData, setSettingssData] = useState([
+    {
+      // repeatFinger : 0,
+      // before_shift: 0,
+      // after_shift: 0,
+      // abcentAfterLate: "yes",
+      // abcentAfterEarlyLeave: "no",
+      // id_compan: 4,
+      // num_shift: 4,
+    },
+  ]);
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  useEffect(() => {
+    setLoader(true);
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchtosetting`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setSettingssData(data);
+          setNeglectTime(data[0].repeatFinger);
+          setShifts(data[0].num_shift);
+          setExtraTime(data[0].before_shift);
+          setExtraTimeAf(data[0].after_shift);
+          setDelay(data[0].abcentAfterLate == "yes");
+          setEarlyLeave(data[0].abcentAfterEarlyLeave == "yes");
+        });
+        setLoader(false);
+      }
+    });
+  }, [refresh]);
 
   //
   //
@@ -15,19 +60,48 @@ export default function generalSettings() {
   //
   //
   const setNumOfShifts = useContext(isArabic).setNumOfShifts;
-  const [neglectTime, setNeglectTime] = useState(5);
-  const [shifts, setShifts] = useState(numOfShifts);
-  const [extraTime, setExtraTime] = useState(3);
-  const [extraTimeAf, setExtraTimeAf] = useState(0);
-  const [delay, setDelay] = useState(false);
-  const [earlyLeave, setEarlyLeave] = useState(false);
+  const [neglectTime, setNeglectTime] = useState();
+  const [shifts, setShifts] = useState();
+  const [extraTime, setExtraTime] = useState();
+  const [extraTimeAf, setExtraTimeAf] = useState();
+  const [delay, setDelay] = useState();
+  const [earlyLeave, setEarlyLeave] = useState();
   const [fisrtLast, setFirstLast] = useState(false);
 
   //save
-  const saveHadeller = () => {};
+
+  const formdata = new FormData();
+  formdata.append("repeatFinger", neglectTime);
+  formdata.append("before_shift", extraTime);
+  formdata.append("after_shift", extraTimeAf);
+  formdata.append("abcentAfterLate", delay ? "yes" : "no");
+  formdata.append("abcentAfterEarlyLeave", earlyLeave ? "yes" : "no");
+  formdata.append("num_shift", shifts);
+
+
+  const [loading, setLoading] = useState(false);
+  const saveHadeller = () => {
+    setLoading(true)
+    setLoader(true)
+    // console.log(settingsData[0].id)
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoUpdatesetting/${settingsData[0].id}`, {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+    }).then((res) => {
+      if (res.status === 200) {
+        setLoading(false);
+        setLoader(false)
+        setRefresh(!refresh)
+      }
+    });
+  };
 
   return (
     <div className=" bg-white shadow-md font-sans border-1 rounded-md md:w-4/5 mx-auto my-12 p-4">
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       <h1 className=" text-2xl text-center mb-8">
         {isArabicprop ? "الإعدادات العامة" : "General Settings"}
       </h1>
@@ -154,7 +228,7 @@ export default function generalSettings() {
             onChange={(e) => setEarlyLeave(e.target.checked)}
           />
         </div>
-        <div className="col-span-2 p-3">
+        {/* <div className="col-span-2 p-3">
           <h4 className=" md:text-lg">
             {isArabicprop
               ? "احتساب أول حركة دخول و آخر حركة انصراف:"
@@ -166,8 +240,8 @@ export default function generalSettings() {
             checked={fisrtLast}
             onChange={(e) => setFirstLast(e.target.checked)}
           />
-        </div>
-        <div className="col-span-2 p-3">
+        </div> */}
+        {/* <div className="col-span-2 p-3">
           <h4 className=" md:text-lg">
             {isArabicprop
               ? "إعدادات السحب التلقائي:"
@@ -180,14 +254,15 @@ export default function generalSettings() {
               {isArabicprop ? "تغيير البيانات" : "change info"}
             </p>
           </Link>
-        </div>
+        </div> */}
       </div>
       <div className=" w-full flex items-center justify-center">
         <button
+          disabled={loading}
           onClick={saveHadeller}
-          className=" text-white py-1 px-12 rounded-full text-lg bg-sky-400 text-center mx-auto my-6"
+          className=" disabled:opacity-60 text-white py-1 px-12 rounded-full text-lg bg-sky-400 text-center mx-auto my-6"
         >
-          {isArabicprop ? "حفظ" : "Save"}
+          {loading ? "loading..." : `${isArabicprop ? "حفظ" : "Save"}`}
         </button>
       </div>
     </div>

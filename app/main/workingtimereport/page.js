@@ -150,7 +150,7 @@ export default function WorkingTimeReports() {
               <th colSpan={6}>{el.shift.name}</th>
               <th colSpan={5}>{el.shift.type_shift}</th>
             </tr>
-            <tr>
+            <tr className=" bg-white p-2 border">
               <th className=" p-2">{isArabicprop ? "اليوم" : "Day"} </th>
               <th colSpan={2} className=" p-2">
                 {isArabicprop ? "الوردية الاولي" : "Shift one"}{" "}

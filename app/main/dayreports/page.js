@@ -228,6 +228,15 @@ export default function DayReports() {
               </th>
             </tr>
             <tr className="bg-white p-2 border text-black/70">
+              <th className=" p-2">{isArabicprop ? "الاسم" : "name"}</th>
+              <th className=" p-2">{isArabicprop ? "الفرع" : "branch"}</th>
+              <th colspan="2" className=" p-2">{isArabicprop ? "الوردية الاولي" : "Shift one"}</th>
+              <th colspan="2" className=" p-2">{isArabicprop ? "الوردية الثانية" : "Shift two"}</th>
+              <th colspan="2" className=" p-2">{isArabicprop ? "الوردية الثالثة" : "Shift three"}</th>
+              <th colspan="2" className=" p-2">{isArabicprop ? "الوردية الرابعة" : "Shift four"}</th>
+              <th className=" p-2">{isArabicprop ? "التاخير" : "Delay"}</th>
+              <th className=" p-2">{isArabicprop ? "الاضافي" : "over time"}</th>
+              <th className=" p-2">{isArabicprop ? "الغياب" : "Absence"}</th>
               
             </tr>
             <tr className="bg-white p-2 border text-black/70">

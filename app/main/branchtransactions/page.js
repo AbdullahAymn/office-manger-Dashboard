@@ -1,15 +1,24 @@
 "use client";
+import Loader from "@/app/components/Loader";
 import Paginate from "@/app/components/Paginate";
 import { isArabic } from "@/utils/langStore";
 import { options } from "@/utils/optionStore";
 import useOptions from "@/utils/useOptions";
 import { InputLabel, MenuItem, Select } from "@mui/material";
 import Link from "next/link";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import Popup from "reactjs-popup";
 
 export default function GetBranchTransactions() {
   const isArabicprop = useContext(isArabic).arabic;
   const [showsearch, setShowSearch] = useState(true);
+  const [loader, setLoader] = useState(false);
+
+  const refrshopt = useContext(options).refresh;
+  const setrefrshopt = useContext(options).setRefresh;
+  useEffect(() => {
+    setrefrshopt(!refrshopt);
+  }, []);
   const branchesOptions = useOptions(useContext(options).branch);
 
   //
@@ -19,12 +28,14 @@ export default function GetBranchTransactions() {
   //
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [branch, setBranch] = useState([]);
+  const [branch, setBranch] = useState("");
+
+  // console.log(branch);
 
   const resetHandeller = () => {
     setFrom("");
     setTo("");
-    setbranches([]);
+    setBranch("");
   };
 
   // Paginate
@@ -36,6 +47,9 @@ export default function GetBranchTransactions() {
 
   return (
     <div className=" font-sans">
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       {/*  */}
       {/* Top section */}
       {/*  */}

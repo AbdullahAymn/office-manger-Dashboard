@@ -154,7 +154,7 @@ export default function TotalAttend() {
                 : `from ${element.from} to ${element.to}`}
             </th>
           </tr>
-          <tr>
+          <tr className="bg-white p-2 border text-black/70">
             <th className=" p-2">{isArabicprop ? "الكود" : "Code"}</th>
             <th className=" p-2">{isArabicprop ? "الأسم" : "name"}</th>
             <th className=" p-2">{isArabicprop ? "الفرع" : "branch"}</th>

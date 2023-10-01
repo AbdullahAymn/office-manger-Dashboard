@@ -7,9 +7,42 @@ import Popupcom from "./components/popup";
 import { absentData, late } from "./TempData";
 import DaysMoves from "./components/daysMoves";
 import DaysChart from "./components/DaysChart";
+import Cookies from "js-cookie";
+import Loader from "../components/Loader";
+import { useEffect } from "react";
+import HoliPopupcom from "./components/HoliPopUp";
 
 export default function page() {
   const arabicProp = useContext(isArabic).arabic;
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  //
+  //All Data 
+  //
+
+  const [allData, setAllData] = useState({});
+  const [jobsDataforserch, setJobsDatasforserch] = useState({});
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+  useEffect(() => {
+    setLoader(true);
+   fetch(`https://backend2.dasta.store/api/auth/finallyReporttotoday`, {
+     method: "GET",
+     headers: myHeaders,
+   }).then((res) => {
+     if (res.status === 200) {
+       res.json().then((data) => {
+        setAllData(data);
+         setJobsDatasforserch(data);
+       });
+       setLoader(false);
+     }
+   });
+  }, [refresh]);
+  
+
 
   const date = new Date();
   const week = [
@@ -34,10 +67,10 @@ export default function page() {
   //Short Summry
   //
 
-  const numOfLate = 2;
-  const numOfAbsent = 3;
-  const numOfAttend = 16;
-  const numOfMonthLate = 20;
+  const numOfLate = allData.late || 0;
+  const numOfAbsent = allData.abcent || 0;
+  const numOfAttend = allData.attedance || 0;
+  const numOfMonthLate = allData.holiday || 0;
 
   const lateFun = () => {setOpenLate(!openLate)};
   const absentFun = () => {setOpenabsent(!openabsent)};
@@ -57,6 +90,9 @@ export default function page() {
     // main line
     //
     <div className=" font-sans w-full ">
+      <Popup open={loader}>
+        <Loader />
+      </Popup>
       <div className="w-full">
         <div className=" p-3 w-full flex items-center justify-start">
           <h1 className=" text-lg font-light mx-5 text-gray-700">
@@ -133,10 +169,10 @@ export default function page() {
               </div>
             </div>
             <div
-              onClick={attendFun}
-              className=" bg-white/30 rounded-b-md text-sm text-white/70 py-2 px-4 hover:underline hover:cursor-pointer"
+              // onClick={attendFun}
+              className=" bg-white/30 rounded-b-md text-sm text-black/0 py-2 px-4  "
             >
-              المزيد
+              ْ
             </div>
           </div>
           {/* MonthLate */}
@@ -163,7 +199,7 @@ export default function page() {
         {/* late */}
         <Popup className=" p-0" open={openLate} closeOnDocumentClick>
           <Popupcom
-            data={late}
+            data={allData.moreLate}
             head={{ arabic: "عرض التأخير", english: "Display Late" }}
             name={{ arabic: "مدة التأخير", english: "Late time" }}
             clickFun ={lateFun}
@@ -172,7 +208,8 @@ export default function page() {
         {/* Absent */}
         <Popup className=" p-0" open={openabsent} closeOnDocumentClick>
           <Popupcom
-            data={absentData}
+            data={allData.moreAbcent}
+            abs={true}
             head={{ arabic: "عرض الغياب", english: "Display Abcence" }}
             clickFun ={absentFun}
           />
@@ -187,8 +224,8 @@ export default function page() {
         </Popup>
         {/* MonthLate */}
         <Popup className=" p-0" open={openmonthLate} closeOnDocumentClick>
-          <Popupcom
-            data={late}
+          <HoliPopupcom
+            data={allData.moreHoliday}
             head={{ arabic: "عرض الأجازات", english: "Month Late" }}
             
             clickFun ={monthLateFun}
@@ -199,8 +236,8 @@ export default function page() {
       {/* The Body  */}
       {/*  */}
       <div className=" py-14 grid grid-cols-6 lg:grid-cols-12">
-        <div className=" col-span-6  m-4" ><DaysMoves day={nameOfDay} date={dateOfDay} /></div>
-        <div className=" col-span-6  m-4"><DaysChart /></div>
+        <div className=" col-span-6  m-4" ><DaysMoves dataall={allData.transtion} day={nameOfDay} date={dateOfDay} /></div>
+        <div className=" col-span-6  m-4"><DaysChart dataall={allData.last10day}  /></div>
         
         
       </div>

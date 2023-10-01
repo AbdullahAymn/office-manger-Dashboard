@@ -2,7 +2,7 @@
 import { isArabic } from "@/utils/langStore";
 import React, { useContext } from "react";
 
-export default function Popupcom(props) {
+export default function HoliPopupcom(props) {
   const arabicProp = useContext(isArabic).arabic;
 
   //
@@ -11,14 +11,15 @@ export default function Popupcom(props) {
 
   const showRows = props.data.map((e) => (
     <tr className="border-b">
-      <td className="p-2 text-center">{e.codeEmployee}</td>
-      <td className="p-2 text-center">{e.nameEmployee}</td>
-      {/* <td className="p-2 text-center">{e.branch}</td> */}
+      <td className="p-2 text-center">{e.data.codeEmployee}</td>
+      <td className="p-2 text-center">{e.data.nameEmployee}</td>
+      <td className="p-2 text-center">{e.data.fromDay}</td>
+      <td className="p-2 text-center">{e.data.toDay}</td>
+      <td className="p-2 text-center">{e.data.sortOfHoliday}</td>
+      <td className="p-2 text-center">{e.data.comment}</td>
+      
 
-      {props.name && <td className="p-2 text-center">{e.shift}</td>}
-      {props.name && <td className="p-2 text-center">{e.lates}</td>}
-      <td className="p-2 text-center">{e.date}</td>
-      {props.abs && <td className="p-2 text-center">{e.comment}</td>}
+      
     </tr>
   ));
   return (
@@ -41,29 +42,19 @@ export default function Popupcom(props) {
                   <th className="p-2 text-center">
                     {arabicProp ? " الإسم" : " Name"}
                   </th>
-                  {/* <th className="p-2 text-center">
-                    {arabicProp ? " الفرع" : " Branch"}
-                  </th> */}
-
-                  {props.name && (
-                    <th className="p-2 text-center">
-                      {arabicProp ? " الدوام" : " Shift"}
-                    </th>
-                  )}
-                  {props.name && (
-                    <th className="p-2 text-center">
-                      {arabicProp ? props.name.arabic : props.name.english}
-                    </th>
-                  )}
-
                   <th className="p-2 text-center">
-                    {arabicProp ? " التاريخ" : " Date"}
+                    {arabicProp ? " من" : " from"}
                   </th>
-                  {props.abs && (
-                    <th className="p-2 text-center">
-                      {arabicProp ? "ملاحظات" : "Notes"}
-                    </th>
-                  )}
+                  <th className="p-2 text-center">
+                    {arabicProp ? " الي" : "to"}
+                  </th>
+                  <th className="p-2 text-center">
+                    {arabicProp ? " نوع الاجازة" : "Type"}
+                  </th>
+                  <th className="p-2 text-center">
+                    {arabicProp ? "ملاحظات" : "comments"}
+                  </th>
+                  
                 </tr>
               </thead>
 

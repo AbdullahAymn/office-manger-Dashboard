@@ -54,6 +54,16 @@ export default function User(props) {
   const [phone, setPhone] = useState("");
 
   //
+  // Settings
+  //
+  const [settings, setSettings] = useState();
+  const [overTime, setOverTime] = useState();
+  const [beforeShift, setBeforeShift] = useState(false);
+  const [afterShift, setAfterShift] = useState(false);
+  const [vacations, setVacations] = useState();
+  const [checkOut, setCheckOut] = useState();
+
+  //
   //
   const token = Cookies.get("token");
   const myHeaders1 = new Headers();
@@ -86,22 +96,20 @@ export default function User(props) {
               setTask(element.id_task);
               setProject(element.id_poject);
               setPhone(element.phone_numbe);
+              setBeforeShift(element.extra_before == 'yes')
+              setAfterShift(element.extra_after == 'yes')
+
+              
             });
             setLoader(false);
+
+            
           }
         });
       }, []);
   }
 
-  //
-  // Settings
-  //
-  const [settings, setSettings] = useState();
-  const [overTime, setOverTime] = useState();
-  const [beforeShift, setBeforeShift] = useState();
-  const [afterShift, setAfterShift] = useState();
-  const [vacations, setVacations] = useState();
-  const [checkOut, setCheckOut] = useState();
+  
 
   //
   //Actions
@@ -126,6 +134,8 @@ export default function User(props) {
   formdata.append("phone_numbe", phone || "");
   formdata.append("id_card", Id);
   formdata.append("code", code);
+  formdata.append("extra_before", beforeShift ? 'yes' : 'no' );
+  formdata.append("extra_after", afterShift ? 'yes' : 'no' );
 
   const addHandeller = (e) => {
     e.preventDefault();
@@ -420,20 +430,18 @@ export default function User(props) {
           {/*  */}
           {/* Settings */}
           {/*  */}
-          {/* <div className=" py-4 px-4 border rounded-md mx-8 font-sans">
+          <div className=" py-4 px-4 border rounded-md mx-8 font-sans">
             <div>
-              <Checkbox
+              {/* <Checkbox
                 onChange={(e) => setSettings(e.target.checked)}
                 checked={settings}
-              />
+              /> */}
               <label>{isArabicprop ? "الإعدادات" : "settings"}</label>
             </div>
             <div
-              className={` grid grid-cols-2 md:grid-cols-4 ${
-                !settings && " opacity-40"
-              } `}
+              className={` grid grid-cols-2 md:grid-cols-4  `}
             >
-              <div className=" col-span-2">
+              {/* <div className=" col-span-2">
                 <Checkbox
                   onChange={(e) => setOverTime(e.target.checked)}
                   disabled={!settings}
@@ -444,11 +452,11 @@ export default function User(props) {
                     ? "خصم التأخير من الوقت الإضافي"
                     : "Subtract Delay time from Overtime"}
                 </label>
-              </div>
+              </div> */}
               <div className=" col-span-2">
                 <Checkbox
                   onChange={(e) => setBeforeShift(e.target.checked)}
-                  disabled={!settings}
+                  // disabled={!settings}
                   checked={beforeShift}
                 />
                 <label>
@@ -460,7 +468,7 @@ export default function User(props) {
               <div className=" col-span-2">
                 <Checkbox
                   onChange={(e) => setAfterShift(e.target.checked)}
-                  disabled={!settings}
+                  // disabled={!settings}
                   checked={afterShift}
                 />
                 <label>
@@ -469,7 +477,7 @@ export default function User(props) {
                     : "Consider extra hours after shift"}
                 </label>
               </div>
-              <div className=" col-span-2">
+              {/* <div className=" col-span-2">
                 <Checkbox
                   onChange={(e) => setVacations(e.target.checked)}
                   disabled={!settings}
@@ -488,9 +496,9 @@ export default function User(props) {
                   checked={checkOut}
                 />
                 <label>{isArabicprop ? "تسجيل خروج بدون بصمة" : ""}</label>
-              </div>
+              </div> */}
             </div>
-          </div> */}
+          </div>
           <div className=" my-4 py-8 mx-4 font-sans flex items-center justify-center">
             <Link href="/main/employees">
               <button className=" text-lg rounded-full py-1 px-12 mx-2 md:mx-14 text-black bg-gray-200">
