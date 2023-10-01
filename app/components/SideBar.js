@@ -18,12 +18,12 @@ export default function (props) {
             className="p-2 w-full text-lg hover:cursor-pointer text-white/70 flex justify-between items-center"
           >
             {!props.smallSideBar && (
-              <h3 className="font-sans text-lg font-bold text-sky-400 text-center">{` ${
+              <h3 className="font-sans text-lg font-bold text-white text-center">{` ${
                 props.isArabicprop ? "البيانات الأساسية" : "Basic info"
               }`}</h3>
             )}
             <i
-              className={`fa-sharp fa-solid text-lg font-bold text-sky-300 ${
+              className={`fa-sharp fa-solid text-lg font-bold text-white ${
                 props.smallSideBar && "text-center mx-auto"
               } fa-caret-down  ${
                 drobBasic && `rotate-${props.isArabicprop ? "900" : "270"} `
@@ -37,15 +37,15 @@ export default function (props) {
         <div className=" flex-none w-full">
           <div
             onClick={() => setProcedure(!drobProcedure)}
-            className="p-2 w-full text-lg  font-bold text-sky-400 hover:cursor-pointer text-white/70 flex justify-between items-center"
+            className="p-2 w-full text-lg  font-bold text-white hover:cursor-pointer text-white/70 flex justify-between items-center"
           >
             {!props.smallSideBar && (
-              <h3 className="font-sans text-lg font-bold text-sky-400">{` ${
+              <h3 className="font-sans text-lg font-bold text-white">{` ${
                 props.isArabicprop ? " الإجراءات" : "Procedure"
               }`}</h3>
             )}
             <i
-              className={`fa-sharp fa-solid text-lg font-bold text-sky-400 ${
+              className={`fa-sharp fa-solid text-lg font-bold text-white ${
                 props.smallSideBar && "text-center mx-auto"
               } fa-caret-down ${
                 drobProcedure && `rotate-${props.isArabicprop ? "900" : "270"}`
@@ -59,15 +59,15 @@ export default function (props) {
         <div className=" flex-none w-full">
           <div
             onClick={() => setReports(!drobReports)}
-            className="p-2 w-full text-lg font-bold text-sky-400 hover:cursor-pointer text-white/70 flex justify-between items-center"
+            className="p-2 w-full text-lg font-bold text-white hover:cursor-pointer text-white/70 flex justify-between items-center"
           >
             {!props.smallSideBar && (
-              <h3 className="font-sans text-lg font-bold text-sky-400">{` ${
+              <h3 className="font-sans text-lg font-bold text-white">{` ${
                 props.isArabicprop ? " التقارير" : "Reports"
               }`}</h3>
             )}
             <i
-              className={`fa-sharp fa-solid text-lg font-bold text-sky-400 ${
+              className={`fa-sharp fa-solid text-lg font-bold text-white ${
                 props.smallSideBar && "text-center mx-auto"
               } fa-caret-down ${
                 drobReports && `rotate-${props.isArabicprop ? "900" : "270"}`
@@ -83,12 +83,12 @@ export default function (props) {
             className="p-2 w-full text-lg hover:cursor-pointer text-white/70 flex justify-between items-center"
           >
             {!props.smallSideBar && (
-              <h3 className="font-sans text-lg font-bold text-sky-400">{` ${
+              <h3 className="font-sans text-lg font-bold text-white">{` ${
                 props.isArabicprop ? " الإعدادات" : "Users"
               }`}</h3>
             )}
             <i
-              className={`fa-sharp fa-solid text-lg font-bold text-sky-400 ${
+              className={`fa-sharp fa-solid text-lg font-bold text-white ${
                 props.smallSideBar && "text-center mx-auto"
               } fa-caret-down ${
                 drobUsers && `rotate-${props.isArabicprop ? "900" : "270"}`
