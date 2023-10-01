@@ -124,7 +124,7 @@ export default function GetBranchTransactions() {
             onClick={gettrans}
             className=" disabled:opacity-60 col-span-6  bg-green-400 text-white py-1 px-3 rounded-full md:mx-2 text-md"
           >
-            {isArabicprop ? "سحب حركات الفروع" : "Get Transactions"}{" "}
+            {isArabicprop ? "اضافة حركات الفروع" : "Add Transactions"}{" "}
           </button>
         </div>
       </div>

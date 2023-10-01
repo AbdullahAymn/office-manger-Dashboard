@@ -12,6 +12,8 @@ import Popup from "reactjs-popup";
 export default function generalSettings() {
   const isArabicprop = useContext(isArabic).arabic;
   const numOfShifts = useContext(isArabic).numOfShifts;
+  const re = useContext(isArabic).refresh;
+  const setre = useContext(isArabic).setRefresh;
   const [loader, setLoader] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
@@ -50,6 +52,7 @@ export default function generalSettings() {
           setEarlyLeave(data[0].abcentAfterEarlyLeave == "yes");
         });
         setLoader(false);
+
       }
     });
   }, [refresh]);
@@ -97,9 +100,11 @@ export default function generalSettings() {
         setLoader(false)
         setRefresh(!refresh)
       }
+      setre(!re)
     });
   };
 
+  
   return (
     <div className=" bg-white shadow-md font-sans border-1 rounded-md md:w-4/5 mx-auto my-12 p-4">
       <Popup open={loader}>

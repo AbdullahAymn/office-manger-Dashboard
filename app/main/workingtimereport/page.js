@@ -12,6 +12,7 @@ import Popup from "reactjs-popup";
 
 export default function WorkingTimeReports() {
   const isArabicprop = useContext(isArabic).arabic;
+  const numOfShifts = useContext(isArabic).numOfShifts;
   const [loader, setLoader] = useState(false);
 
   //show serach
@@ -127,12 +128,12 @@ export default function WorkingTimeReports() {
           <td className=" p-2 text-center">{day}</td>
           <td className=" p-2 text-center">{in1}</td>
           <td className=" p-2 text-center">{out1}</td>
-          <td className=" p-2 text-center">{in2}</td>
-          <td className=" p-2 text-center">{out2}</td>
-          <td className=" p-2 text-center">{in3}</td>
-          <td className=" p-2 text-center">{out3}</td>
-          <td className=" p-2 text-center">{in4}</td>
-          <td className=" p-2 text-center">{out4}</td>
+          {numOfShifts > 1 && <td className=" p-2 text-center">{in2}</td>}
+          {numOfShifts > 1 &&<td className=" p-2 text-center">{out2}</td>}
+          {numOfShifts > 2 &&<td className=" p-2 text-center">{in3}</td>}
+          {numOfShifts > 2 &&<td className=" p-2 text-center">{out3}</td>}
+          {numOfShifts > 3 &&<td className=" p-2 text-center">{in4}</td>}
+          {numOfShifts > 3 &&<td className=" p-2 text-center">{out4}</td>}
         </tr>
       );
     });
@@ -147,34 +148,40 @@ export default function WorkingTimeReports() {
           <thead>
             <tr></tr>
             <tr className="  w-full bg-[#393d3f50] m-1 text-black/70 border">
-              <th colSpan={6}>{el.shift.name}</th>
-              <th colSpan={5}>{el.shift.type_shift}</th>
+              {numOfShifts == 1 &&<th colSpan='2'>{el.shift.name}</th>}
+              {numOfShifts == 1 &&<th colSpan='1'>{el.shift.type_shift}</th>}
+              {numOfShifts == 2 &&<th colSpan='3'>{el.shift.name}</th>}
+              {numOfShifts == 2 &&<th colSpan='2'>{el.shift.type_shift}</th>}
+              {numOfShifts == 3 &&<th colSpan='4'>{el.shift.name}</th>}
+              {numOfShifts == 3 &&<th colSpan='3'>{el.shift.type_shift}</th>}
+              {numOfShifts == 4 &&<th colSpan='5'>{el.shift.name}</th>}
+              {numOfShifts == 4 &&<th colSpan='4'>{el.shift.type_shift}</th>}
             </tr>
             <tr className=" bg-white p-2 border">
               <th className=" p-2">{isArabicprop ? "اليوم" : "Day"} </th>
               <th colSpan={2} className=" p-2">
                 {isArabicprop ? "الوردية الاولي" : "Shift one"}{" "}
               </th>
-              <th colSpan={2} className=" p-2">
+              {numOfShifts > 1 &&<th colSpan={2} className=" p-2">
                 {isArabicprop ? "الوردية الثانية" : "Shift Two"}{" "}
-              </th>
-              <th colSpan={2} className=" p-2">
+              </th>}
+             {numOfShifts > 2 && <th colSpan={2} className=" p-2">
                 {isArabicprop ? "الوردية الثالثة" : "Shift Three"}{" "}
-              </th>
-              <th colSpan={2} className=" p-2">
+              </th>}
+              {numOfShifts > 3 &&<th colSpan={2} className=" p-2">
                 {isArabicprop ? "الوردية الرابعة" : "Shift Four"}{" "}
-              </th>
+              </th>}
             </tr>
             <tr>
               <th></th>
               <th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>
               <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>
-              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>
-              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>
-              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
+              {numOfShifts > 1 &&<th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>}
+              {numOfShifts > 1 &&<th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>}
+              {numOfShifts > 2 &&<th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>}
+              {numOfShifts > 2 &&<th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>}
+              {numOfShifts > 3 &&<th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>}
+              {numOfShifts > 3 &&<th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>}
             </tr>
           </thead>
           <tbody>{rows}</tbody>
@@ -276,7 +283,7 @@ export default function WorkingTimeReports() {
 
   //
   //Excel
-  const headers = [
+  const headers = [ 
     { label: " ", key: "day" },
     { label: " ", key: "statu" },
     { label: " ", key: "in1" },
@@ -378,10 +385,10 @@ export default function WorkingTimeReports() {
     cvsData.push({
       day: isArabicprop ? "الدوام" : "shift",
       statu: isArabicprop ? e.shift.name : e.shift.name_en,
-      in1: "",
-      out1: "",
-      in2: isArabicprop ? "النوع" : "type",
-      out2: e.shift.type_shift,
+      in1: isArabicprop ? "النوع" : "type",
+      out1: e.shift.type_shift,
+      in2: '',
+      out2: '',
       in3: "",
       out3: "",
       in4: "",

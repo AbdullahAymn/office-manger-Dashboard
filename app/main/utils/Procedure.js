@@ -1,7 +1,7 @@
 export const ProcedureMainData = [
   {
-    arabic: "سحب حركات الفروع",
-    english: "Get branch transactions",
+    arabic: "اضافة حركات الفروع",
+    english: "Add branch transactions",
     link: "/main/branchtransactions",
     icon: "fa-solid fa-download",
   },
