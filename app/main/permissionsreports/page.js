@@ -49,9 +49,9 @@ export default function VacationsReports() {
     const formdata = new FormData();
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
-    if (!token) {
-      window.location.reload();
-    }
+    // if (!token) {
+    //   window.location.reload();
+    // }
     await fetch("https://backend2.dasta.store/api/auth/FinalReportPermision", {
       method: "POST",
       headers: myHeaders,

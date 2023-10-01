@@ -55,9 +55,9 @@ export default function DetailedAttendance() {
     setLoader(true);
     const myHeaders = new Headers();
     const token = Cookies.get("token");
-    if (!token) {
-      window.location.reload();
-    }
+    // if (!token) {
+    //   window.location.reload();
+    // }
     myHeaders.append("Authorization", `Bearer ${token}\n`);
     const formdata = new FormData();
     formdata.append("FromDay", from);

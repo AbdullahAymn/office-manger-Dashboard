@@ -60,9 +60,9 @@ export default function GetBranchTransactions() {
    formdata.append("branchs[]", branch);
 
   const gettrans = () => {
-    if (!token) {
-      window.location.reload();
-    }
+    // if (!token) {
+    //   window.location.reload();
+    // }
     setLoader(true);
     fetch(`https://backend2.dasta.store/api/auth/revesionController`, {
       method: 'POST',

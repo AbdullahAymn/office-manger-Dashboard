@@ -22,9 +22,9 @@ export default function page() {
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
     setLoader(true);
-    if (!token) {
-      window.location.reload();
-    }
+    // if (!token) {
+    //   window.location.reload();
+    // }
     fetch(
       `https://backend2.dasta.store/api/auth/basicInfoFetchoficiallHoliday`,
       {

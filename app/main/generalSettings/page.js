@@ -84,9 +84,9 @@ export default function generalSettings() {
     setLoading(true)
     setLoader(true)
     // console.log(settingsData[0].id)
-    if (!token) {
-      window.location.reload();
-    }
+    // if (!token) {
+    //   window.location.reload();
+    // }
     fetch(`https://backend2.dasta.store/api/auth/basicInfoUpdatesetting/${settingsData[0].id}`, {
       method: "POST",
       headers: myHeaders,

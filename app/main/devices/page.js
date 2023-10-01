@@ -33,9 +33,9 @@ export default function Devices() {
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
     setLoader(true);
-    if (!token) {
-      window.location.reload();
-    }
+    // if (!token) {
+    //   window.location.reload();
+    // }
     fetch(`https://backend2.dasta.store/api/auth/fetchDevices`, {
       method: "GET",
       headers: myHeaders,
