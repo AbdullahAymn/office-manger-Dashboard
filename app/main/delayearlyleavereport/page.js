@@ -63,6 +63,9 @@ export default function DelayEarlyLeaveReport() {
     const formdata = new FormData();
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
+    if (!token) {
+      window.location.reload();
+    }
     await fetch("https://backend2.dasta.store/api/auth/earlyleaveAndLate", {
       method: "POST",
       headers: myHeaders,

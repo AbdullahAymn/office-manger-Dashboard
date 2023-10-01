@@ -64,6 +64,9 @@ export default function AttendanceBranchRyreport() {
     const formdata = new FormData();
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
+    if (!token) {
+      window.location.reload();
+    }
     await fetch(
       "https://backend2.dasta.store/api/auth/leaveAndAttedanceinBranch",
       {

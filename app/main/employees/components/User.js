@@ -73,6 +73,9 @@ export default function User(props) {
     props.edit &&
       useEffect(() => {
         setLoader(!loader);
+        if (!token) {
+          window.location.reload();
+        }
         fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchemployee`, {
           method: "GET",
           headers: myHeaders1,

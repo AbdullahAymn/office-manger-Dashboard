@@ -65,6 +65,9 @@ export default function CancelTransfer() {
   
 
   const cancel = () => {
+    if (!token) {
+      window.location.reload();
+    }
     setLoader(true);
     fetch(`https://backend2.dasta.store/api/auth/deleteCollection`, {
       method: "POST",

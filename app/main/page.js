@@ -27,6 +27,9 @@ export default function page() {
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
+    if (!token) {
+      window.location.reload();
+    }
     setLoader(true);
    fetch(`https://backend2.dasta.store/api/auth/finallyReporttotoday`, {
      method: "GET",

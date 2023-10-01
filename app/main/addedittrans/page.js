@@ -42,6 +42,9 @@ export default function AddEditTrans() {
   myHeaders.append("Authorization", `Bearer ${token}\n`);
 
   useEffect(() => {
+    if (!token) {
+      window.location.reload();
+    }
     setLoader(true);
     fetch(`https://backend2.dasta.store/api/auth/fetchAllhandle`, {
       method: "GET",

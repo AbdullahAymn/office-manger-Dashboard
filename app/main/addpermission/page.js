@@ -44,6 +44,9 @@ export default function AddPermission() {
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
     setLoader(true);
+    if (!token) {
+      window.location.reload();
+    }
     fetch(`https://backend2.dasta.store/api/auth/fetchAllPermision`, {
       method: "GET",
       headers: myHeaders,

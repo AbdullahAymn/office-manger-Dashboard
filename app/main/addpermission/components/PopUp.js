@@ -84,6 +84,9 @@ export default function PopUp(props) {
   formdata.append("codeEmployee", code);
 
   const addHandeller = () => {
+    if (!token) {
+      window.location.reload();
+    }
     setloading(true);
     fetch(`https://backend2.dasta.store/api/auth/addPermision`, {
       method: "POST",
@@ -99,6 +102,9 @@ export default function PopUp(props) {
 
   //edit
   const editHandeller = () => {
+    if (!token) {
+      window.location.reload();
+    }
     setloading(true);
     fetch(`https://backend2.dasta.store/api/auth/updatePermision/${employeeElement.id}`, {
       method: "POST",

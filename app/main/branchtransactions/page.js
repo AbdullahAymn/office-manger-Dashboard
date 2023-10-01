@@ -5,6 +5,7 @@ import { isArabic } from "@/utils/langStore";
 import { options } from "@/utils/optionStore";
 import useOptions from "@/utils/useOptions";
 import { InputLabel, MenuItem, Select } from "@mui/material";
+import Cookies from "js-cookie";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import Popup from "reactjs-popup";
@@ -45,6 +46,43 @@ export default function GetBranchTransactions() {
     setSlice(slice);
   };
 
+  //get
+
+  const [message, setMessage] = useState("");
+
+  const token = Cookies.get("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}\n`);
+
+   const formdata = new FormData();
+   formdata.append("FromDay", from);
+   formdata.append("ToDay", to);
+   formdata.append("branchs[]", branch);
+
+  const gettrans = () => {
+    if (!token) {
+      window.location.reload();
+    }
+    setLoader(true);
+    fetch(`https://backend2.dasta.store/api/auth/revesionController`, {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow'
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setMessage('تم سحب الحركات بنجاح');
+          
+        });
+        setLoader(false);
+      } else {
+        setMessage('هناك مشكلة في السحب');
+        setLoader(false);
+      }
+    });
+  };
+
   return (
     <div className=" font-sans">
       <Popup open={loader}>
@@ -82,8 +120,9 @@ export default function GetBranchTransactions() {
             ></i>
           </button>
           <button
-            // onClick={props.addFun}
-            className=" col-span-6  bg-green-400 text-white py-1 px-3 rounded-full md:mx-2 text-md"
+            disabled={!from || !to || !branch}
+            onClick={gettrans}
+            className=" disabled:opacity-60 col-span-6  bg-green-400 text-white py-1 px-3 rounded-full md:mx-2 text-md"
           >
             {isArabicprop ? "سحب حركات الفروع" : "Get Transactions"}{" "}
           </button>
@@ -145,20 +184,24 @@ export default function GetBranchTransactions() {
         </div>
       )}
 
+      <div className=" p-12 text-center flex items-center justify-center">
+        <h1 className=" text-3xl">{message}</h1>
+      </div>
+
       {/*  */}
       {/* Paginate */}
       {/*  */}
 
-      <div className=" w-full">
+      {/* <div className=" w-full">
         <Paginate data={getData} getSlice={getSlice} />
-      </div>
+      </div> */}
 
       {/*  */}
       {/* Table */}
       {/*  */}
-      <div className=" w-full font-sans my-4">
+      {/* <div className=" w-full font-sans my-4">
         <table className=" min-w-full text-sm md:text-base">
-          {/* tabelBody */}
+          
           <thead>
             <tr className=" grid grid-cols-9 bg-white p-2 border text-black/70">
               <th className=" col-span-9 text-start">
@@ -166,9 +209,9 @@ export default function GetBranchTransactions() {
               </th>
             </tr>
           </thead>
-          {/* <tbody>{tabelData}</tbody> */}
+          
         </table>
-      </div>
+      </div> */}
     </div>
   );
 }

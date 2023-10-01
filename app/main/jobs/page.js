@@ -22,7 +22,10 @@ export default function jobs() {
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
-     setLoader(true);
+    setLoader(true);
+    if (!token) {
+      window.location.reload();
+    }
     fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchjob`, {
       method: "GET",
       headers: myHeaders,
