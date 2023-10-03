@@ -17,6 +17,13 @@ import Popup from "reactjs-popup";
 
 export default function DayReports() {
   const isArabicprop = useContext(isArabic).arabic;
+  const numOfShifts = useContext(isArabic).numOfShifts;
+  const re = useContext(isArabic).refresh;
+  const setre = useContext(isArabic).setRefresh;
+
+  useEffect(() => {
+    setre(!re);
+  }, []);
   const [loader, setLoader] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
@@ -224,12 +231,12 @@ export default function DayReports() {
           <th className=" p-2">{e.branch}</th>
           <th className=" p-2">{delay1}</th>
           <th className=" p-2">{overtime1}</th>
-          <th className=" p-2">{delay2}</th>
-          <th className=" p-2">{overtime2}</th>
-          <th className=" p-2">{delay3}</th>
-          <th className=" p-2">{overtime3}</th>
-          <th className=" p-2">{delay4}</th>
-          <th className=" p-2">{overtime4}</th>
+          {numOfShifts > 1 && <th className=" p-2">{delay2}</th>}
+          {numOfShifts > 1 && <th className=" p-2">{overtime2}</th>}
+          {numOfShifts > 2 && <th className=" p-2">{delay3}</th>}
+          {numOfShifts > 2 && <th className=" p-2">{overtime3}</th>}
+          {numOfShifts > 3 && <th className=" p-2">{delay4}</th>}
+          {numOfShifts > 3 && <th className=" p-2">{overtime4}</th>}
 
           {/* <th className=" p-2">{e.totalLate}</th>
           <th className=" p-2">{e.totalExtraWork}</th> */}
@@ -237,6 +244,31 @@ export default function DayReports() {
         </tr>
       );
     });
+
+    let n1;
+    let n2;
+    let n3;
+
+    if (numOfShifts == 1) {
+      n1 = 1;
+      n2 = 1;
+      n3 = 3;
+    }
+    if (numOfShifts == 2) {
+      n1 = 2;
+      n2 = 2;
+      n3 = 3;
+    }
+    if (numOfShifts == 3) {
+      n1 = 2;
+      n2 = 3;
+      n3 = 4;
+    }
+    if (numOfShifts == 4) {
+      n1 = 3;
+      n2 = 4;
+      n3 = 5;
+    }
 
     return (
       <>
@@ -247,13 +279,13 @@ export default function DayReports() {
           <thead>
             <tr></tr>
             <tr className="  w-full bg-[#8c929450] m-1 text-black/70 border">
-              <th colspan="3" className=" p-1">
+              <th colspan={n1} className=" p-1">
                 {isArabicprop ? `اليوم : ${e}` : ` Day : ${e}`}
               </th>
-              <th colspan="4" className=" p-1">
+              <th colspan={n2} className=" p-1">
                 {date}
               </th>
-              <th colspan="6">
+              <th colspan={n3}>
                 {" "}
                 {isArabicprop
                   ? `الفترة من ${element.from} الي ${element.to}`
@@ -266,15 +298,15 @@ export default function DayReports() {
               <th colspan="2" className=" p-2">
                 {isArabicprop ? "الوردية 1" : "shift 1"}
               </th>
-              <th colspan="2" className=" p-2">
+              {numOfShifts > 1 &&<th colspan="2" className=" p-2">
                 {isArabicprop ? "الوردية 2" : "shift 2"}
-              </th>
-              <th colspan="2" className=" p-2">
+              </th>}
+             {numOfShifts > 2 && <th colspan="2" className=" p-2">
                 {isArabicprop ? "الوردية 3" : "shift 3"}
-              </th>
-              <th colspan="2" className=" p-2">
+              </th>}
+              {numOfShifts > 3 &&<th colspan="2" className=" p-2">
                 {isArabicprop ? "الوردية 4" : "shift 4"}
-              </th>
+              </th>}
               {/* <th className=" p-2">{isArabicprop ? "التأخير" : "delay"}</th>
               <th className=" p-2">{isArabicprop ? "الإضافي" : "over time"}</th> */}
               <th className=" p-2">{isArabicprop ? "الغياب" : "Absence"}</th>
@@ -284,12 +316,12 @@ export default function DayReports() {
               <th className=" p-2"></th>
               <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
               <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
-              <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
-              <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
-              <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
-              <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
-              <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
-              <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
+              {numOfShifts > 1 &&<th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>}
+              {numOfShifts > 1 &&<th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>}
+              {numOfShifts > 2 &&<th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>}
+              {numOfShifts > 2 &&<th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>}
+              {numOfShifts > 3 &&<th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>}
+              {numOfShifts > 3 &&<th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>}
 
               {/* <th className=" p-2"></th>
               <th className=" p-2"></th> */}
@@ -369,8 +401,8 @@ export default function DayReports() {
       out3: "",
       in4: isArabicprop ? `التاريخ ` : "date",
       out4: date,
-    //   late: "",
-    //   over: "",
+      //   late: "",
+      //   over: "",
       abence: "",
     });
     cvsData.push({
@@ -384,8 +416,8 @@ export default function DayReports() {
       out3: isArabicprop ? `اضافي الوردية 3` : "over time Shift 3",
       in4: isArabicprop ? `تأخير الوردية 4` : "Delay Shift 4",
       out4: isArabicprop ? `اضافي الوردية 4` : "over time Shift 4",
-    //   late: isArabicprop ? "التاخير" : "Delay",
-    //   over: isArabicprop ? "الاضافي" : "Over time",
+      //   late: isArabicprop ? "التاخير" : "Delay",
+      //   over: isArabicprop ? "الاضافي" : "Over time",
       abence: isArabicprop ? "الغياب" : "Absence",
     });
 
@@ -475,8 +507,8 @@ export default function DayReports() {
       out3: "",
       in4: "",
       out4: "",
-    //   late: "",
-    //   over: "",
+      //   late: "",
+      //   over: "",
       abence: "",
     });
   });

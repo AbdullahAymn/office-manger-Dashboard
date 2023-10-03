@@ -19,6 +19,13 @@ import { data } from "autoprefixer";
 
 export default function DetailedAttendance() {
   const isArabicprop = useContext(isArabic).arabic;
+  const numOfShifts = useContext(isArabic).numOfShifts;
+  const re = useContext(isArabic).refresh;
+  const setre = useContext(isArabic).setRefresh;
+
+  useEffect(() => {
+    setre(!re);
+  }, []);
   const [loader, setLoader] = useState(false);
   // -------------------------------------------------------------------
   //
@@ -179,12 +186,12 @@ export default function DetailedAttendance() {
             <th className=" p-2">{el.branch}</th>
             <th className=" p-2">{in1}</th>
             <th className=" p-2">{out1}</th>
-            <th className=" p-2">{in2}</th>
-            <th className=" p-2">{out2}</th>
-            <th className=" p-2">{in3}</th>
-            <th className=" p-2">{out3}</th>
-            <th className=" p-2">{in4}</th>
-            <th className=" p-2">{out4}</th>
+            {numOfShifts > 1 && <th className=" p-2">{in2}</th>}
+            {numOfShifts > 1 && <th className=" p-2">{out2}</th>}
+            {numOfShifts > 2 && <th className=" p-2">{in3}</th>}
+            {numOfShifts > 2 && <th className=" p-2">{out3}</th>}
+            {numOfShifts > 3 && <th className=" p-2">{in4}</th>}
+            {numOfShifts > 3 && <th className=" p-2">{out4}</th>}
 
             <th className=" p-2">{el.totalLate}</th>
             <th className=" p-2">{el.totalExtraWork}</th>
@@ -196,6 +203,26 @@ export default function DetailedAttendance() {
       return showws;
     });
 
+    let n1;
+    
+
+    if (numOfShifts == 1) {
+      n1 = 8;
+      
+    }
+    if (numOfShifts == 2) {
+      n1 = 10;
+      
+    }
+    if (numOfShifts == 3) {
+      n1 = 12;
+      
+    }
+    if (numOfShifts == 4) {
+      n1 = 14;
+     
+    }
+
     return (
       <table
         key={index}
@@ -205,7 +232,7 @@ export default function DetailedAttendance() {
         <thead>
           <tr></tr>
           <tr className="  w-full bg-[#8c929450] m-1 text-black/70 border">
-            <th colspan="14" className=" text-center">
+            <th colspan={n1} className=" text-center">
               {isArabicprop
                 ? `من ${element.from} الي ${element.to}`
                 : `from ${element.from} to ${element.to}`}
@@ -218,15 +245,21 @@ export default function DetailedAttendance() {
             <th colspan="2" className=" p-2">
               {isArabicprop ? "الوردية 1" : "shift 1"}
             </th>
-            <th colspan="2" className=" p-2">
-              {isArabicprop ? "الوردية 2" : "shift 2"}
-            </th>
-            <th colspan="2" className=" p-2">
-              {isArabicprop ? "الوردية 3" : "shift 3"}
-            </th>
-            <th colspan="2" className=" p-2">
-              {isArabicprop ? "الوردية 4" : "shift 4"}
-            </th>
+            {numOfShifts > 1 && (
+              <th colspan="2" className=" p-2">
+                {isArabicprop ? "الوردية 2" : "shift 2"}
+              </th>
+            )}
+            {numOfShifts > 2 && (
+              <th colspan="2" className=" p-2">
+                {isArabicprop ? "الوردية 3" : "shift 3"}
+              </th>
+            )}
+            {numOfShifts > 3 && (
+              <th colspan="2" className=" p-2">
+                {isArabicprop ? "الوردية 4" : "shift 4"}
+              </th>
+            )}
             <th className=" p-2">{isArabicprop ? "التأخير" : "delay"}</th>
             <th className=" p-2">{isArabicprop ? "الإضافي" : "over time"}</th>
             <th className=" p-2">{isArabicprop ? "الغياب" : "Absence"}</th>
@@ -237,12 +270,24 @@ export default function DetailedAttendance() {
             <th className=" p-2"></th>
             <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
             <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
-            <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-            <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
-            <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-            <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
-            <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-            <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
+            {numOfShifts > 1 && (
+              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
+            )}
+            {numOfShifts > 1 && (
+              <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
+            )}
+            {numOfShifts > 2 && (
+              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
+            )}
+            {numOfShifts > 2 && (
+              <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
+            )}
+            {numOfShifts > 3 && (
+              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
+            )}
+            {numOfShifts > 3 && (
+              <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
+            )}
 
             <th className=" p-2"></th>
             <th className=" p-2"></th>

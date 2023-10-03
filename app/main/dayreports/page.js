@@ -17,6 +17,13 @@ import Popup from "reactjs-popup";
 
 export default function DayReports() {
   const isArabicprop = useContext(isArabic).arabic;
+  const numOfShifts = useContext(isArabic).numOfShifts;
+  const re = useContext(isArabic).refresh;
+  const setre = useContext(isArabic).setRefresh;
+
+  useEffect(() => {
+    setre(!re);
+  }, []);
   const [loader, setLoader] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
@@ -194,12 +201,12 @@ export default function DayReports() {
           <th className=" p-2">{e.branch}</th>
           <th className=" p-2">{in1}</th>
           <th className=" p-2">{out1}</th>
-          <th className=" p-2">{in2}</th>
-          <th className=" p-2">{out2}</th>
-          <th className=" p-2">{in3}</th>
-          <th className=" p-2">{out3}</th>
-          <th className=" p-2">{in4}</th>
-          <th className=" p-2">{out4}</th>
+          {numOfShifts > 1 && <th className=" p-2">{in2}</th>}
+          {numOfShifts > 1 && <th className=" p-2">{out2}</th>}
+          {numOfShifts > 2 && <th className=" p-2">{in3}</th>}
+          {numOfShifts > 2 && <th className=" p-2">{out3}</th>}
+          {numOfShifts > 3 && <th className=" p-2">{in4}</th>}
+          {numOfShifts > 3 && <th className=" p-2">{out4}</th>}
 
           <th className=" p-2">{e.totalLate}</th>
           <th className=" p-2">{e.totalExtraWork}</th>
@@ -207,6 +214,31 @@ export default function DayReports() {
         </tr>
       );
     });
+
+    let n1;
+    let n2;
+    let n3;
+
+    if (numOfShifts == 1) {
+      n1 = 2;
+      n2 = 2;
+      n3 = 3;
+    }
+    if (numOfShifts == 2) {
+      n1 = 3;
+      n2 = 3;
+      n3 = 3;
+    }
+    if (numOfShifts == 3) {
+      n1 = 2;
+      n2 = 4;
+      n3 = 5;
+    }
+    if (numOfShifts == 4) {
+      n1 = 4;
+      n2 = 4;
+      n3 = 5;
+    }
 
     return (
       <>
@@ -217,13 +249,13 @@ export default function DayReports() {
           <thead>
             <tr></tr>
             <tr className="  w-full bg-[#8c929450] m-1 text-black/70 border">
-              <th colspan="3" className=" p-1">
+              <th colspan={n1} className=" p-1">
                 {isArabicprop ? `اليوم : ${e}` : ` Day : ${e}`}
               </th>
-              <th colspan="4" className=" p-1">
+              <th colspan={n2} className=" p-1">
                 {date}
               </th>
-              <th colspan="6">
+              <th colspan={n3}>
                 {" "}
                 {isArabicprop
                   ? `الفترة من ${element.from} الي ${element.to}`
@@ -233,26 +265,51 @@ export default function DayReports() {
             <tr className="bg-white p-2 border text-black/70">
               <th className=" p-2">{isArabicprop ? "الاسم" : "name"}</th>
               <th className=" p-2">{isArabicprop ? "الفرع" : "branch"}</th>
-              <th colspan="2" className=" p-2">{isArabicprop ? "الوردية الاولي" : "Shift one"}</th>
-              <th colspan="2" className=" p-2">{isArabicprop ? "الوردية الثانية" : "Shift two"}</th>
-              <th colspan="2" className=" p-2">{isArabicprop ? "الوردية الثالثة" : "Shift three"}</th>
-              <th colspan="2" className=" p-2">{isArabicprop ? "الوردية الرابعة" : "Shift four"}</th>
+              <th colspan="2" className=" p-2">
+                {isArabicprop ? "الوردية الاولي" : "Shift one"}
+              </th>
+              {numOfShifts > 1 && (
+                <th colspan="2" className=" p-2">
+                  {isArabicprop ? "الوردية الثانية" : "Shift two"}
+                </th>
+              )}
+              {numOfShifts > 2 && (
+                <th colspan="2" className=" p-2">
+                  {isArabicprop ? "الوردية الثالثة" : "Shift three"}
+                </th>
+              )}
+              {numOfShifts > 3 && (
+                <th colspan="2" className=" p-2">
+                  {isArabicprop ? "الوردية الرابعة" : "Shift four"}
+                </th>
+              )}
               <th className=" p-2">{isArabicprop ? "التاخير" : "Delay"}</th>
               <th className=" p-2">{isArabicprop ? "الاضافي" : "over time"}</th>
               <th className=" p-2">{isArabicprop ? "الغياب" : "Absence"}</th>
-              
             </tr>
             <tr className="bg-white p-2 border text-black/70">
               <th className=" p-2"></th>
               <th className=" p-2"></th>
               <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
               <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-              <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-              <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-              <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
+              {numOfShifts > 1 && (
+                <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
+              )}
+              {numOfShifts > 1 && (
+                <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
+              )}
+              {numOfShifts > 2 && (
+                <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
+              )}
+              {numOfShifts > 2 && (
+                <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
+              )}
+              {numOfShifts > 3 && (
+                <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
+              )}
+              {numOfShifts > 3 && (
+                <th className=" p-2">{isArabicprop ? "انصراف" : "out"}</th>
+              )}
 
               <th className=" p-2"></th>
               <th className=" p-2"></th>
