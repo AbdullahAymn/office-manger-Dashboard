@@ -13,6 +13,12 @@ import Popup from "reactjs-popup";
 export default function WorkingTimeReports() {
   const isArabicprop = useContext(isArabic).arabic;
   const numOfShifts = useContext(isArabic).numOfShifts;
+  const re = useContext(isArabic).refresh;
+  const setre = useContext(isArabic).setRefresh;
+
+  useEffect(() => {
+    setre(!re)
+  },[])
   const [loader, setLoader] = useState(false);
 
   //show serach
