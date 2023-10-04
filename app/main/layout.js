@@ -23,7 +23,8 @@ export default function RootLayout({ children }) {
   // setTimeout(dothing, 1000*30);
 
   function doSomething() {
-    window.location.reload()
+    // window.location.reload()
+    router.push("/")
 }
   
 
