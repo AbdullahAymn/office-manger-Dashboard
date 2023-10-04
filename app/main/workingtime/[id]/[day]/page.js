@@ -17,7 +17,7 @@ export default function Page() {
   const id = useParams().id;
   const day = useParams().day;
 
-  console.log(day)
+  // console.log(day)
 
   const [shifts, setShifts] = useState([
     {
@@ -124,6 +124,32 @@ export default function Page() {
   };
 
   const formdata = new FormData();
+  // formdata.append("id_shift_day", day);
+  // formdata.append("id_shift", id);
+  // formdata.append("name", shifts[showShifts.length].name);
+  // formdata.append("name_en", shifts[showShifts.length].nameEn);
+  // formdata.append("type", "act");
+  // formdata.append("start_attendance", attStart);
+  // formdata.append("attendance", att);
+  // formdata.append("end_attendance", attEnd);
+  // formdata.append("start_leave", leaveStart);
+  // formdata.append("leaveTime", leave);
+  // formdata.append("end_leave", leaveEnd);
+  // formdata.append("early_leave", earlyLeave);
+
+  // formdata.append("id_shift_day", day);
+  // formdata.append("id_shift", id);
+  // formdata.append("name", shifts[showShifts.length].name);
+  // formdata.append("name_en", shifts[showShifts.length].nameEn);
+  // formdata.append("type", "act");
+  // formdata.append("start_attendance", attStart);
+  // formdata.append("attendance", att);
+  // formdata.append("end_attendance", "20:10");
+  // formdata.append("start_leave", "00:55");
+  // formdata.append("leaveTime", "20:00:00");
+  // formdata.append("end_leave", "01:05");
+  // formdata.append("early_leave", "00:30");
+
   formdata.append("id_shift_day", day);
   formdata.append("id_shift", id);
   formdata.append("name", shifts[showShifts.length].name);
