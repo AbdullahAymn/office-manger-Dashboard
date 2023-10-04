@@ -17,6 +17,8 @@ export default function Page() {
   const id = useParams().id;
   const day = useParams().day;
 
+  console.log(day)
+
   const [shifts, setShifts] = useState([
     {
       name: "الورديه الاولي",
@@ -317,6 +319,7 @@ export default function Page() {
         </Popup>
         <Popup open={edit}>
           <Edit
+            dd={day}
             element={editedItem}
             refresh={closeEditRefresh}
             close={closeEditHandeller}

@@ -30,9 +30,12 @@ export default function Edit(props) {
   formdata.append("leaveTime", leaveEdit);
   formdata.append("end_leave", leaveEndEdit);
   formdata.append("early_leave", earlyLeaveEdit);
+
+  console.log(editedItem.id)
+
   const editHandeller = () => {
     setloading(true);
-    fetch(`https://backend2.dasta.store/api/auth/basicInfoUpdateworkTime/${editedItem.id}`, {
+    fetch(`https://backend2.dasta.store/api/auth/basicInfoUpdateworkTime/${editedItem.id}/${props.dd}`, {
       method: "POST",
       headers: myHeaders,
       body: formdata,
