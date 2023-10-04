@@ -22,24 +22,32 @@ export default function Edit(props) {
   const token = Cookies.get("token");
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}`);
-  const formdata = new FormData();
-  formdata.append("start_attendance", attStartEdit);
-  formdata.append("attendance", attEdit);
-  formdata.append("end_attendance", attEndEdit);
-  formdata.append("start_leave", leaveStartEdit);
-  formdata.append("leaveTime", leaveEdit);
-  formdata.append("end_leave", leaveEndEdit);
-  formdata.append("early_leave", earlyLeaveEdit);
 
-  console.log(editedItem.id)
+  // console.log(editedItem.id);
+  // console.log(props.dd);
 
   const editHandeller = () => {
     setloading(true);
-    fetch(`https://backend2.dasta.store/api/auth/basicInfoUpdateworkTime/${editedItem.id}/${props.dd}`, {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-    }).then((res) => {
+    var formdata = new FormData();
+    formdata.append("start_attendance", attStartEdit);
+    formdata.append("attendance", attEdit);
+    formdata.append("end_attendance", attEndEdit);
+    formdata.append("start_leave", leaveStartEdit);
+    formdata.append("leaveTime", leaveEdit);
+    formdata.append("end_leave", leaveEndEdit);
+    formdata.append("early_leave", earlyLeaveEdit);
+
+    // formdata.append("name", "الورديه التانيه");
+    // formdata.append("attendance", "11:10:00");
+    // formdata.append("leaveTime", "21:30:00");
+    fetch(
+      `https://backend2.dasta.store/api/auth/basicInfoUpdateworkTime/${editedItem.id}`,
+      {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+      }
+    ).then((res) => {
       if (res.status === 200) {
         props.refresh();
       }
