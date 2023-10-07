@@ -323,7 +323,7 @@ export default function RootLayout({ children }) {
           {/*  */}
           {/*  */}
           <div
-            className={`flex lg:hidden h-full overflow-y-scroll bg-slate-800 px-8 z-0 pt-16 fixed top-0 ${
+            className={`flex w-[80%]  lg:hidden h-full overflow-y-scroll bg-slate-800 px-8 z-0 pt-16 fixed top-0 ${
               show
                 ? ` ${isArabicprop ? "siarac" : "sienac"}`
                 : ` ${isArabicprop ? "siar" : "sien"}`
