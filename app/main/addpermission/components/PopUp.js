@@ -85,7 +85,7 @@ export default function PopUp(props) {
 
   const addHandeller = () => {
     if (!token) {
-      window.location.reload();
+      router.push("/");
     }
     setloading(true);
     fetch(`https://backend2.dasta.store/api/auth/addPermision`, {
@@ -99,24 +99,25 @@ export default function PopUp(props) {
     });
   };
 
-
   //edit
   const editHandeller = () => {
     if (!token) {
-      window.location.reload();
+      router.push("/");
     }
     setloading(true);
-    fetch(`https://backend2.dasta.store/api/auth/updatePermision/${employeeElement.id}`, {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-    }).then((res) => {
+    fetch(
+      `https://backend2.dasta.store/api/auth/updatePermision/${employeeElement.id}`,
+      {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+      }
+    ).then((res) => {
       if (res.status === 200) {
         props.refresh();
       }
     });
-}
-
+  };
 
   return (
     <div className=" h-screen w-full  overflow-auto md:pb-0 md:overflow-hidden flex items-center justify-center">

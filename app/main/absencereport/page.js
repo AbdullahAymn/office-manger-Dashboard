@@ -12,7 +12,6 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { fonty } from "@/utils/Amiri-Regular-normal (1)";
 
-
 export default function AbsenceReport() {
   const isArabicprop = useContext(isArabic).arabic;
   const [loader, setLoader] = useState(false);
@@ -48,7 +47,7 @@ export default function AbsenceReport() {
     const myHeaders = new Headers();
     const token = Cookies.get("token");
     // if (!token) {
-    //   window.location.reload()
+    //    router.push("/")
     // }
     myHeaders.append("Authorization", `Bearer ${token}\n`);
     const formdata = new FormData();
@@ -88,7 +87,7 @@ export default function AbsenceReport() {
     setFrom(date.toLocaleDateString("en-CA"));
     setTo(date.toLocaleDateString("en-CA"));
 
-    setDataToMap([])
+    setDataToMap([]);
   };
 
   // -------------------------------------------------------------------
@@ -166,7 +165,7 @@ export default function AbsenceReport() {
   const printDocument = () => {
     const doc = new jsPDF();
     doc.setFont("Amiri-Regular");
-    doc.text(90, 10, isArabicprop ? 'تقرير الغياب' : "absence  Report");
+    doc.text(90, 10, isArabicprop ? "تقرير الغياب" : "absence  Report");
     dataToMap.map((e, index) => {
       let num = index;
       autoTable(doc, {
@@ -179,8 +178,6 @@ export default function AbsenceReport() {
     doc.save("تقرير الغياب.pdf");
   };
 
-
-
   //Excel
   const headers = [
     { label: `الكود`, key: "code" },
@@ -190,17 +187,15 @@ export default function AbsenceReport() {
   let cvsData = [];
 
   const cvsDatas = dataToMap.map((e, index) => {
-   
     e.data.map((e) => {
       cvsData.push({
         code: e.codeEmployee,
         name: e.nameEmployee,
         date: e.day.substr(0, 10),
       });
-    })
-   }
-  )
-  
+    });
+  });
+
   return (
     <div className=" font-sans">
       <Popup open={loader}>

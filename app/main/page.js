@@ -18,7 +18,7 @@ export default function page() {
   const [refresh, setRefresh] = useState(false);
 
   //
-  //All Data 
+  //All Data
   //
 
   const [allData, setAllData] = useState({});
@@ -28,24 +28,22 @@ export default function page() {
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     setLoader(true);
-   fetch(`https://backend2.dasta.store/api/auth/finallyReporttotoday`, {
-     method: "GET",
-     headers: myHeaders,
-   }).then((res) => {
-     if (res.status === 200) {
-       res.json().then((data) => {
-        setAllData(data);
-         setJobsDatasforserch(data);
-       });
-       setLoader(false);
-     }
-   });
+    fetch(`https://backend2.dasta.store/api/auth/finallyReporttotoday`, {
+      method: "GET",
+      headers: myHeaders,
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          setAllData(data);
+          setJobsDatasforserch(data);
+        });
+        setLoader(false);
+      }
+    });
   }, [refresh]);
-  
-
 
   const date = new Date();
   const week = [
@@ -75,10 +73,18 @@ export default function page() {
   const numOfAttend = allData.attedance || 0;
   const numOfMonthLate = allData.holiday || 0;
 
-  const lateFun = () => {setOpenLate(!openLate)};
-  const absentFun = () => {setOpenabsent(!openabsent)};
-  const attendFun = () => {setOpenattend(!openattend)};
-  const monthLateFun = () => {setOpenmonthLate(!openmonthLate)};
+  const lateFun = () => {
+    setOpenLate(!openLate);
+  };
+  const absentFun = () => {
+    setOpenabsent(!openabsent);
+  };
+  const attendFun = () => {
+    setOpenattend(!openattend);
+  };
+  const monthLateFun = () => {
+    setOpenmonthLate(!openmonthLate);
+  };
 
   //
   //popup
@@ -205,7 +211,7 @@ export default function page() {
             data={allData.moreLate}
             head={{ arabic: "عرض التأخير", english: "Display Late" }}
             name={{ arabic: "مدة التأخير", english: "Late time" }}
-            clickFun ={lateFun}
+            clickFun={lateFun}
           />
         </Popup>
         {/* Absent */}
@@ -214,7 +220,7 @@ export default function page() {
             data={allData.moreAbcent}
             abs={true}
             head={{ arabic: "عرض الغياب", english: "Display Abcence" }}
-            clickFun ={absentFun}
+            clickFun={absentFun}
           />
         </Popup>
         {/* Attend */}
@@ -222,7 +228,7 @@ export default function page() {
           <Popupcom
             data={late}
             head={{ arabic: "عرض الحضور ", english: "Display Abcence" }}
-            clickFun ={attendFun}
+            clickFun={attendFun}
           />
         </Popup>
         {/* MonthLate */}
@@ -230,8 +236,7 @@ export default function page() {
           <HoliPopupcom
             data={allData.moreHoliday}
             head={{ arabic: "عرض الأجازات", english: "Month Late" }}
-            
-            clickFun ={monthLateFun}
+            clickFun={monthLateFun}
           />
         </Popup>
       </div>
@@ -239,10 +244,16 @@ export default function page() {
       {/* The Body  */}
       {/*  */}
       <div className=" py-14 grid grid-cols-6 lg:grid-cols-12">
-        <div className=" col-span-6  m-4" ><DaysMoves dataall={allData.transtion} day={nameOfDay} date={dateOfDay} /></div>
-        <div className=" col-span-6  m-4"><DaysChart dataall={allData.last10day}  /></div>
-        
-        
+        <div className=" col-span-6  m-4">
+          <DaysMoves
+            dataall={allData.transtion}
+            day={nameOfDay}
+            date={dateOfDay}
+          />
+        </div>
+        <div className=" col-span-6  m-4">
+          <DaysChart dataall={allData.last10day} />
+        </div>
       </div>
     </div>
   );

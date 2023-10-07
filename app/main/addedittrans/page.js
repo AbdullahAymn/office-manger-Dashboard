@@ -36,14 +36,14 @@ export default function AddEditTrans() {
   const [jobsDataforserch, setJobsDatasforserch] = useState([]);
   const token = Cookies.get("token");
   // if (!token) {
-  //   window.location.reload();
+  //    router.push("/");
   // }
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}\n`);
 
   useEffect(() => {
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     setLoader(true);
     fetch(`https://backend2.dasta.store/api/auth/fetchAllhandle`, {

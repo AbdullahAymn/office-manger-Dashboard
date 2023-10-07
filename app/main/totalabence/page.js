@@ -66,7 +66,7 @@ export default function DelayEarlyLeaveReport() {
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     await fetch("https://backend2.dasta.store/api/auth/FinalReportTotabcent", {
       method: "POST",
@@ -210,7 +210,11 @@ export default function DelayEarlyLeaveReport() {
   const printDocument = () => {
     const doc = new jsPDF();
     doc.setFont("Amiri-Regular");
-    doc.text(90, 10, isArabicprop ? "تقرير اجمالي الغياب" : "Total Absence Report");
+    doc.text(
+      90,
+      10,
+      isArabicprop ? "تقرير اجمالي الغياب" : "Total Absence Report"
+    );
     dataToMap.map((e, index) => {
       let num = index;
       autoTable(doc, {

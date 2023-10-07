@@ -50,7 +50,7 @@ export default function EmployeesReport() {
   useEffect(() => {
     setLoader(true);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     fetch(`https://backend2.dasta.store/api/auth/finallyReportgetEmployee`, {
       method: "GET",
@@ -174,8 +174,6 @@ export default function EmployeesReport() {
     groub: e.goubs,
     shift: e.id_shift,
   }));
-
-  
 
   function printDocument() {
     const doc = new jsPDF();

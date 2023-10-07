@@ -51,7 +51,7 @@ export default function DelayReport() {
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     await fetch("https://backend2.dasta.store/api/auth/finallyReportLates", {
       method: "POST",
@@ -87,7 +87,7 @@ export default function DelayReport() {
     setFrom(date.toLocaleDateString("en-CA"));
     setTo(date.toLocaleDateString("en-CA"));
 
-    setDataToMap([])
+    setDataToMap([]);
   };
 
   // -------------------------------------------------------------------
@@ -197,16 +197,14 @@ export default function DelayReport() {
   let cvsData = [];
 
   const cvsDatas = dataToMap.map((e, index) => {
-
     const day = new Date(from);
     day.setDate(day.getDate() + index);
 
-    let date  = day.toLocaleDateString("en-GB", {
+    let date = day.toLocaleDateString("en-GB", {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-    })
-
+    });
 
     e.data.map((e) => {
       cvsData.push({

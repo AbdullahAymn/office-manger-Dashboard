@@ -30,7 +30,7 @@ export default function PopUp(props) {
 
   useEffect(() => {
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchemployee`, {
       method: "GET",
@@ -131,16 +131,19 @@ export default function PopUp(props) {
 
   const editHandeller = () => {
     setloading(true);
-    fetch(`https://backend2.dasta.store/api/auth/updateholiday/${employeeElement.id}`, {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-    }).then((res) => {
+    fetch(
+      `https://backend2.dasta.store/api/auth/updateholiday/${employeeElement.id}`,
+      {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+      }
+    ).then((res) => {
       if (res.status === 200) {
         props.refresh();
       }
     });
-}
+  };
   ///
   ////////
   return (

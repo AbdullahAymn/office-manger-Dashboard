@@ -63,14 +63,14 @@ export default function DetailedAttendance() {
     const myHeaders = new Headers();
     const token = Cookies.get("token");
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     myHeaders.append("Authorization", `Bearer ${token}\n`);
     const formdata = new FormData();
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
     if (!token) {
-      window.location.reload();
+      router.push("/");
     }
     await fetch(
       "https://backend2.dasta.store/api/auth/finallyReportdetailsDay",
@@ -204,23 +204,18 @@ export default function DetailedAttendance() {
     });
 
     let n1;
-    
 
     if (numOfShifts == 1) {
       n1 = 8;
-      
     }
     if (numOfShifts == 2) {
       n1 = 10;
-      
     }
     if (numOfShifts == 3) {
       n1 = 12;
-      
     }
     if (numOfShifts == 4) {
       n1 = 14;
-     
     }
 
     return (

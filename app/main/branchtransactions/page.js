@@ -54,30 +54,29 @@ export default function GetBranchTransactions() {
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}\n`);
 
-   const formdata = new FormData();
-   formdata.append("FromDay", from);
-   formdata.append("ToDay", to);
-   formdata.append("branchs[]", branch);
+  const formdata = new FormData();
+  formdata.append("FromDay", from);
+  formdata.append("ToDay", to);
+  formdata.append("branchs[]", branch);
 
   const gettrans = () => {
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     setLoader(true);
     fetch(`https://backend2.dasta.store/api/auth/revesionController`, {
-      method: 'POST',
+      method: "POST",
       headers: myHeaders,
       body: formdata,
-      redirect: 'follow'
+      redirect: "follow",
     }).then((res) => {
       if (res.status === 200) {
         res.json().then((data) => {
-          setMessage('تم سحب الحركات بنجاح');
-          
+          setMessage("تم سحب الحركات بنجاح");
         });
         setLoader(false);
       } else {
-        setMessage('هناك مشكلة في السحب');
+        setMessage("هناك مشكلة في السحب");
         setLoader(false);
       }
     });

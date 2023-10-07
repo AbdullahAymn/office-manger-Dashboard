@@ -30,7 +30,7 @@ export default function Tasks() {
   useEffect(() => {
     setLoader(true);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchtask`, {
       method: "GET",

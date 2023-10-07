@@ -56,13 +56,13 @@ export default function TotalAttend() {
     const myHeaders = new Headers();
     const token = Cookies.get("token");
     if (!token) {
-      window.location.reload();
+      router.push("/");
     }
     myHeaders.append("Authorization", `Bearer ${token}\n`);
     const formdata = new FormData();
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
-    
+
     await fetch(
       "https://backend2.dasta.store/api/auth/finallyReporttotaldetailsDay",
       {

@@ -65,7 +65,7 @@ export default function DayReports() {
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     await fetch(
       "https://backend2.dasta.store/api/auth/finallyReportgetstatusDay",
@@ -298,15 +298,21 @@ export default function DayReports() {
               <th colspan="2" className=" p-2">
                 {isArabicprop ? "الوردية 1" : "shift 1"}
               </th>
-              {numOfShifts > 1 &&<th colspan="2" className=" p-2">
-                {isArabicprop ? "الوردية 2" : "shift 2"}
-              </th>}
-             {numOfShifts > 2 && <th colspan="2" className=" p-2">
-                {isArabicprop ? "الوردية 3" : "shift 3"}
-              </th>}
-              {numOfShifts > 3 &&<th colspan="2" className=" p-2">
-                {isArabicprop ? "الوردية 4" : "shift 4"}
-              </th>}
+              {numOfShifts > 1 && (
+                <th colspan="2" className=" p-2">
+                  {isArabicprop ? "الوردية 2" : "shift 2"}
+                </th>
+              )}
+              {numOfShifts > 2 && (
+                <th colspan="2" className=" p-2">
+                  {isArabicprop ? "الوردية 3" : "shift 3"}
+                </th>
+              )}
+              {numOfShifts > 3 && (
+                <th colspan="2" className=" p-2">
+                  {isArabicprop ? "الوردية 4" : "shift 4"}
+                </th>
+              )}
               {/* <th className=" p-2">{isArabicprop ? "التأخير" : "delay"}</th>
               <th className=" p-2">{isArabicprop ? "الإضافي" : "over time"}</th> */}
               <th className=" p-2">{isArabicprop ? "الغياب" : "Absence"}</th>
@@ -316,12 +322,24 @@ export default function DayReports() {
               <th className=" p-2"></th>
               <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
               <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
-              {numOfShifts > 1 &&<th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>}
-              {numOfShifts > 1 &&<th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>}
-              {numOfShifts > 2 &&<th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>}
-              {numOfShifts > 2 &&<th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>}
-              {numOfShifts > 3 &&<th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>}
-              {numOfShifts > 3 &&<th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>}
+              {numOfShifts > 1 && (
+                <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
+              )}
+              {numOfShifts > 1 && (
+                <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
+              )}
+              {numOfShifts > 2 && (
+                <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
+              )}
+              {numOfShifts > 2 && (
+                <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
+              )}
+              {numOfShifts > 3 && (
+                <th className=" p-2">{isArabicprop ? "تأخير" : "Delay"}</th>
+              )}
+              {numOfShifts > 3 && (
+                <th className=" p-2">{isArabicprop ? "اضافي" : "over time"}</th>
+              )}
 
               {/* <th className=" p-2"></th>
               <th className=" p-2"></th> */}

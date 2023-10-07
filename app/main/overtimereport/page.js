@@ -51,7 +51,7 @@ export default function OverTimeReprt() {
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     await fetch(
       "https://backend2.dasta.store/api/auth/finallyReportExtraWork",

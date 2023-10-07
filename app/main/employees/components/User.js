@@ -15,13 +15,13 @@ import Popup from "reactjs-popup";
 export default function User(props) {
   const isArabicprop = useContext(isArabic).arabic;
   const [loader, setLoader] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const refrshopt = useContext(options).refresh;
   const setrefrshopt = useContext(options).setRefresh;
   useEffect(() => {
-    setrefrshopt(!refrshopt)
-  },[])
+    setrefrshopt(!refrshopt);
+  }, []);
   const branchesOptions = useOptions(useContext(options).branch);
   const mangementOptions = useOptions(useContext(options).mangement);
   const departmentOptions = useOptions(useContext(options).department);
@@ -31,7 +31,6 @@ export default function User(props) {
   const projectOptions = useOptions(useContext(options).project);
   const natOptions = useOptions(useContext(options).nat);
   const taskOptions = useOptions(useContext(options).task);
- 
 
   //
   //
@@ -74,7 +73,7 @@ export default function User(props) {
       useEffect(() => {
         setLoader(!loader);
         // if (!token) {
-        //   window.location.reload();
+        //    router.push("/");
         // }
         fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchemployee`, {
           method: "GET",
@@ -99,20 +98,14 @@ export default function User(props) {
               setTask(element.id_task);
               setProject(element.id_poject);
               setPhone(element.phone_numbe);
-              setBeforeShift(element.extra_before == 'yes')
-              setAfterShift(element.extra_after == 'yes')
-
-              
+              setBeforeShift(element.extra_before == "yes");
+              setAfterShift(element.extra_after == "yes");
             });
             setLoader(false);
-
-            
           }
         });
       }, []);
   }
-
-  
 
   //
   //Actions
@@ -137,8 +130,8 @@ export default function User(props) {
   formdata.append("phone_numbe", phone || "");
   formdata.append("id_card", Id);
   formdata.append("code", code);
-  formdata.append("extra_before", beforeShift ? 'yes' : 'no' );
-  formdata.append("extra_after", afterShift ? 'yes' : 'no' );
+  formdata.append("extra_before", beforeShift ? "yes" : "no");
+  formdata.append("extra_after", afterShift ? "yes" : "no");
 
   const addHandeller = (e) => {
     e.preventDefault();
@@ -441,9 +434,7 @@ export default function User(props) {
               /> */}
               <label>{isArabicprop ? "الإعدادات" : "settings"}</label>
             </div>
-            <div
-              className={` grid grid-cols-2 md:grid-cols-4  `}
-            >
+            <div className={` grid grid-cols-2 md:grid-cols-4  `}>
               {/* <div className=" col-span-2">
                 <Checkbox
                   onChange={(e) => setOverTime(e.target.checked)}

@@ -38,14 +38,14 @@ export default function AddPermission() {
   const [jobsDataforserch, setJobsDatasforserch] = useState([]);
   const token = Cookies.get("token");
   // if (!token) {
-  //   window.location.reload();
+  //    router.push("/");
   // }
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
     setLoader(true);
     if (!token) {
-      window.location.reload();
+      router.push("/");
     }
     fetch(`https://backend2.dasta.store/api/auth/fetchAllPermision`, {
       method: "GET",

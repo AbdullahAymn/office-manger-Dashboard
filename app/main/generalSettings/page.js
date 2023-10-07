@@ -52,7 +52,6 @@ export default function generalSettings() {
           setEarlyLeave(data[0].abcentAfterEarlyLeave == "yes");
         });
         setLoader(false);
-
       }
     });
   }, [refresh]);
@@ -81,30 +80,31 @@ export default function generalSettings() {
   formdata.append("abcentAfterEarlyLeave", earlyLeave ? "yes" : "no");
   formdata.append("num_shift", shifts);
 
-
   const [loading, setLoading] = useState(false);
   const saveHadeller = () => {
-    setLoading(true)
-    setLoader(true)
+    setLoading(true);
+    setLoader(true);
     // console.log(settingsData[0].id)
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
-    fetch(`https://backend2.dasta.store/api/auth/basicInfoUpdatesetting/${settingsData[0].id}`, {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-    }).then((res) => {
+    fetch(
+      `https://backend2.dasta.store/api/auth/basicInfoUpdatesetting/${settingsData[0].id}`,
+      {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+      }
+    ).then((res) => {
       if (res.status === 200) {
         setLoading(false);
-        setLoader(false)
-        setRefresh(!refresh)
+        setLoader(false);
+        setRefresh(!refresh);
       }
-      setre(!re)
+      setre(!re);
     });
   };
 
-  
   return (
     <div className=" bg-white shadow-md font-sans border-1 rounded-md md:w-4/5 mx-auto my-12 p-4">
       <Popup open={loader}>

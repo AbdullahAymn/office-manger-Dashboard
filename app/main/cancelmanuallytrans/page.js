@@ -21,7 +21,7 @@ export default function CancelTransfer() {
 
   const resetHandeller = () => {
     setSelectedEmployyes([]);
-    setSelectedEmployyesId([])
+    setSelectedEmployyesId([]);
     setFrom("");
     setTo("");
   };
@@ -58,15 +58,13 @@ export default function CancelTransfer() {
   const formdata = new FormData();
   formdata.append("code[]", selectedEmployees);
   // formdata.append("code[]", "2");
-  formdata.append("id[]", selectedEmployeesId );
+  formdata.append("id[]", selectedEmployeesId);
   formdata.append("FromDay", from);
   formdata.append("ToDay", to);
 
-  
-
   const cancel = () => {
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     setLoader(true);
     fetch(`https://backend2.dasta.store/api/auth/deleteCollection`, {
@@ -77,9 +75,8 @@ export default function CancelTransfer() {
     }).then((res) => {
       if (res.status === 200) {
         setLoader(false);
-        resetHandeller()
-      }
-      else {
+        resetHandeller();
+      } else {
         setLoader(false);
         toast.error(`${isArabicprop ? "هناك مشكلة" : "Something is wrong"}`);
       }

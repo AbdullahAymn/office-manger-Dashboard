@@ -27,7 +27,7 @@ export default function Projects() {
   useEffect(() => {
     setLoader(true);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchpoject`, {
       method: "GET",

@@ -62,7 +62,7 @@ export default function AttendanceSummaryReport() {
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     await fetch("https://backend2.dasta.store/api/auth/totalReportAtted", {
       method: "POST",
@@ -115,29 +115,27 @@ export default function AttendanceSummaryReport() {
   const dataShow = dataToMap.map((e, index) => {
     let num = index;
 
-    const da =  e.map(el => {
+    const da = e.map((el) => {
       let searched = el;
-    if (name) {
-      searched = searched.filter((e) => e.name.includes(name.trim()));
-    }
-    if (branch) {
-      searched = searched.filter((e) => e.branch == branch);
-    }
+      if (name) {
+        searched = searched.filter((e) => e.name.includes(name.trim()));
+      }
+      if (branch) {
+        searched = searched.filter((e) => e.branch == branch);
+      }
 
-    let show = searched.map((el) => {
-      return (
-        <tr className=" grid-cols-11 border">
-          <td className=" col-span-3 p-2">{el.name}</td>
-          <td className=" col-span-2 p-2">{el.branch}</td>
-          <td className=" col-span-3 p-2">{el.day}</td>
-          <td className=" col-span-2 p-2">{el.status}</td>
-          
-        </tr>
-      );
+      let show = searched.map((el) => {
+        return (
+          <tr className=" grid-cols-11 border">
+            <td className=" col-span-3 p-2">{el.name}</td>
+            <td className=" col-span-2 p-2">{el.branch}</td>
+            <td className=" col-span-3 p-2">{el.day}</td>
+            <td className=" col-span-2 p-2">{el.status}</td>
+          </tr>
+        );
+      });
+      return show;
     });
-    return show
-    }
-    )
 
     // const froom = from
     const day = new Date(from);
@@ -180,13 +178,10 @@ export default function AttendanceSummaryReport() {
     );
   });
 
-
   // const dataShow = dataToMap.map((e, index) => {
-    
 
   //   return('11')
   // })
-
 
   // -------------------------------------------------------------------
   //
@@ -200,7 +195,9 @@ export default function AttendanceSummaryReport() {
     doc.text(
       90,
       10,
-      isArabicprop ? 'تقرير ملخص تقرير الحضور' : "Attendance Summary Report Report"
+      isArabicprop
+        ? "تقرير ملخص تقرير الحضور"
+        : "Attendance Summary Report Report"
     );
     dataToMap.map((e, index) => {
       let num = index;
@@ -231,11 +228,9 @@ export default function AttendanceSummaryReport() {
           branch: elem.branch,
           date: elem.day,
           status: elem.status,
-          
         });
       });
-    })
-    
+    });
   });
   return (
     <div className=" font-sans">

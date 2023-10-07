@@ -33,7 +33,7 @@ export default function AddVacation() {
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     setLoader(true);
     fetch(`https://backend2.dasta.store/api/auth/fetchAllholiday`, {

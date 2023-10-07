@@ -64,7 +64,7 @@ export default function DelayEarlyLeaveReport() {
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     await fetch("https://backend2.dasta.store/api/auth/earlyleaveAndLate", {
       method: "POST",
@@ -144,44 +144,42 @@ export default function DelayEarlyLeaveReport() {
       if (el.Late.length) {
         el.Late.map((element) => {
           if (element.shift == "الورديه الاولي") {
-            in1 = element.day.substr(10, 6)
+            in1 = element.day.substr(10, 6);
           }
           if (element.shift == "الورديه الثانيه") {
-            in2 = element.day.substr(10, 6)
+            in2 = element.day.substr(10, 6);
           }
           if (element.shift == "الورديه الثالثه") {
-            in3 = element.day.substr(10, 6)
+            in3 = element.day.substr(10, 6);
           }
-          if (element.shift ==  "الورديه الرابعه") {
-            in4 = element.day.substr(10, 6)
+          if (element.shift == "الورديه الرابعه") {
+            in4 = element.day.substr(10, 6);
           }
-        })
-        
+        });
       }
       if (el.EarlyLeave.length) {
         el.EarlyLeave.map((element) => {
           if (element.shift == "الورديه الاولي") {
-            out1 = element.day.substr(10, 6)
+            out1 = element.day.substr(10, 6);
           }
           if (element.shift == "الورديه الثانيه") {
-            out2 = element.day.substr(10, 6)
+            out2 = element.day.substr(10, 6);
           }
           if (element.shift == "الورديه الثالثه") {
-            out3 = element.day.substr(10, 6)
+            out3 = element.day.substr(10, 6);
           }
-          if (element.shift ==  "الورديه الرابعه") {
-            out4 = element.day.substr(10, 6)
+          if (element.shift == "الورديه الرابعه") {
+            out4 = element.day.substr(10, 6);
           }
-        })
-        
+        });
       }
 
       if (el.abcent.length) {
         el.abcent.map((element) => {
-          absent = element.comment
-        })
+          absent = element.comment;
+        });
       }
-      
+
       return (
         <tr className=" grid-cols-11 border">
           <td className=" col-span-1 text-center p-2">{el.code}</td>
@@ -281,7 +279,13 @@ export default function DelayEarlyLeaveReport() {
   const printDocument = () => {
     const doc = new jsPDF();
     doc.setFont("Amiri-Regular");
-    doc.text(90, 10, isArabicprop ? "تقرير التاخير والانصراف المبكر" : "Delay and Early Leave Report");
+    doc.text(
+      90,
+      10,
+      isArabicprop
+        ? "تقرير التاخير والانصراف المبكر"
+        : "Delay and Early Leave Report"
+    );
     dataToMap.map((e, index) => {
       let num = index;
       autoTable(doc, {
@@ -315,7 +319,6 @@ export default function DelayEarlyLeaveReport() {
 
   const cvsDatas = dataToMap.map((e, index) => {
     e.map((e) => {
-
       let in1 = "";
       let out1 = "";
       let in2 = "";
@@ -330,42 +333,40 @@ export default function DelayEarlyLeaveReport() {
       if (e.Late.length) {
         e.Late.map((element) => {
           if (element.shift == "الورديه الاولي") {
-            in1 = element.day.substr(10, 6)
+            in1 = element.day.substr(10, 6);
           }
           if (element.shift == "الورديه الثانيه") {
-            in2 = element.day.substr(10, 6)
+            in2 = element.day.substr(10, 6);
           }
           if (element.shift == "الورديه الثالثه") {
-            in3 = element.day.substr(10, 6)
+            in3 = element.day.substr(10, 6);
           }
-          if (element.shift ==  "الورديه الرابعه") {
-            in4 = element.day.substr(10, 6)
+          if (element.shift == "الورديه الرابعه") {
+            in4 = element.day.substr(10, 6);
           }
-        })
-        
+        });
       }
       if (e.EarlyLeave.length) {
         e.EarlyLeave.map((element) => {
           if (element.shift == "الورديه الاولي") {
-            out1 = element.day.substr(10, 6)
+            out1 = element.day.substr(10, 6);
           }
           if (element.shift == "الورديه الثانيه") {
-            out2 = element.day.substr(10, 6)
+            out2 = element.day.substr(10, 6);
           }
           if (element.shift == "الورديه الثالثه") {
-            out3 = element.day.substr(10, 6)
+            out3 = element.day.substr(10, 6);
           }
-          if (element.shift ==  "الورديه الرابعه") {
-            out4 = element.day.substr(10, 6)
+          if (element.shift == "الورديه الرابعه") {
+            out4 = element.day.substr(10, 6);
           }
-        })
-        
+        });
       }
 
       if (e.abcent.length) {
         e.abcent.map((element) => {
-          absent = element.comment
-        })
+          absent = element.comment;
+        });
       }
 
       cvsData.push({

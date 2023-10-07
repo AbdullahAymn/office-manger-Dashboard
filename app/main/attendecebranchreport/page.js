@@ -65,7 +65,7 @@ export default function AttendanceBranchRyreport() {
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     await fetch(
       "https://backend2.dasta.store/api/auth/leaveAndAttedanceinBranch",
@@ -266,7 +266,9 @@ export default function AttendanceBranchRyreport() {
     doc.text(
       90,
       10,
-      isArabicprop ? " تقارير الحضور والانصراف بالفروع" : "Branch Attendance Report"
+      isArabicprop
+        ? " تقارير الحضور والانصراف بالفروع"
+        : "Branch Attendance Report"
     );
     dataToMap.map((e, index) => {
       let num = index;
@@ -296,13 +298,11 @@ export default function AttendanceBranchRyreport() {
     { label: "انصراف الورية 3", key: "out3" },
     { label: "حضور الوردية 4", key: "in4" },
     { label: "انصراف الورية 4", key: "out4" },
-   
   ];
   let cvsData = [];
 
   const cvsDatas = dataToMap.map((e, index) => {
     e.details.map((el) => {
-
       let in1 = "";
       let out1 = "";
       let in2 = "";
@@ -329,12 +329,12 @@ export default function AttendanceBranchRyreport() {
           in4 = elem.start_attedance;
           out4 = elem.end_leave;
         }
-      })
+      });
 
       cvsData.push({
         code: e.code,
         name: e.name,
-        branch: e.branch ,
+        branch: e.branch,
         shift: e.shift,
         date: el.date,
         in1: in1,

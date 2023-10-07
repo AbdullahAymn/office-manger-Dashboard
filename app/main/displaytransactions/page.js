@@ -58,7 +58,7 @@ export default function DisplayTransactions() {
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     await fetch("https://backend2.dasta.store/api/auth/showTrnstion", {
       method: "POST",
@@ -116,32 +116,26 @@ export default function DisplayTransactions() {
     }
 
     let show = searched.map((e, index) => {
-
-      let timein = ''
-      let timeout = ''
-      let late = ''
-      let overtime = ''
-      let early = ''
+      let timein = "";
+      let timeout = "";
+      let late = "";
+      let overtime = "";
+      let early = "";
 
       if (e.tleave.length > 0) {
         timeout = e.tleave[0].day.substr(11, 5);
-        
       }
       if (e.tealyleave.length > 0) {
         early = e.tealyleave[0].day.substr(11, 5);
-        
       }
       if (e.late.length > 0) {
         late = e.late[0].day.substr(11, 5);
-        
       }
       if (e.extrawork.length > 0) {
         overtime = e.extrawork[0].day.substr(11, 5);
-        
       }
       if (e.Attedance.length > 0) {
         timein = e.Attedance[0].day.substr(11, 5);
-        
       }
       return (
         <tr key={index} className="p-2 border text-black/70">

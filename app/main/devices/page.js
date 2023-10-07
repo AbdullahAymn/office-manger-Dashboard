@@ -34,7 +34,7 @@ export default function Devices() {
   useEffect(() => {
     setLoader(true);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     fetch(`https://backend2.dasta.store/api/auth/fetchDevices`, {
       method: "GET",

@@ -26,7 +26,7 @@ export default function page() {
   useEffect(() => {
     setLoader(true);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     fetch(`https://backend2.dasta.store/api/auth/basicInfoFetchgroubEmployee`, {
       method: "GET",
@@ -92,7 +92,6 @@ export default function page() {
   //edit
   const [openEdit, setOpenEdit] = useState(false);
   const [editedItem, setEditedItem] = useState("");
- 
 
   const openEditHandeller = (e) => {
     setOpenEdit(!openEdit);

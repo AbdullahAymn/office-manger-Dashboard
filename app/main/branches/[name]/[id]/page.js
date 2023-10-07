@@ -25,7 +25,7 @@ export default function page() {
   myHeaders.append("Authorization", `Bearer ${token}\n`);
   useEffect(() => {
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     fetch(
       `https://backend2.dasta.store/api/auth/basicInfofetchbelongToBranchadministation/${name}`,

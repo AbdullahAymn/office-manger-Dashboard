@@ -21,7 +21,6 @@ export default function DisplayTransactions() {
   useEffect(() => {
     setrefrshopt(!refrshopt);
   }, []);
-  
 
   // -------------------------------------------------------------------
 
@@ -53,7 +52,7 @@ export default function DisplayTransactions() {
     formdata.append("FromDay", from);
     formdata.append("ToDay", to);
     // if (!token) {
-    //   window.location.reload();
+    //    router.push("/");
     // }
     await fetch("https://backend2.dasta.store/api/auth/alltranstion", {
       method: "POST",
@@ -117,7 +116,6 @@ export default function DisplayTransactions() {
           <td className=" p-2  text-center">{e.nameEmp}</td>
           <td className=" p-2  text-center">{e.timestamp.substr(0, 10)}</td>
           <td className=" p-2  text-center">{e.timestamp.substr(11, 5)}</td>
-          
         </tr>
       );
     });
@@ -132,13 +130,10 @@ export default function DisplayTransactions() {
             <tr className="  grid-cols-12 bg-white p-2 border text-black/70">
               <th className=" p-2  ">{isArabicprop ? "الكود" : "Code"}</th>
               <th className=" p-2  ">{isArabicprop ? "الإسم" : "Name"}</th>
-              <th className=" p-2  ">
-                {isArabicprop ? "التاريخ" : "Date"}
-              </th>
+              <th className=" p-2  ">{isArabicprop ? "التاريخ" : "Date"}</th>
               <th className=" p-2">
                 {isArabicprop ? "وقت الحضور" : "Time In"}
               </th>
-              
             </tr>
           </thead>
 

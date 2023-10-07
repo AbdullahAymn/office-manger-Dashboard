@@ -19,14 +19,13 @@ export default function RootLayout({ children }) {
   const token = Cookies.get("token") || false;
   const router = useRouter();
 
-  setTimeout(doSomething, 1000*60*50);
+  setTimeout(doSomething, 1000 * 60 * 50);
   // setTimeout(dothing, 1000*30);
 
   function doSomething() {
-    // window.location.reload()
-    router.push("/")
-}
-  
+    //  router.push("/")
+    router.push("/");
+  }
 
   const goHome = () => {
     router.push("/");
@@ -36,8 +35,8 @@ export default function RootLayout({ children }) {
       goHome();
       return;
     }
-    setUserName(Cookies.get("name"))
-  },[])
+    setUserName(Cookies.get("name"));
+  }, []);
 
   const logoutHandeller = async () => {
     const logout = () => {
@@ -60,7 +59,7 @@ export default function RootLayout({ children }) {
     setAra(preValue);
   }, []);
 
-  const [userName , setUserName] = useState('');
+  const [userName, setUserName] = useState("");
 
   const [drop, setDrop] = useState(false);
 
