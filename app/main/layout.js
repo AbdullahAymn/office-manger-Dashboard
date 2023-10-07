@@ -323,12 +323,13 @@ export default function RootLayout({ children }) {
           {/*  */}
           {/*  */}
           <div
-            className={`flex w-[80%]  lg:hidden h-full overflow-y-scroll bg-slate-800 px-8 z-0 pt-16 fixed top-0 ${
+            className={`flex w-[80%] md:w-[40%]  lg:hidden h-full overflow-y-scroll bg-slate-800 px-8 z-0 pt-16 fixed top-0 ${
               show
                 ? ` ${isArabicprop ? "siarac" : "sienac"}`
                 : ` ${isArabicprop ? "siar" : "sien"}`
             }  `}
           >
+           
             <SideBar
               isArabicprop={isArabicprop}
               smallSideBar={smallSideBar}
@@ -350,6 +351,7 @@ export default function RootLayout({ children }) {
               smallSideBar ? "lg:w-20" : "lg:w-3/12"
             }  bg-slate-800 h-full overflow-y-scroll p-4`}
           >
+            
             <SideBar
               isArabicprop={isArabicprop}
               smallSideBar={smallSideBar}
