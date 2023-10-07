@@ -2,11 +2,12 @@
   "name": "dashboard",
   "version": "0.1.0",
   "private": true,
-  "homepage": "easysoft.m2ksa.com",
+  
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js"
+    "start": "next start"
+   
   }
 ,
   "dependencies": {
