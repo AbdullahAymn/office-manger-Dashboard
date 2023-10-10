@@ -18,6 +18,13 @@ import { elements } from "chart.js";
 
 export default function DelayEarlyLeaveReport() {
   const isArabicprop = useContext(isArabic).arabic;
+  const numOfShifts = useContext(isArabic).numOfShifts;
+  const re = useContext(isArabic).refresh;
+  const setre = useContext(isArabic).setRefresh;
+
+  useEffect(() => {
+    setre(!re);
+  }, []);
   const [loader, setLoader] = useState(false);
   const refrshopt = useContext(options).refresh;
   const setrefrshopt = useContext(options).setRefresh;
@@ -188,12 +195,24 @@ export default function DelayEarlyLeaveReport() {
           <td className=" col-span-2 text-center p-2">{el.data}</td>
           <td className=" col-span-2 text-center  p-2">{in1}</td>
           <td className=" col-span-2 text-center  p-2">{out1}</td>
-          <td className=" col-span-2 text-center  p-2">{in2}</td>
-          <td className=" col-span-2 text-center  p-2">{out2}</td>
-          <td className=" col-span-2 text-center  p-2">{in3}</td>
-          <td className=" col-span-2 text-center  p-2">{out3}</td>
-          <td className=" col-span-2 text-center  p-2">{in4}</td>
-          <td className=" col-span-2 text-center  p-2">{out4}</td>
+          {numOfShifts > 1 && (
+            <td className=" col-span-2 text-center  p-2">{in2}</td>
+          )}
+          {numOfShifts > 1 && (
+            <td className=" col-span-2 text-center  p-2">{out2}</td>
+          )}
+          {numOfShifts > 2 && (
+            <td className=" col-span-2 text-center  p-2">{in3}</td>
+          )}
+          {numOfShifts > 2 && (
+            <td className=" col-span-2 text-center  p-2">{out3}</td>
+          )}
+          {numOfShifts > 3 && (
+            <td className=" col-span-2 text-center  p-2">{in4}</td>
+          )}
+          {numOfShifts > 3 && (
+            <td className=" col-span-2 text-center  p-2">{out4}</td>
+          )}
           <td className=" col-span-2 text-center  p-2">{absent}</td>
         </tr>
       );
@@ -202,6 +221,28 @@ export default function DelayEarlyLeaveReport() {
     // const froom = from
     const day = new Date(from);
     day.setDate(day.getDate() + index);
+    let n1
+    
+
+    if (numOfShifts == 1) {
+      n1 = 7
+      
+    }
+    
+    if (numOfShifts == 2) {
+      n1 = 9
+     
+    }
+    
+    if (numOfShifts == 3) {
+      n1 = 11
+      
+    }
+    
+    if (numOfShifts == 4) {
+      n1 = 13
+      
+    }
     return (
       <>
         <table
@@ -212,7 +253,7 @@ export default function DelayEarlyLeaveReport() {
             <tr></tr>
 
             <tr className=" grid-cols-11  w-full bg-[#8c929450] m-1 text-black/70 border">
-              <th colspan={13} className=" col-span-11">
+              <th colspan={n1} className=" col-span-11">
                 {isArabicprop
                   ? `الفترة من ${from} الي ${to}`
                   : `From ${from} to ${to}`}
@@ -234,15 +275,21 @@ export default function DelayEarlyLeaveReport() {
               <th colSpan={2} className=" col-span-2  p-2">
                 {isArabicprop ? "الوردية الاولي" : "Shift one"}
               </th>
-              <th colSpan={2} className=" col-span-2  p-2">
-                {isArabicprop ? "الوردية الثانية" : "Shift two"}
-              </th>
-              <th colSpan={2} className=" col-span-2  p-2">
-                {isArabicprop ? "الوردية الثالثة" : "Shift three"}
-              </th>
-              <th colSpan={2} className=" col-span-2  p-2">
-                {isArabicprop ? "الوردية الرابعة" : "Shift four"}
-              </th>
+              {numOfShifts > 1 && (
+                <th colSpan={2} className=" col-span-2  p-2">
+                  {isArabicprop ? "الوردية الثانية" : "Shift two"}
+                </th>
+              )}
+              {numOfShifts > 2 && (
+                <th colSpan={2} className=" col-span-2  p-2">
+                  {isArabicprop ? "الوردية الثالثة" : "Shift three"}
+                </th>
+              )}
+              {numOfShifts > 3 && (
+                <th colSpan={2} className=" col-span-2  p-2">
+                  {isArabicprop ? "الوردية الرابعة" : "Shift four"}
+                </th>
+              )}
               <th className=" col-span-2  p-2">
                 {isArabicprop ? "الغياب" : "Abence"}
               </th>
@@ -254,12 +301,12 @@ export default function DelayEarlyLeaveReport() {
               <th></th>
               <th className=" p-2">{isArabicprop ? "حضور" : "In"}</th>
               <th>{isArabicprop ? "إنصراف" : "Out"}</th>
-              <th>{isArabicprop ? "حضور" : "In"}</th>
-              <th>{isArabicprop ? "إنصراف" : "Out"}</th>
-              <th>{isArabicprop ? "حضور" : "In"}</th>
-              <th>{isArabicprop ? "إنصراف" : "Out"}</th>
-              <th>{isArabicprop ? "حضور" : "In"}</th>
-              <th>{isArabicprop ? "إنصراف" : "Out"}</th>
+              {numOfShifts > 1 && <th>{isArabicprop ? "حضور" : "In"}</th>}
+              {numOfShifts > 1 && <th>{isArabicprop ? "إنصراف" : "Out"}</th>}
+              {numOfShifts > 2 && <th>{isArabicprop ? "حضور" : "In"}</th>}
+              {numOfShifts > 2 && <th>{isArabicprop ? "إنصراف" : "Out"}</th>}
+              {numOfShifts > 3 && <th>{isArabicprop ? "حضور" : "In"}</th>}
+              {numOfShifts > 3 && <th>{isArabicprop ? "إنصراف" : "Out"}</th>}
               <th></th>
             </tr>
           </thead>

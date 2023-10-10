@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
     //  router.push("/")
     router.push("/");
   }
+  
 
   const goHome = () => {
     router.push("/");

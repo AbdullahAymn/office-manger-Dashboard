@@ -17,6 +17,13 @@ import { options } from "@/utils/optionStore";
 
 export default function AttendanceBranchRyreport() {
   const isArabicprop = useContext(isArabic).arabic;
+  const numOfShifts = useContext(isArabic).numOfShifts;
+  const re = useContext(isArabic).refresh;
+  const setre = useContext(isArabic).setRefresh;
+
+  useEffect(() => {
+    setre(!re);
+  }, []);
   const [loader, setLoader] = useState(false);
   const refrshopt = useContext(options).refresh;
   const setrefrshopt = useContext(options).setRefresh;
@@ -173,12 +180,26 @@ export default function AttendanceBranchRyreport() {
           <td className=" col-span-3 text-center p-2">{e.branch}</td>
           <td className=" col-span-1 text-center p-2">{in1}</td>
           <td className=" col-span-3 text-center p-2">{out1}</td>
-          <td className=" col-span-3 text-center p-2">{in2}</td>
-          <td className=" col-span-1 text-center p-2">{out2}</td>
-          <td className=" col-span-3 text-center p-2">{in3}</td>
-          <td className=" col-span-3 text-center p-2">{out3}</td>
-          <td className=" col-span-1 text-center p-2">{in4}</td>
-          <td className=" col-span-3 text-center p-2">{out4}</td>
+          {numOfShifts > 1 && (
+            <td className=" col-span-3 text-center p-2">{in2}</td>
+          )}
+          {numOfShifts > 1 && (
+            <td className=" col-span-1 text-center p-2">{out2}</td>
+          )}
+          {numOfShifts > 2 && (
+            <td className=" col-span-3 text-center p-2">{in3}</td>
+          )}
+          {numOfShifts > 2 && (
+            <td cla ssName=" col-span-3 text-center p-2">
+              {out3}
+            </td>
+          )}
+          {numOfShifts > 3 && (
+            <td className=" col-span-1 text-center p-2">{in4}</td>
+          )}
+          {numOfShifts > 3 && (
+            <td className=" col-span-3 text-center p-2">{out4}</td>
+          )}
         </tr>
       );
     });
@@ -186,6 +207,40 @@ export default function AttendanceBranchRyreport() {
     // const froom = from
     const day = new Date(from);
     day.setDate(day.getDate() + index);
+
+    let n1
+    let n2
+    let n3
+    let n4
+
+    if (numOfShifts == 1) {
+      n1 = 1
+      n2 = 1
+      n3 = 1
+      n4 = 2
+    }
+    
+    if (numOfShifts == 2) {
+      n1 = 1
+      n2 = 1
+      n3 = 2
+      n4 = 3
+    }
+    
+    if (numOfShifts == 3) {
+      n1 = 1
+      n2 = 2
+      n3 = 2
+      n4 = 4
+    }
+    
+    if (numOfShifts == 4) {
+      n1 = 2
+      n2 = 2
+      n3 = 2
+      n4 = 5
+    }
+    
     return (
       <>
         <table
@@ -196,16 +251,16 @@ export default function AttendanceBranchRyreport() {
             <tr></tr>
 
             <tr className=" grid-cols-11  w-full bg-[#8c929450] m-1 text-black/70 border">
-              <th colspan={2} className=" col-span-11">
+              <th colspan={n1} className=" col-span-11">
                 {isArabicprop ? "الكود" : "Code"} {" :"} {e.code}
               </th>
-              <th colspan={2} className=" col-span-11">
+              <th colspan={n2} className=" col-span-11">
                 {isArabicprop ? "الاسم" : "Name"} {" :"} {e.name}
               </th>
-              <th colspan={2} className=" col-span-11">
+              <th colspan={n3} className=" col-span-11">
                 {isArabicprop ? "الفرع" : "Branch"} {" :"} {e.branch}
               </th>
-              <th colspan={5} className=" col-span-11">
+              <th colspan={n4} className=" col-span-11">
                 {isArabicprop
                   ? `الفترة من ${e.from} الي ${e.to}`
                   : `From ${e.from} to ${e.to}`}
@@ -224,15 +279,15 @@ export default function AttendanceBranchRyreport() {
               <th colSpan={2} className=" col-span-2 text-center p-2">
                 {isArabicprop ? "الوردية الاولي" : "shift one"}
               </th>
-              <th colSpan={2} className=" col-span-2 text-center p-2">
+              {numOfShifts > 1 &&<th colSpan={2} className=" col-span-2 text-center p-2">
                 {isArabicprop ? "الوردية الثانية" : "shift two"}
-              </th>
-              <th colSpan={2} className=" col-span-2 text-center p-2">
+              </th>}
+              {numOfShifts > 2 &&<th colSpan={2} className=" col-span-2 text-center p-2">
                 {isArabicprop ? "الوردية الثالثة" : "shift three"}
-              </th>
-              <th colSpan={2} className=" col-span-2 text-center p-2">
+              </th>}
+              {numOfShifts > 3 &&<th colSpan={2} className=" col-span-2 text-center p-2">
                 {isArabicprop ? "الوردية الرابعة" : "shift four"}
-              </th>
+              </th>}
             </tr>
             <tr className="border text-black/70">
               <th></th>
@@ -240,12 +295,12 @@ export default function AttendanceBranchRyreport() {
               <th></th>
               <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
               <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
-              <th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>
-              <th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>
+              {numOfShifts > 1 &&<th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>}
+              {numOfShifts > 1 &&<th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>}
+              {numOfShifts > 2 &&<th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>}
+              {numOfShifts > 2 &&<th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>}
+              {numOfShifts > 3 &&<th className=" p-2">{isArabicprop ? "حضور" : "in"}</th>}
+              {numOfShifts > 3 &&<th className=" p-2">{isArabicprop ? "إنصراف" : "Out"}</th>}
             </tr>
           </thead>
           <tbody>{show}</tbody>
